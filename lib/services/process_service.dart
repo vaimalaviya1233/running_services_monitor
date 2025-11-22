@@ -45,7 +45,10 @@ class ProcessService {
       // 2. Enrich with app names using cache
       final enrichedServices = await enrichServicesWithAppNames(services);
 
-      // 3. Group by package name
+      // 3. Get RAM info from dumpsys meminfo (more reliable)
+      final ramMap = await _getProcessRamMap();
+
+      // 4. Group by package name
       final Map<String, List<RunningServiceInfo>> grouped = {};
       for (var service in enrichedServices) {
         if (!grouped.containsKey(service.packageName)) {
@@ -54,7 +57,7 @@ class ProcessService {
         grouped[service.packageName]!.add(service);
       }
 
-      // 4. Create AppProcessInfo objects
+      // 5. Create AppProcessInfo objects
       final List<AppProcessInfo> appProcessInfos = [];
 
       grouped.forEach((packageName, serviceList) {
@@ -70,6 +73,13 @@ class ProcessService {
         }
 
         for (var service in serviceList) {
+          // Update service RAM from map if available
+          if (ramMap.containsKey(service.pid)) {
+            final ramKb = ramMap[service.pid]!;
+            service.ramInKb = ramKb;
+            service.ramUsage = _formatRam(ramKb);
+          }
+
           totalRamKb += service.ramInKb ?? 0;
           pids.add(service.pid);
           // If we didn't find app name in cache, maybe service has it (from AppCheck fallback)
@@ -79,21 +89,13 @@ class ProcessService {
           if (service.isSystemApp) isSystem = true;
         }
 
-        // Format RAM string
-        String totalRamStr;
-        if (totalRamKb > 1024) {
-          totalRamStr = '${(totalRamKb / 1024).toStringAsFixed(0)} MB';
-        } else {
-          totalRamStr = '${totalRamKb.toStringAsFixed(0)} KB';
-        }
-
         appProcessInfos.add(
           AppProcessInfo(
             packageName: packageName,
             appName: appName,
             services: serviceList,
             pids: pids.toList(),
-            totalRam: totalRamStr,
+            totalRam: _formatRam(totalRamKb),
             totalRamInKb: totalRamKb,
             isSystemApp: isSystem,
             appInfo: cachedAppInfo,
@@ -109,6 +111,15 @@ class ProcessService {
       debugPrint('Error getting app process infos: $e');
       return [];
     }
+  }
+
+  String _formatRam(double kb) {
+    if (kb > 1024 * 1024) {
+      return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';
+    } else if (kb > 1024) {
+      return '${(kb / 1024).toStringAsFixed(1)} MB';
+    }
+    return '${kb.toStringAsFixed(0)} KB';
   }
 
   /// Get system RAM info (Total, Free, Used)
@@ -195,11 +206,7 @@ class ProcessService {
           final pssKb = int.tryParse(pssMatch.group(1) ?? '');
           if (pssKb != null) {
             currentRamInKb = pssKb.toDouble();
-            if (pssKb > 1024) {
-              currentRamUsage = '${(pssKb / 1024).toStringAsFixed(1)} MB';
-            } else {
-              currentRamUsage = '$pssKb KB';
-            }
+            currentRamUsage = _formatRam(currentRamInKb);
           }
         }
       }
@@ -284,6 +291,40 @@ class ProcessService {
     } catch (e) {
       debugPrint('Error enriching services: $e');
       return services;
+    }
+  }
+
+  /// Get RAM usage by PID from dumpsys meminfo
+  Future<Map<int, double>> _getProcessRamMap() async {
+    try {
+      final result = await _shizukuService.executeCommand('dumpsys meminfo');
+      if (result == null) return {};
+
+      final Map<int, double> ramMap = {};
+      final lines = result.split('\n');
+
+      // Regex to match: 12,345K: com.package (pid 123)
+      // Matches lines like: "   150,000K: com.google.android.gms (pid 1234)"
+      final regex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)\)');
+
+      for (var line in lines) {
+        final match = regex.firstMatch(line);
+        if (match != null) {
+          final ramStr = match.group(1)?.replaceAll(',', '') ?? '0';
+          final pidStr = match.group(3) ?? '0';
+
+          final ramKb = double.tryParse(ramStr) ?? 0;
+          final pid = int.tryParse(pidStr) ?? 0;
+
+          if (pid > 0) {
+            ramMap[pid] = ramKb;
+          }
+        }
+      }
+      return ramMap;
+    } catch (e) {
+      debugPrint('Error getting process RAM map: $e');
+      return {};
     }
   }
 }
