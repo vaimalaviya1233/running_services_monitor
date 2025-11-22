@@ -39,7 +39,7 @@ class AppProcessInfo {
   final String totalRam; // Formatted string e.g. "150 MB"
   final double totalRamInKb; // For sorting/calculation
   final bool isSystemApp;
-  final dynamic
+  dynamic
   appInfo; // AppInfo from installed_apps package (dynamic to avoid circular dependency if possible, or just import)
 
   AppProcessInfo({

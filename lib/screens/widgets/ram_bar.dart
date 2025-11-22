@@ -16,9 +16,9 @@ class RamBar extends StatelessWidget {
 
   String _formatRam(double kb) {
     if (kb > 1024 * 1024) {
-      return '${(kb / (1024 * 1024)).toStringAsFixed(1)} GB';
+      return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';
     } else if (kb > 1024) {
-      return '${(kb / 1024).toStringAsFixed(0)} MB';
+      return '${(kb / 1024).toStringAsFixed(1)} MB';
     }
     return '${kb.toStringAsFixed(0)} KB';
   }
@@ -29,6 +29,11 @@ class RamBar extends StatelessWidget {
     // System RAM = Total Used - Apps RAM
     double systemRamKb = usedRamKb - appsRamKb;
     if (systemRamKb < 0) systemRamKb = 0; // Safety
+
+    // Avoid division by zero
+    if (totalRamKb <= 0) {
+      return const SizedBox.shrink();
+    }
 
     final double systemFlex = systemRamKb / totalRamKb;
     final double appsFlex = appsRamKb / totalRamKb;

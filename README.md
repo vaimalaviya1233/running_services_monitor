@@ -1,20 +1,6 @@
 # Running Services Monitor
 
-A Flutter Android app that displays all running apps and services on your device, including system apps. This app uses **Shizuku** to access system information without requiring root access.
-
-## Features
-
-✨ **View Running Services**: See all active services on your device
-📱 **System & User Apps**: Separate views for system and user applications  
-🔍 **Detailed Information**: View package names, PIDs, process names, and service classes
-🎨 **Material Design 3**: Modern UI with dark mode support
-🔄 **Real-time Refresh**: Update the service list anytime
-🚫 **No Root Required**: Uses Shizuku for elevated permissions via ADB
-
-## Screenshots
-
-The app displays running services similar to the Android Developer Options "Running Services" screen that was available in older Android versions.
-
+[![Download APK](https://img.shields.io/github/v/release/biplobsd/running_services_monitor?style=for-the-badge&label=Download%20APK&color=blue)](https://github.com/biplobsd/running_services_monitor/releases/latest)
 ## Requirements
 
 ### Essential
@@ -77,31 +63,7 @@ This app uses Shizuku to execute privileged ADB commands without root access:
 1. **Shizuku Integration**: The app connects to the Shizuku service running on your device
 2. **Dumpsys Commands**: Executes `dumpsys activity services` to get running service information
 3. **Parsing**: Parses the dumpsys output to extract service details (package name, PID, process name, etc.)
-4. **App Metadata**: Uses `device_apps` package to fetch app names and icons
-5. **Categorization**: Separates services into System and User categories
-
-## Technical Details
-
-### Dependencies
-- `shizuku_api: ^1.2.2` - Shizuku API integration
-- `device_apps: ^2.2.0` - App information and icons
-- `flutter_svg: ^2.0.10+1` - SVG support
-
-### Architecture
-```
-lib/
-├── models/
-│   └── service_info.dart          # Data models for services and processes
-├── services/
-│   ├── shizuku_service.dart       # Shizuku wrapper and command execution
-│   └── process_service.dart       # Service fetching and parsing logic
-├── screens/
-│   └── home_screen.dart           # Main screen with tabs
-├── widgets/
-│   ├── service_list_item.dart     # Service display widget
-│   └── shizuku_setup_dialog.dart  # Setup instructions dialog
-└── main.dart                      # App entry point
-```
+4. **Categorization**: Separates services into System and User categories
 
 ### Key Components
 
@@ -152,7 +114,7 @@ Shizuku provides a solution by:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/biplobsd/running_services_monitor.git
 cd running_services_monitor
 
 # Get dependencies
@@ -169,11 +131,16 @@ flutter build apk --release
 
 This project is open source. Feel free to use and modify as needed.
 
+## Support
+
+If you find this app useful, consider buying me a coffee:
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/biplobsd)
+
 ## Credits
 
 - **Shizuku** by RikkaApps - https://github.com/RikkaApps/Shizuku
 - **Flutter** - https://flutter.dev
-- **device_apps** package - https://pub.dev/packages/device_apps
 
 ## Disclaimer
 
