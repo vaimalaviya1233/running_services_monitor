@@ -25,34 +25,39 @@ class AppList extends StatelessWidget {
         if (filteredApps.isEmpty) {
           content = LayoutBuilder(
             builder: (context, constraints) {
-              return SingleChildScrollView(
+              return CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.outline),
-                        const SizedBox(height: 16),
-                        Text(
-                          searchQuery.isNotEmpty ? 'No matching apps' : 'No apps found',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ],
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.outline),
+                          const SizedBox(height: 16),
+                          Text(
+                            searchQuery.isNotEmpty ? 'No matching apps' : 'No apps found',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               );
             },
           );
         } else {
-          content = ListView.builder(
+          content = CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: filteredApps.length,
-            itemBuilder: (context, index) {
-              return AppListItem(appInfo: filteredApps[index]);
-            },
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return AppListItem(appInfo: filteredApps[index]);
+                }, childCount: filteredApps.length),
+              ),
+            ],
           );
         }
 

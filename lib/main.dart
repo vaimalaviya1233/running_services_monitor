@@ -33,6 +33,9 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Running Services Monitor',
             debugShowCheckedModeBanner: false,
+            scrollBehavior: const MaterialScrollBehavior().copyWith(
+              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            ),
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light),
               useMaterial3: true,

@@ -51,24 +51,32 @@ class HomeBody extends StatelessWidget {
         }
 
         // Success state
-        return Column(
-          children: [
-            // RAM Bar
-            BlocSelector<HomeBloc, HomeState, ({double total, double used, double apps, double free})>(
-              selector: (state) => (
-                total: state.value.totalRamKb,
-                used: state.value.usedRamKb,
-                apps: state.value.appsRamKb,
-                free: state.value.freeRamKb,
-              ),
-              builder: (context, ram) {
-                return RamBar(totalRamKb: ram.total, usedRamKb: ram.used, appsRamKb: ram.apps, freeRamKb: ram.free);
+        return BlocSelector<HomeBloc, HomeState, ({double total, double used, double apps, double free})>(
+          selector: (state) => (
+            total: state.value.totalRamKb,
+            used: state.value.usedRamKb,
+            apps: state.value.appsRamKb,
+            free: state.value.freeRamKb,
+          ),
+          builder: (context, ram) {
+            return NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _RamBarDelegate(
+                      ramBar: RamBar(
+                        totalRamKb: ram.total,
+                        usedRamKb: ram.used,
+                        appsRamKb: ram.apps,
+                        freeRamKb: ram.free,
+                      ),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: Divider(height: 1)),
+                ];
               },
-            ),
-            const Divider(height: 1),
-            // App List
-            Expanded(
-              child:
+              body:
                   BlocSelector<
                     HomeBloc,
                     HomeState,
@@ -87,10 +95,32 @@ class HomeBody extends StatelessWidget {
                       );
                     },
                   ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
+  }
+}
+
+class _RamBarDelegate extends SliverPersistentHeaderDelegate {
+  final Widget ramBar;
+
+  _RamBarDelegate({required this.ramBar});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(color: Theme.of(context).colorScheme.surface, child: ramBar);
+  }
+
+  @override
+  double get maxExtent => 195; // Adjusted for actual RamBar height with padding
+
+  @override
+  double get minExtent => 195; // Keep it the same size when pinned
+
+  @override
+  bool shouldRebuild(covariant _RamBarDelegate oldDelegate) {
+    return ramBar != oldDelegate.ramBar;
   }
 }

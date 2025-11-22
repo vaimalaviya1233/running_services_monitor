@@ -12,31 +12,40 @@ class AppDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Running app')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            AppHeader(appInfo: appInfo),
-            const SizedBox(height: 24),
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.all(24.0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Header
+                AppHeader(appInfo: appInfo),
+                const SizedBox(height: 24),
 
-            // Description
-            Text(
-              'This app can\'t safely be stopped. If you stop it, you may lose some of your current work.',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[400]),
+                // Description
+                Text(
+                  'This app can\'t safely be stopped. If you stop it, you may lose some of your current work.',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[400]),
+                ),
+
+                const SizedBox(height: 32),
+                const Divider(),
+                const SizedBox(height: 16),
+
+                // Service List
+                Text('Active Services', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+              ]),
             ),
-
-            const SizedBox(height: 32),
-            const Divider(),
-            const SizedBox(height: 16),
-
-            // Service List
-            Text('Active Services', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Expanded(child: ServiceList(services: appInfo.services)),
-          ],
-        ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: ServiceList(services: appInfo.services),
+            ),
+          ),
+        ],
       ),
     );
   }
