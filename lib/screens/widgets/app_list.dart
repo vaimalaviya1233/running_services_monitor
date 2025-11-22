@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 import 'app_list_item.dart';
 
 class AppList extends StatelessWidget {
@@ -37,7 +38,9 @@ class AppList extends StatelessWidget {
                           Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.outline),
                           const SizedBox(height: 16),
                           Text(
-                            searchQuery.isNotEmpty ? 'No matching apps' : 'No apps found',
+                            searchQuery.isNotEmpty
+                                ? AppLocalizations.of(context)!.noMatchingApps
+                                : AppLocalizations.of(context)!.noAppsFound,
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],

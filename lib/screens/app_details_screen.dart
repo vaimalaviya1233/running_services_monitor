@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/service_info.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 import 'widgets/app_header.dart';
 import 'widgets/service_list.dart';
 
@@ -11,7 +12,7 @@ class AppDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Running app')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.runningApp)),
       body: CustomScrollView(
         slivers: [
           SliverPadding(
@@ -24,7 +25,7 @@ class AppDetailsScreen extends StatelessWidget {
 
                 // Description
                 Text(
-                  'This app can\'t safely be stopped. If you stop it, you may lose some of your current work.',
+                  AppLocalizations.of(context)!.stopWarning,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[400]),
                 ),
 
@@ -33,7 +34,7 @@ class AppDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Service List
-                Text('Active Services', style: Theme.of(context).textTheme.titleMedium),
+                Text(AppLocalizations.of(context)!.activeServices, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
               ]),
             ),

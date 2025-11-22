@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 
 class RamBar extends StatelessWidget {
   final double totalRamKb;
@@ -44,7 +45,10 @@ class RamBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Device memory', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          Text(
+            AppLocalizations.of(context)!.deviceMemory,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
           const SizedBox(height: 16),
           // The Bar
           ClipRRect(
@@ -74,17 +78,32 @@ class RamBar extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Legend
-          _buildLegendItem(color: Colors.grey[700]!, label: 'System', value: _formatRam(systemRamKb)),
+          _buildLegendItem(
+            context,
+            color: Colors.grey[700]!,
+            label: AppLocalizations.of(context)!.system,
+            value: _formatRam(systemRamKb),
+          ),
           const SizedBox(height: 8),
-          _buildLegendItem(color: Colors.lightBlue[200]!, label: 'Apps', value: _formatRam(appsRamKb)),
+          _buildLegendItem(
+            context,
+            color: Colors.lightBlue[200]!,
+            label: AppLocalizations.of(context)!.apps,
+            value: _formatRam(appsRamKb),
+          ),
           const SizedBox(height: 8),
-          _buildLegendItem(color: Colors.grey[300]!, label: 'Free', value: _formatRam(freeRamKb)),
+          _buildLegendItem(
+            context,
+            color: Colors.grey[300]!,
+            label: AppLocalizations.of(context)!.free,
+            value: _formatRam(freeRamKb),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildLegendItem({required Color color, required String label, required String value}) {
+  Widget _buildLegendItem(BuildContext context, {required Color color, required String label, required String value}) {
     return Row(
       children: [
         Container(
@@ -95,7 +114,7 @@ class RamBar extends StatelessWidget {
         const SizedBox(width: 12),
         Text(label, style: const TextStyle(fontSize: 14)),
         const Spacer(),
-        Text('$value of RAM', style: const TextStyle(fontSize: 14)),
+        Text('$value ${AppLocalizations.of(context)!.ofRam}', style: const TextStyle(fontSize: 14)),
       ],
     );
   }

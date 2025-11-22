@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/theme/theme_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
+import 'package:running_services_monitor/bloc/language_bloc/language_bloc.dart';
 import 'package:running_services_monitor/screens/about_screen.dart';
 import 'widgets/shizuku_setup_dialog.dart';
 import 'widgets/home_body.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -65,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (_refreshCount % 5 == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Enjoying the app? Consider buying me a coffee!'),
+          content: Text(AppLocalizations.of(context)!.enjoyingApp),
           action: SnackBarAction(
-            label: 'Donate',
+            label: AppLocalizations.of(context)!.donate,
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
           ),
         ),
@@ -119,10 +121,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ? TextField(
                           controller: _searchController,
                           autofocus: true,
-                          decoration: const InputDecoration(
-                            hintText: 'Search apps...',
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.searchApps,
                             border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: const TextStyle(color: Colors.white70),
                           ),
                           style: const TextStyle(color: Colors.white),
                         )
@@ -138,9 +140,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           child: TabBar(
                             controller: _tabController,
                             tabs: [
-                              Tab(text: 'All (${value.allApps.length})'),
-                              Tab(text: 'User (${value.userApps.length})'),
-                              Tab(text: 'System (${value.systemApps.length})'),
+                              Tab(text: '${AppLocalizations.of(context)!.all} (${value.allApps.length})'),
+                              Tab(text: '${AppLocalizations.of(context)!.user} (${value.userApps.length})'),
+                              Tab(text: '${AppLocalizations.of(context)!.system} (${value.systemApps.length})'),
                             ],
                           ),
                         )
@@ -157,7 +159,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             homeBloc.add(const HomeEvent.toggleSearch());
                           }
                         },
-                        tooltip: value.isSearching ? 'Close Search' : 'Search',
+                        tooltip: value.isSearching
+                            ? AppLocalizations.of(context)!.closeSearch
+                            : AppLocalizations.of(context)!.search,
                       ),
                       IconButton(
                         icon: Icon(
@@ -165,24 +169,35 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           color: value.isAutoUpdateEnabled ? Theme.of(context).colorScheme.primary : null,
                         ),
                         onPressed: () => homeBloc.add(const HomeEvent.toggleAutoUpdate()),
-                        tooltip: 'Auto-Update (3s)',
+                        tooltip: AppLocalizations.of(context)!.autoUpdate,
                       ),
                       IconButton(
                         icon: const Icon(Icons.refresh),
                         onPressed: value.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
-                        tooltip: 'Refresh',
+                        tooltip: AppLocalizations.of(context)!.refresh,
                       ),
                     ],
+                    PopupMenuButton<Locale>(
+                      icon: const Icon(Icons.language),
+                      tooltip: 'Language',
+                      onSelected: (Locale locale) {
+                        context.read<LanguageBloc>().add(LanguageEvent.changeLanguage(locale));
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<Locale>>[
+                        const PopupMenuItem<Locale>(value: Locale('en'), child: Text('English')),
+                        const PopupMenuItem<Locale>(value: Locale('bn'), child: Text('বাংলা')),
+                      ],
+                    ),
                     IconButton(
                       icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode),
                       onPressed: () => context.read<ThemeBloc>().toggleTheme(),
-                      tooltip: 'Toggle Theme',
+                      tooltip: AppLocalizations.of(context)!.toggleTheme,
                     ),
                     IconButton(
                       icon: const Icon(Icons.info_outline),
                       onPressed: () =>
                           Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
-                      tooltip: 'About',
+                      tooltip: AppLocalizations.of(context)!.about,
                     ),
                   ],
                 );

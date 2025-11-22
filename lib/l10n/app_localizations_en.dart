@@ -1,0 +1,145 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'Running Services Monitor';
+
+  @override
+  String get enjoyingApp => 'Enjoying the app? Consider buying me a coffee!';
+
+  @override
+  String get donate => 'Donate';
+
+  @override
+  String get searchApps => 'Search apps...';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get system => 'System';
+
+  @override
+  String get closeSearch => 'Close Search';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get autoUpdate => 'Auto-Update (3s)';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get toggleTheme => 'Toggle Theme';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get developer => 'Developer';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get sourceCode => 'Source Code';
+
+  @override
+  String get blogs => 'Blogs';
+
+  @override
+  String get buyMeCoffee => 'Buy Me a Coffee';
+
+  @override
+  String get madeInBangladesh => 'Made in Bangladesh';
+
+  @override
+  String get runningApp => 'Running app';
+
+  @override
+  String get stopWarning =>
+      'This app can\'t safely be stopped. If you stop it, you may lose some of your current work.';
+
+  @override
+  String get activeServices => 'Active Services';
+
+  @override
+  String get shizukuRequired => 'Shizuku Required';
+
+  @override
+  String get shizukuRequiredMessage =>
+      'This app requires Shizuku to access running services information.';
+
+  @override
+  String get setupSteps => 'Setup Steps:';
+
+  @override
+  String get step1 => 'Install Shizuku app from Play Store or GitHub';
+
+  @override
+  String get step2 => 'Open Shizuku and start the service';
+
+  @override
+  String get step3 => 'For Android 11+: Use Wireless Debugging';
+
+  @override
+  String get step4 => 'For Android 10 and below: Connect to PC via ADB';
+
+  @override
+  String get step5 => 'Return to this app and retry';
+
+  @override
+  String get quickStart => 'Quick Start (Android 11+)';
+
+  @override
+  String get quickStartSteps =>
+      '1. Enable Developer Options\n2. Enable Wireless Debugging\n3. Open Shizuku and tap \"Pair\"\n4. Follow on-screen instructions';
+
+  @override
+  String get exitApp => 'Exit App';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get loadingServices => 'Loading services...';
+
+  @override
+  String get deviceMemory => 'Device memory';
+
+  @override
+  String get noMatchingApps => 'No matching apps';
+
+  @override
+  String get noAppsFound => 'No apps found';
+
+  @override
+  String get ofRam => 'of RAM';
+
+  @override
+  String get processAnd => 'process and';
+
+  @override
+  String get services => 'services';
+
+  @override
+  String get apps => 'Apps';
+
+  @override
+  String get free => 'Free';
+}

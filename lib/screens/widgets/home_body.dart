@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 import 'app_list.dart';
 import 'ram_bar.dart';
 
@@ -19,10 +20,14 @@ class HomeBody extends StatelessWidget {
 
         // Loading state (initial load)
         if (value.isLoading && value.allApps.isEmpty) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Loading services...')],
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text(AppLocalizations.of(context)!.loadingServices),
+              ],
             ),
           );
         }
@@ -42,7 +47,7 @@ class HomeBody extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: () => homeBloc.add(const HomeEvent.initializeShizuku()),
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
+                    label: Text(AppLocalizations.of(context)!.retry),
                   ),
                 ],
               ),

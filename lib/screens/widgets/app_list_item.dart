@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 import '../app_details_screen.dart';
 import 'app_icon.dart';
 
@@ -17,7 +18,7 @@ class AppListItem extends StatelessWidget {
       leading: AppIcon(appInfo: appInfo, size: 40),
       title: Text(appInfo.appName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16)),
       subtitle: Text(
-        '$processCount process and $serviceCount services',
+        '$processCount ${AppLocalizations.of(context)!.processAnd} $serviceCount ${AppLocalizations.of(context)!.services}',
         style: TextStyle(color: Colors.grey[400], fontSize: 12),
       ),
       trailing: Text(appInfo.totalRam, style: const TextStyle(fontSize: 14)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:running_services_monitor/l10n/app_localizations.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -10,8 +11,8 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  static const String appName = 'Running Services Monitor';
-  String version = 'Loading...';
+  // static const String appName = 'Running Services Monitor';
+  String version = '';
   static const String email = 'biplobsd11@gmail.com';
   static const String sourceCodeUrl = 'https://github.com/biplobsd/running_services_monitor';
   static const String blogsUrl = 'https://biplobsd.github.io';
@@ -21,7 +22,16 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   void initState() {
     super.initState();
+    // version = AppLocalizations.of(context)!.loading; // Context not available in initState for localization usually, but we can init with empty or loading
     _loadPackageInfo();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (version.isEmpty) {
+      version = AppLocalizations.of(context)!.loading;
+    }
   }
 
   Future<void> _loadPackageInfo() async {
@@ -42,7 +52,7 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('About')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.about)),
       body: CustomScrollView(
         slivers: [
           SliverPadding(
@@ -59,9 +69,9 @@ class _AboutScreenState extends State<AboutScreen> {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        appName,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      Text(
+                        AppLocalizations.of(context)!.appTitle,
+                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
@@ -70,25 +80,30 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                _buildInfoTile(context, icon: Icons.person, title: 'Developer', subtitle: developerName),
+                _buildInfoTile(
+                  context,
+                  icon: Icons.person,
+                  title: AppLocalizations.of(context)!.developer,
+                  subtitle: developerName,
+                ),
                 _buildInfoTile(
                   context,
                   icon: Icons.email,
-                  title: 'Email',
+                  title: AppLocalizations.of(context)!.email,
                   subtitle: email,
                   onTap: () => _launchUrl('mailto:$email'),
                 ),
                 _buildInfoTile(
                   context,
                   icon: Icons.code,
-                  title: 'Source Code',
+                  title: AppLocalizations.of(context)!.sourceCode,
                   subtitle: 'github.com/biplobsd/running_services_monitor',
                   onTap: () => _launchUrl(sourceCodeUrl),
                 ),
                 _buildInfoTile(
                   context,
                   icon: Icons.web,
-                  title: 'Blogs',
+                  title: AppLocalizations.of(context)!.blogs,
                   subtitle: 'biplobsd.github.io',
                   onTap: () => _launchUrl(blogsUrl),
                 ),
@@ -97,13 +112,16 @@ class _AboutScreenState extends State<AboutScreen> {
                   child: FilledButton.icon(
                     onPressed: () => _launchUrl(buyMeCoffeeUrl),
                     icon: const Icon(Icons.coffee),
-                    label: const Text('Buy Me a Coffee'),
+                    label: Text(AppLocalizations.of(context)!.buyMeCoffee),
                     style: FilledButton.styleFrom(backgroundColor: Colors.amber[800], foregroundColor: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Center(
-                  child: Text('Made in Bangladesh', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.madeInBangladesh,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
                 ),
               ]),
             ),
