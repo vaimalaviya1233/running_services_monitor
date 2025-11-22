@@ -1,0 +1,5 @@
+---
+trigger: always_on
+---
+
+1. Don't create widget method create class widget in the widget folder

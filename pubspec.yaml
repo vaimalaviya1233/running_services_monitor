@@ -20,6 +20,10 @@ dependencies:
   injectable: ^2.6.0
   get_it: ^9.1.0
   flutter_bloc: ^9.1.1
+  hydrated_bloc: ^10.1.1
+  path_provider: ^2.1.1
+  url_launcher: ^6.2.1
+  package_info_plus: ^8.1.2
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +34,10 @@ dev_dependencies:
   json_serializable: ^6.11.2
   bloc_lint: ^0.3.5
   injectable_generator: ^2.9.1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.7
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/splash.png

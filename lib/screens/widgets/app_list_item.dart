@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/service_info.dart';
-import '../screens/app_details_screen.dart';
+import 'package:running_services_monitor/models/service_info.dart';
+import '../app_details_screen.dart';
+import 'app_icon.dart';
 
 class AppListItem extends StatelessWidget {
   final AppProcessInfo appInfo;
@@ -13,7 +14,7 @@ class AppListItem extends StatelessWidget {
     final serviceCount = appInfo.services.length;
 
     return ListTile(
-      leading: _buildAppIcon(),
+      leading: AppIcon(appInfo: appInfo, size: 40),
       title: Text(appInfo.appName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16)),
       subtitle: Text(
         '$processCount process and $serviceCount services',
@@ -24,12 +25,5 @@ class AppListItem extends StatelessWidget {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppDetailsScreen(appInfo: appInfo)));
       },
     );
-  }
-
-  Widget _buildAppIcon() {
-    if (appInfo.appInfo != null && appInfo.appInfo!.icon != null) {
-      return Image.memory(appInfo.appInfo!.icon!, width: 40, height: 40);
-    }
-    return const Icon(Icons.android, size: 40);
   }
 }

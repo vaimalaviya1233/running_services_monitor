@@ -45,17 +45,25 @@ class ProcessService {
       final meminfoOutput = await _shizukuService.executeCommand('dumpsys meminfo');
 
       // 2. Prepare data for isolate
-      // We pass a simplified map of the cache to avoid passing complex objects if possible,
-      // but AppInfo should be transferable. If not, we might need to map it to a simpler DTO.
-      // For now, we'll pass the cache directly.
+      // We pass a simplified map of the cache to avoid passing complex objects (AppInfo might not be sendable)
+      final Map<String, String> appNames = {};
+      for (var entry in _appCache.entries) {
+        appNames[entry.key] = entry.value.name;
+      }
+
       final isolateData = _IsolateData(
         servicesOutput: servicesOutput,
         meminfoOutput: meminfoOutput ?? '',
-        appCache: _appCache,
+        appNames: appNames,
       );
 
       // 3. Run heavy processing in background isolate
       final appProcessInfos = await compute(_processDataInIsolate, isolateData);
+
+      // 4. Re-attach AppInfo from cache (main thread)
+      for (var info in appProcessInfos) {
+        info.appInfo = _appCache[info.packageName];
+      }
 
       return appProcessInfos;
     } catch (e) {
@@ -132,9 +140,9 @@ class ProcessService {
       }
 
       // Update App Name from Cache
-      final cachedApp = data.appCache[service.packageName];
-      if (cachedApp != null) {
-        service.appName = cachedApp.name;
+      final cachedAppName = data.appNames[service.packageName];
+      if (cachedAppName != null) {
+        service.appName = cachedAppName;
       } else {
         // Fallback name generation
         final parts = service.packageName.split('.');
@@ -164,10 +172,11 @@ class ProcessService {
       final Set<int> pids = {};
       String appName = packageName;
       bool isSystem = false;
-      AppInfo? cachedAppInfo = data.appCache[packageName];
 
-      if (cachedAppInfo != null) {
-        appName = cachedAppInfo.name;
+      // Try to get name from cache or first service
+      final cachedAppName = data.appNames[packageName];
+      if (cachedAppName != null) {
+        appName = cachedAppName;
       } else if (serviceList.isNotEmpty && serviceList.first.appName != null) {
         appName = serviceList.first.appName!;
       }
@@ -187,7 +196,7 @@ class ProcessService {
           totalRam: formatRam(totalRamKb),
           totalRamInKb: totalRamKb,
           isSystemApp: isSystem,
-          appInfo: cachedAppInfo,
+          appInfo: null, // Will be attached in main thread
         ),
       );
     });
@@ -314,7 +323,7 @@ class ProcessService {
 class _IsolateData {
   final String servicesOutput;
   final String meminfoOutput;
-  final Map<String, AppInfo> appCache;
+  final Map<String, String> appNames;
 
-  _IsolateData({required this.servicesOutput, required this.meminfoOutput, required this.appCache});
+  _IsolateData({required this.servicesOutput, required this.meminfoOutput, required this.appNames});
 }

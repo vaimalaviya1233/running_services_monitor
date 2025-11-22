@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
-import '../models/service_info.dart';
+import 'package:running_services_monitor/models/service_info.dart';
 
 class ServiceListItem extends StatelessWidget {
   final RunningServiceInfo service;

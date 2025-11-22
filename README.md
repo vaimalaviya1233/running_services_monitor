@@ -1,20 +1,4 @@
 # Running Services Monitor
-
-A Flutter Android app that displays all running apps and services on your device, including system apps. This app uses **Shizuku** to access system information without requiring root access.
-
-## Features
-
-✨ **View Running Services**: See all active services on your device
-📱 **System & User Apps**: Separate views for system and user applications  
-🔍 **Detailed Information**: View package names, PIDs, process names, and service classes
-🎨 **Material Design 3**: Modern UI with dark mode support
-🔄 **Real-time Refresh**: Update the service list anytime
-🚫 **No Root Required**: Uses Shizuku for elevated permissions via ADB
-
-## Screenshots
-
-The app displays running services similar to the Android Developer Options "Running Services" screen that was available in older Android versions.
-
 ## Requirements
 
 ### Essential
@@ -168,6 +152,12 @@ flutter build apk --release
 ## License
 
 This project is open source. Feel free to use and modify as needed.
+
+## Support
+
+If you find this app useful, consider buying me a coffee:
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/biplobsd)
 
 ## Credits
 

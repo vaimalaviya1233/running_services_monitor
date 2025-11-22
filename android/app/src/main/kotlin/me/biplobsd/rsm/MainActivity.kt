@@ -1,4 +1,4 @@
-package com.runningservices.running_services_monitor
+package me.biplobsd.rsm
 
 import android.content.pm.PackageManager
 import io.flutter.embedding.android.FlutterActivity
