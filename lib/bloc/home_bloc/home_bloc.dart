@@ -86,7 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       // Load Apps
       final apps = await _processService.getAppProcessInfos().timeout(
-        const Duration(seconds: 30),
+        const Duration(minutes: 2),
         onTimeout: () {
           throw Exception('Timeout fetching services');
         },
@@ -143,7 +143,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ),
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      print(e);
+      print(s);
       if (!event.silent) {
         emit(HomeState.failure(state.value.copyWith(isLoading: false), 'Error loading data: $e'));
       }

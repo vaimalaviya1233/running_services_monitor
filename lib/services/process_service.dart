@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-
-import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
-import '../models/service_info.dart';
+import 'package:running_services_monitor/models/service_info.dart';
+import 'app_info_service.dart';
 import 'shizuku_service.dart';
 
 @lazySingleton
 class ProcessService {
   final ShizukuService _shizukuService;
+  final AppInfoService _appInfoService;
 
-  ProcessService(this._shizukuService);
+  ProcessService(this._shizukuService, this._appInfoService);
 
   // Cache for app info (icon, name, etc.)
   final Map<String, AppInfo> _appCache = {};
@@ -19,7 +19,7 @@ class ProcessService {
   /// Refresh the app cache
   Future<void> refreshAppCache() async {
     try {
-      final apps = await InstalledApps.getInstalledApps(excludeSystemApps: false, withIcon: true);
+      final apps = await _appInfoService.getInstalledApps(excludeSystemApps: false, withIcon: true);
       _appCache.clear();
       int appsWithIcons = 0;
       for (var app in apps) {
@@ -79,7 +79,7 @@ class ProcessService {
         } else {
           // If no cached icon, try to fetch it directly
           try {
-            final fetchedAppInfo = await InstalledApps.getAppInfo(info.packageName);
+            final fetchedAppInfo = await _appInfoService.getAppInfo(info.packageName);
             if (fetchedAppInfo != null && fetchedAppInfo.icon != null) {
               appInfo = fetchedAppInfo;
               fetchedIcons++;
@@ -101,7 +101,7 @@ class ProcessService {
           } else if (service.packageName != info.packageName) {
             // If service has different package, try to fetch its icon
             try {
-              final fetchedServiceInfo = await InstalledApps.getAppInfo(service.packageName);
+              final fetchedServiceInfo = await _appInfoService.getAppInfo(service.packageName);
               if (fetchedServiceInfo != null && fetchedServiceInfo.icon != null) {
                 updatedService = updatedService.copyWith(icon: fetchedServiceInfo.icon);
                 servicesWithIcons++;

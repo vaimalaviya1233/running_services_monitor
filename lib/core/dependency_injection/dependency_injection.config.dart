@@ -16,6 +16,7 @@ import '../../bloc/app_details_bloc/app_details_bloc.dart' as _i543;
 import '../../bloc/home_bloc/home_bloc.dart' as _i98;
 import '../../bloc/language_bloc/language_bloc.dart' as _i663;
 import '../../bloc/stop_service_bloc/stop_service_bloc.dart' as _i256;
+import '../../services/app_info_service.dart' as _i825;
 import '../../services/process_service.dart' as _i622;
 import '../../services/shizuku_service.dart' as _i842;
 import '../theme/theme_bloc.dart' as _i118;
@@ -27,12 +28,18 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i543.AppDetailsBloc>(() => _i543.AppDetailsBloc());
     gh.factory<_i663.LanguageBloc>(() => _i663.LanguageBloc());
     gh.singleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
+    gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());
     gh.lazySingleton<_i842.ShizukuService>(() => _i842.ShizukuService());
+    gh.factory<_i543.AppDetailsBloc>(
+      () => _i543.AppDetailsBloc(gh<_i825.AppInfoService>()),
+    );
     gh.lazySingleton<_i622.ProcessService>(
-      () => _i622.ProcessService(gh<_i842.ShizukuService>()),
+      () => _i622.ProcessService(
+        gh<_i842.ShizukuService>(),
+        gh<_i825.AppInfoService>(),
+      ),
     );
     gh.factory<_i256.StopServiceBloc>(
       () => _i256.StopServiceBloc(gh<_i622.ProcessService>()),

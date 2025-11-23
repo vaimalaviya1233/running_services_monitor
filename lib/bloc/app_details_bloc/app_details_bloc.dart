@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:installed_apps/installed_apps.dart';
+
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/services/app_info_service.dart';
 
 part 'app_details_event.dart';
 part 'app_details_state.dart';
@@ -10,7 +11,9 @@ part 'app_details_bloc.freezed.dart';
 
 @injectable
 class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
-  AppDetailsBloc() : super(const AppDetailsState.initial()) {
+  final AppInfoService _appInfoService;
+
+  AppDetailsBloc(this._appInfoService) : super(const AppDetailsState.initial()) {
     on<_LoadDetails>(_onLoadDetails);
   }
 
@@ -23,7 +26,7 @@ class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
       // 1. Fetch main app icon if missing
       if (appInfo.appInfo == null || appInfo.appInfo!.icon == null) {
         try {
-          final fetchedAppInfo = await InstalledApps.getAppInfo(appInfo.packageName);
+          final fetchedAppInfo = await _appInfoService.getAppInfo(appInfo.packageName);
           if (fetchedAppInfo != null) {
             appInfo = appInfo.copyWith(appInfo: fetchedAppInfo);
           }
@@ -38,7 +41,7 @@ class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
         var updatedService = service;
         if (service.icon == null) {
           try {
-            final fetchedAppInfo = await InstalledApps.getAppInfo(service.packageName);
+            final fetchedAppInfo = await _appInfoService.getAppInfo(service.packageName);
             if (fetchedAppInfo != null && fetchedAppInfo.icon != null) {
               updatedService = service.copyWith(icon: fetchedAppInfo.icon);
             }

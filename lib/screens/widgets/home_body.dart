@@ -43,6 +43,9 @@ class HomeBody extends StatelessWidget {
           builder: (context, ram) {
             return NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
+                if (ram.total <= 0) {
+                  return [];
+                }
                 return [
                   SliverPersistentHeader(
                     pinned: true,
