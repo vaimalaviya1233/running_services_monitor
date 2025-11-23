@@ -1,6 +1,35 @@
 # Running Services Monitor
 
 [![Download APK](https://img.shields.io/github/v/release/biplobsd/running_services_monitor?style=for-the-badge&label=Download%20APK&color=blue)](https://github.com/biplobsd/running_services_monitor/releases/latest)
+
+Running Services Monitor is a powerful Flutter application designed to help you monitor and manage running services on your Android device. With a clean and intuitive interface, you can easily view system and user apps, check their status, and manage them efficiently.
+
+## Features
+
+- **Monitor Running Services**: View a comprehensive list of all running services on your device.
+- **Categorized View**: Easily switch between All, User, and System apps.
+- **Search Functionality**: Quickly find specific apps with the built-in search bar.
+- **App Details**: Get detailed information about each app, including package name, version, and more.
+- **Shizuku Integration**: Leverages Shizuku for advanced system interactions without root (where supported).
+- **Material Design 3**: A modern and beautiful UI that adapts to your device's theme.
+- **Dark/Light Mode**: Toggle between dark and light themes for comfortable viewing.
+- **Localization**: Support for English and Bangla languages.
+
+## 📱 Screenshots
+
+| Home                                       | Dark Home                                       |
+|--------------------------------------------|-------------------------------------------------|
+| ![Home](/screenshots/home.jpg)             | ![Dark Home](/screenshots/dark_home.jpg)        |
+
+| Details                                    | Service Details                                 |
+|--------------------------------------------|-------------------------------------------------|
+| ![Details](/screenshots/details.jpg)       | ![Service Details](/screenshots/service_details.jpg) |
+
+| Search                                     |
+|--------------------------------------------|
+| ![Search](/screenshots/search.jpg)         |
+
+
 ## Requirements
 
 ### Essential
