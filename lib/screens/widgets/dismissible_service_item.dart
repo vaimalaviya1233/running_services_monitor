@@ -38,7 +38,7 @@ class DismissibleServiceItem extends StatelessWidget {
                 ),
               );
             },
-            success: (packageName) {
+            success: (packageName, pid) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

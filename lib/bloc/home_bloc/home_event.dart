@@ -7,5 +7,6 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.toggleAutoUpdate() = _ToggleAutoUpdate;
   const factory HomeEvent.toggleSearch() = _ToggleSearch;
   const factory HomeEvent.updateSearchQuery(String query) = _UpdateSearchQuery;
+  const factory HomeEvent.removeApp(String packageName) = _RemoveApp;
   const factory HomeEvent.autoUpdateTick() = _AutoUpdateTick;
 }

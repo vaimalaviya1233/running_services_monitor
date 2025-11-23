@@ -55,7 +55,7 @@ extension HomeEventPatterns on HomeEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _InitializeShizuku value)?  initializeShizuku,TResult Function( _LoadData value)?  loadData,TResult Function( _ToggleAutoUpdate value)?  toggleAutoUpdate,TResult Function( _ToggleSearch value)?  toggleSearch,TResult Function( _UpdateSearchQuery value)?  updateSearchQuery,TResult Function( _AutoUpdateTick value)?  autoUpdateTick,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _InitializeShizuku value)?  initializeShizuku,TResult Function( _LoadData value)?  loadData,TResult Function( _ToggleAutoUpdate value)?  toggleAutoUpdate,TResult Function( _ToggleSearch value)?  toggleSearch,TResult Function( _UpdateSearchQuery value)?  updateSearchQuery,TResult Function( _RemoveApp value)?  removeApp,TResult Function( _AutoUpdateTick value)?  autoUpdateTick,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
@@ -63,7 +63,8 @@ return initializeShizuku(_that);case _LoadData() when loadData != null:
 return loadData(_that);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate(_that);case _ToggleSearch() when toggleSearch != null:
 return toggleSearch(_that);case _UpdateSearchQuery() when updateSearchQuery != null:
-return updateSearchQuery(_that);case _AutoUpdateTick() when autoUpdateTick != null:
+return updateSearchQuery(_that);case _RemoveApp() when removeApp != null:
+return removeApp(_that);case _AutoUpdateTick() when autoUpdateTick != null:
 return autoUpdateTick(_that);case _:
   return orElse();
 
@@ -82,7 +83,7 @@ return autoUpdateTick(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _InitializeShizuku value)  initializeShizuku,required TResult Function( _LoadData value)  loadData,required TResult Function( _ToggleAutoUpdate value)  toggleAutoUpdate,required TResult Function( _ToggleSearch value)  toggleSearch,required TResult Function( _UpdateSearchQuery value)  updateSearchQuery,required TResult Function( _AutoUpdateTick value)  autoUpdateTick,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _InitializeShizuku value)  initializeShizuku,required TResult Function( _LoadData value)  loadData,required TResult Function( _ToggleAutoUpdate value)  toggleAutoUpdate,required TResult Function( _ToggleSearch value)  toggleSearch,required TResult Function( _UpdateSearchQuery value)  updateSearchQuery,required TResult Function( _RemoveApp value)  removeApp,required TResult Function( _AutoUpdateTick value)  autoUpdateTick,}){
 final _that = this;
 switch (_that) {
 case _InitializeShizuku():
@@ -90,7 +91,8 @@ return initializeShizuku(_that);case _LoadData():
 return loadData(_that);case _ToggleAutoUpdate():
 return toggleAutoUpdate(_that);case _ToggleSearch():
 return toggleSearch(_that);case _UpdateSearchQuery():
-return updateSearchQuery(_that);case _AutoUpdateTick():
+return updateSearchQuery(_that);case _RemoveApp():
+return removeApp(_that);case _AutoUpdateTick():
 return autoUpdateTick(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -108,7 +110,7 @@ return autoUpdateTick(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _InitializeShizuku value)?  initializeShizuku,TResult? Function( _LoadData value)?  loadData,TResult? Function( _ToggleAutoUpdate value)?  toggleAutoUpdate,TResult? Function( _ToggleSearch value)?  toggleSearch,TResult? Function( _UpdateSearchQuery value)?  updateSearchQuery,TResult? Function( _AutoUpdateTick value)?  autoUpdateTick,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _InitializeShizuku value)?  initializeShizuku,TResult? Function( _LoadData value)?  loadData,TResult? Function( _ToggleAutoUpdate value)?  toggleAutoUpdate,TResult? Function( _ToggleSearch value)?  toggleSearch,TResult? Function( _UpdateSearchQuery value)?  updateSearchQuery,TResult? Function( _RemoveApp value)?  removeApp,TResult? Function( _AutoUpdateTick value)?  autoUpdateTick,}){
 final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
@@ -116,7 +118,8 @@ return initializeShizuku(_that);case _LoadData() when loadData != null:
 return loadData(_that);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate(_that);case _ToggleSearch() when toggleSearch != null:
 return toggleSearch(_that);case _UpdateSearchQuery() when updateSearchQuery != null:
-return updateSearchQuery(_that);case _AutoUpdateTick() when autoUpdateTick != null:
+return updateSearchQuery(_that);case _RemoveApp() when removeApp != null:
+return removeApp(_that);case _AutoUpdateTick() when autoUpdateTick != null:
 return autoUpdateTick(_that);case _:
   return null;
 
@@ -134,14 +137,15 @@ return autoUpdateTick(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initializeShizuku,TResult Function( bool silent)?  loadData,TResult Function()?  toggleAutoUpdate,TResult Function()?  toggleSearch,TResult Function( String query)?  updateSearchQuery,TResult Function()?  autoUpdateTick,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initializeShizuku,TResult Function( bool silent)?  loadData,TResult Function()?  toggleAutoUpdate,TResult Function()?  toggleSearch,TResult Function( String query)?  updateSearchQuery,TResult Function( String packageName)?  removeApp,TResult Function()?  autoUpdateTick,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
 return initializeShizuku();case _LoadData() when loadData != null:
 return loadData(_that.silent);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate();case _ToggleSearch() when toggleSearch != null:
 return toggleSearch();case _UpdateSearchQuery() when updateSearchQuery != null:
-return updateSearchQuery(_that.query);case _AutoUpdateTick() when autoUpdateTick != null:
+return updateSearchQuery(_that.query);case _RemoveApp() when removeApp != null:
+return removeApp(_that.packageName);case _AutoUpdateTick() when autoUpdateTick != null:
 return autoUpdateTick();case _:
   return orElse();
 
@@ -160,14 +164,15 @@ return autoUpdateTick();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initializeShizuku,required TResult Function( bool silent)  loadData,required TResult Function()  toggleAutoUpdate,required TResult Function()  toggleSearch,required TResult Function( String query)  updateSearchQuery,required TResult Function()  autoUpdateTick,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initializeShizuku,required TResult Function( bool silent)  loadData,required TResult Function()  toggleAutoUpdate,required TResult Function()  toggleSearch,required TResult Function( String query)  updateSearchQuery,required TResult Function( String packageName)  removeApp,required TResult Function()  autoUpdateTick,}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku():
 return initializeShizuku();case _LoadData():
 return loadData(_that.silent);case _ToggleAutoUpdate():
 return toggleAutoUpdate();case _ToggleSearch():
 return toggleSearch();case _UpdateSearchQuery():
-return updateSearchQuery(_that.query);case _AutoUpdateTick():
+return updateSearchQuery(_that.query);case _RemoveApp():
+return removeApp(_that.packageName);case _AutoUpdateTick():
 return autoUpdateTick();case _:
   throw StateError('Unexpected subclass');
 
@@ -185,14 +190,15 @@ return autoUpdateTick();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initializeShizuku,TResult? Function( bool silent)?  loadData,TResult? Function()?  toggleAutoUpdate,TResult? Function()?  toggleSearch,TResult? Function( String query)?  updateSearchQuery,TResult? Function()?  autoUpdateTick,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initializeShizuku,TResult? Function( bool silent)?  loadData,TResult? Function()?  toggleAutoUpdate,TResult? Function()?  toggleSearch,TResult? Function( String query)?  updateSearchQuery,TResult? Function( String packageName)?  removeApp,TResult? Function()?  autoUpdateTick,}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
 return initializeShizuku();case _LoadData() when loadData != null:
 return loadData(_that.silent);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate();case _ToggleSearch() when toggleSearch != null:
 return toggleSearch();case _UpdateSearchQuery() when updateSearchQuery != null:
-return updateSearchQuery(_that.query);case _AutoUpdateTick() when autoUpdateTick != null:
+return updateSearchQuery(_that.query);case _RemoveApp() when removeApp != null:
+return removeApp(_that.packageName);case _AutoUpdateTick() when autoUpdateTick != null:
 return autoUpdateTick();case _:
   return null;
 
@@ -422,6 +428,72 @@ class __$UpdateSearchQueryCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? query = null,}) {
   return _then(_UpdateSearchQuery(
 null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _RemoveApp implements HomeEvent {
+  const _RemoveApp(this.packageName);
+  
+
+ final  String packageName;
+
+/// Create a copy of HomeEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RemoveAppCopyWith<_RemoveApp> get copyWith => __$RemoveAppCopyWithImpl<_RemoveApp>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RemoveApp&&(identical(other.packageName, packageName) || other.packageName == packageName));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,packageName);
+
+@override
+String toString() {
+  return 'HomeEvent.removeApp(packageName: $packageName)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RemoveAppCopyWith<$Res> implements $HomeEventCopyWith<$Res> {
+  factory _$RemoveAppCopyWith(_RemoveApp value, $Res Function(_RemoveApp) _then) = __$RemoveAppCopyWithImpl;
+@useResult
+$Res call({
+ String packageName
+});
+
+
+
+
+}
+/// @nodoc
+class __$RemoveAppCopyWithImpl<$Res>
+    implements _$RemoveAppCopyWith<$Res> {
+  __$RemoveAppCopyWithImpl(this._self, this._then);
+
+  final _RemoveApp _self;
+  final $Res Function(_RemoveApp) _then;
+
+/// Create a copy of HomeEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? packageName = null,}) {
+  return _then(_RemoveApp(
+null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

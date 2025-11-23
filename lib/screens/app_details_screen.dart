@@ -22,7 +22,7 @@ class AppDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => getIt<AppDetailsBloc>()..add(AppDetailsEvent.loadDetails(appInfo: appInfo))),
+        BlocProvider(create: (context) => getIt<AppDetailsBloc>()..add(AppDetailsEvent.loadDetails(appInfo))),
         BlocProvider(create: (context) => getIt<StopServiceBloc>()),
       ],
       child: BlocListener<StopServiceBloc, StopServiceState>(
@@ -48,7 +48,7 @@ class AppDetailsScreen extends StatelessWidget {
                 ),
               );
             },
-            success: (packageName) {
+            success: (packageName, servicePid) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -64,18 +64,32 @@ class AppDetailsScreen extends StatelessWidget {
                   behavior: SnackBarBehavior.floating,
                 ),
               );
-              // Navigate back to home and refresh after a short delay
-              Future.delayed(const Duration(milliseconds: 500), () {
-                if (context.mounted) {
-                  context.pop();
-                  // Try to access HomeBloc and refresh if available
-                  try {
-                    context.read<HomeBloc>().add(const HomeEvent.loadData());
-                  } catch (e) {
-                    // HomeBloc might not be available in context, that's okay
-                  }
+
+              if (servicePid != null) {
+                // Single service stopped
+                context.read<AppDetailsBloc>().add(AppDetailsEvent.removeService(servicePid));
+              } else {
+                // All services stopped (App stopped)
+                // Notify HomeBloc to remove the app
+                try {
+                  // We need to find HomeBloc. Since we are navigating back, we can assume HomeBloc is up in the tree
+                  // or we can access it via getIt if it's a singleton (it is injectable).
+                  // But usually BlocProvider is used.
+                  // If we pop, we return to HomeScreen.
+                  // We can pass a result back to pop?
+                  // Or we can try to access HomeBloc here.
+                  context.read<HomeBloc>().add(HomeEvent.removeApp(packageName));
+                } catch (e) {
+                  // HomeBloc might not be in context if we are not using MultiBlocProvider at root properly or if this is a new route.
+                  // But usually it is available if provided above MaterialApp or in the route.
                 }
-              });
+
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                });
+              }
             },
             error: (message) {
               ScaffoldMessenger.of(context).clearSnackBars();

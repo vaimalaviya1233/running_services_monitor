@@ -22,6 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<_ToggleAutoUpdate>(_onToggleAutoUpdate);
     on<_ToggleSearch>(_onToggleSearch);
     on<_UpdateSearchQuery>(_onUpdateSearchQuery);
+    on<_RemoveApp>(_onRemoveApp);
     on<_AutoUpdateTick>(_onAutoUpdateTick);
   }
 
@@ -182,5 +183,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onUpdateSearchQuery(_UpdateSearchQuery event, Emitter<HomeState> emit) async {
     emit(HomeState.success(state.value.copyWith(searchQuery: event.query)));
+  }
+
+  Future<void> _onRemoveApp(_RemoveApp event, Emitter<HomeState> emit) async {
+    final currentState = state.value;
+    final updatedAllApps = currentState.allApps.where((app) => app.packageName != event.packageName).toList();
+    final updatedUserApps = currentState.userApps.where((app) => app.packageName != event.packageName).toList();
+    final updatedSystemApps = currentState.systemApps.where((app) => app.packageName != event.packageName).toList();
+
+    // Recalculate Apps RAM
+    double appsRam = 0;
+    for (var app in updatedAllApps) {
+      appsRam += app.totalRamInKb;
+    }
+
+    emit(
+      HomeState.success(
+        currentState.copyWith(
+          allApps: updatedAllApps,
+          userApps: updatedUserApps,
+          systemApps: updatedSystemApps,
+          appsRamKb: appsRam,
+        ),
+      ),
+    );
   }
 }

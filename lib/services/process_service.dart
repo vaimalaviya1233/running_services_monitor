@@ -68,35 +68,42 @@ class ProcessService {
       int servicesWithIcons = 0;
       int fetchedIcons = 0;
 
+      final updatedAppProcessInfos = <AppProcessInfo>[];
+
       for (var info in appProcessInfos) {
-        info.appInfo = _appCache[info.packageName];
-        if (info.appInfo != null && info.appInfo!.icon != null) {
+        var updatedInfo = info;
+        var appInfo = _appCache[info.packageName];
+
+        if (appInfo != null && appInfo.icon != null) {
           appsWithAppInfo++;
         } else {
           // If no cached icon, try to fetch it directly
           try {
             final fetchedAppInfo = await InstalledApps.getAppInfo(info.packageName);
             if (fetchedAppInfo != null && fetchedAppInfo.icon != null) {
-              info.appInfo = fetchedAppInfo;
+              appInfo = fetchedAppInfo;
               fetchedIcons++;
             }
           } catch (e) {
             // Ignore errors for individual apps
           }
         }
+        updatedInfo = updatedInfo.copyWith(appInfo: appInfo);
 
         // Also attach icons to individual services from their package names
+        final updatedServices = <RunningServiceInfo>[];
         for (var service in info.services) {
+          var updatedService = service;
           final serviceAppInfo = _appCache[service.packageName];
           if (serviceAppInfo != null && serviceAppInfo.icon != null) {
-            service.icon = serviceAppInfo.icon;
+            updatedService = updatedService.copyWith(icon: serviceAppInfo.icon);
             servicesWithIcons++;
           } else if (service.packageName != info.packageName) {
             // If service has different package, try to fetch its icon
             try {
               final fetchedServiceInfo = await InstalledApps.getAppInfo(service.packageName);
               if (fetchedServiceInfo != null && fetchedServiceInfo.icon != null) {
-                service.icon = fetchedServiceInfo.icon;
+                updatedService = updatedService.copyWith(icon: fetchedServiceInfo.icon);
                 servicesWithIcons++;
                 fetchedIcons++;
               }
@@ -104,14 +111,19 @@ class ProcessService {
               // Ignore errors for individual services
             }
           }
+          updatedServices.add(updatedService);
         }
+        updatedInfo = updatedInfo.copyWith(services: updatedServices);
+        updatedAppProcessInfos.add(updatedInfo);
       }
 
+      final finalAppProcessInfos = updatedAppProcessInfos;
+
       debugPrint(
-        'Icon stats: $appsWithAppInfo cached, $fetchedIcons fetched, $servicesWithIcons service icons, ${appProcessInfos.length} total apps',
+        'Icon stats: $appsWithAppInfo cached, $fetchedIcons fetched, $servicesWithIcons service icons, ${finalAppProcessInfos.length} total apps',
       );
 
-      return appProcessInfos;
+      return finalAppProcessInfos;
     } catch (e) {
       debugPrint('Error getting app process infos: $e');
       return [];
@@ -223,18 +235,19 @@ class ProcessService {
     }
 
     // Enrich services
-    for (var service in services) {
+    final enrichedServices = services.map((service) {
+      var updatedService = service;
+
       // Update RAM
       if (ramMap.containsKey(service.pid)) {
         final ramKb = ramMap[service.pid]!;
-        service.ramInKb = ramKb;
-        service.ramUsage = formatRam(ramKb);
+        updatedService = updatedService.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb));
       }
 
       // Update App Name from Cache
       final cachedAppName = data.appNames[service.packageName];
       if (cachedAppName != null) {
-        service.appName = cachedAppName;
+        updatedService = updatedService.copyWith(appName: cachedAppName);
       } else {
         // Fallback name generation
         final parts = service.packageName.split('.');
@@ -243,13 +256,16 @@ class ProcessService {
           if (name.isNotEmpty) {
             name = name[0].toUpperCase() + name.substring(1);
           }
-          service.appName = name;
+          updatedService = updatedService.copyWith(appName: name);
         } else {
-          service.appName = service.packageName;
+          updatedService = updatedService.copyWith(appName: service.packageName);
         }
       }
+      return updatedService;
+    }).toList();
 
-      // Group
+    // Group
+    for (var service in enrichedServices) {
       if (!grouped.containsKey(service.packageName)) {
         grouped[service.packageName] = [];
       }

@@ -1,83 +1,52 @@
-// Model for running service information
-class RunningServiceInfo {
-  final String user;
-  final int pid;
-  final String processName;
-  final String serviceName;
-  final String packageName;
-  final bool isSystemApp;
-  final String? serviceClass;
-  String? appName;
-  String? ramUsage; // e.g. "25 MB"
-  double? ramInKb; // Parsed value for aggregation
-  dynamic icon; // Service-specific icon from InstalledApps cache
+import 'dart:typed_data';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:installed_apps/app_info.dart';
 
-  RunningServiceInfo({
-    required this.user,
-    required this.pid,
-    required this.processName,
-    required this.serviceName,
-    required this.packageName,
-    required this.isSystemApp,
-    this.serviceClass,
-    this.appName,
-    this.ramUsage,
-    this.ramInKb,
-    this.icon,
-  });
+part 'service_info.freezed.dart';
 
-  @override
-  String toString() {
-    return 'Service: $serviceName (PID: $pid, Pkg: $packageName, App: $appName, RAM: $ramUsage)';
-  }
+/// Model for running service information
+@freezed
+abstract class RunningServiceInfo with _$RunningServiceInfo {
+  const factory RunningServiceInfo({
+    required String user,
+    required int pid,
+    required String processName,
+    required String serviceName,
+    required String packageName,
+    required bool isSystemApp,
+    String? serviceClass,
+    String? appName,
+    String? ramUsage, // e.g. "25 MB"
+    double? ramInKb, // Parsed value for aggregation
+    Uint8List? icon, // Service-specific icon from InstalledApps cache
+  }) = _RunningServiceInfo;
 }
 
-// Model for running app/process information (Grouped)
-class AppProcessInfo {
-  final String packageName;
-  final String appName;
-  final List<RunningServiceInfo> services;
-  final List<int> pids;
-  final String totalRam; // Formatted string e.g. "150 MB"
-  final double totalRamInKb; // For sorting/calculation
-  final bool isSystemApp;
-  dynamic
-  appInfo; // AppInfo from installed_apps package (dynamic to avoid circular dependency if possible, or just import)
-
-  AppProcessInfo({
-    required this.packageName,
-    required this.appName,
-    required this.services,
-    required this.pids,
-    required this.totalRam,
-    required this.totalRamInKb,
-    required this.isSystemApp,
-    this.appInfo,
-  });
+/// Model for running app/process information (Grouped)
+@freezed
+abstract class AppProcessInfo with _$AppProcessInfo {
+  const factory AppProcessInfo({
+    required String packageName,
+    required String appName,
+    required List<RunningServiceInfo> services,
+    required List<int> pids,
+    required String totalRam, // Formatted string e.g. "150 MB"
+    required double totalRamInKb, // For sorting/calculation
+    required bool isSystemApp,
+    AppInfo? appInfo, // AppInfo from installed_apps package
+  }) = _AppProcessInfo;
 }
 
-// Model for running process information (Raw from ps/dumpsys if needed)
-class RunningProcessInfo {
-  final String packageName;
-  final String processName;
-  final int pid;
-  final int uid;
-  final String? appName;
-  final bool isSystemApp;
-  final String importance;
-
-  RunningProcessInfo({
-    required this.packageName,
-    required this.processName,
-    required this.pid,
-    required this.uid,
-    this.appName,
-    required this.isSystemApp,
-    required this.importance,
-  });
-
-  @override
-  String toString() {
-    return 'RunningProcessInfo(package: $packageName, process: $processName, pid: $pid, importance: $importance)';
-  }
+/// Model for running process information (Raw from ps/dumpsys if needed)
+@freezed
+abstract class RunningProcessInfo with _$RunningProcessInfo {
+  const factory RunningProcessInfo({
+    required String packageName,
+    required String processName,
+    required int pid,
+    required int uid,
+    String? appName,
+    required bool isSystemApp,
+    required String importance,
+  }) = _RunningProcessInfo;
 }

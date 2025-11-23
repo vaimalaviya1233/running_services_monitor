@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'service_icon.dart';
 import 'service_details_dialog.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
 
 class ServiceListItem extends StatelessWidget {
   final RunningServiceInfo service;
@@ -81,10 +83,16 @@ class ServiceListItem extends StatelessWidget {
           ],
         ),
         trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) => ServiceDetailsDialog(service: service),
-        ),
+        onTap: () {
+          final stopServiceBloc = context.read<StopServiceBloc>();
+          showDialog(
+            context: context,
+            builder: (context) => BlocProvider.value(
+              value: stopServiceBloc,
+              child: ServiceDetailsDialog(service: service),
+            ),
+          );
+        },
       ),
     );
   }

@@ -55,12 +55,13 @@ extension AppDetailsEventPatterns on AppDetailsEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _LoadDetails value)?  loadDetails,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _LoadDetails value)?  loadDetails,TResult Function( _RemoveService value)?  removeService,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _LoadDetails() when loadDetails != null:
-return loadDetails(_that);case _:
+return loadDetails(_that);case _RemoveService() when removeService != null:
+return removeService(_that);case _:
   return orElse();
 
 }
@@ -78,12 +79,13 @@ return loadDetails(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _LoadDetails value)  loadDetails,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _LoadDetails value)  loadDetails,required TResult Function( _RemoveService value)  removeService,}){
 final _that = this;
 switch (_that) {
 case _Started():
 return started(_that);case _LoadDetails():
-return loadDetails(_that);case _:
+return loadDetails(_that);case _RemoveService():
+return removeService(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +102,13 @@ return loadDetails(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _LoadDetails value)?  loadDetails,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _LoadDetails value)?  loadDetails,TResult? Function( _RemoveService value)?  removeService,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _LoadDetails() when loadDetails != null:
-return loadDetails(_that);case _:
+return loadDetails(_that);case _RemoveService() when removeService != null:
+return removeService(_that);case _:
   return null;
 
 }
@@ -122,11 +125,12 @@ return loadDetails(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( AppProcessInfo appInfo)?  loadDetails,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( AppProcessInfo appInfo)?  loadDetails,TResult Function( int pid)?  removeService,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _LoadDetails() when loadDetails != null:
-return loadDetails(_that.appInfo);case _:
+return loadDetails(_that.appInfo);case _RemoveService() when removeService != null:
+return removeService(_that.pid);case _:
   return orElse();
 
 }
@@ -144,11 +148,12 @@ return loadDetails(_that.appInfo);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( AppProcessInfo appInfo)  loadDetails,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( AppProcessInfo appInfo)  loadDetails,required TResult Function( int pid)  removeService,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _LoadDetails():
-return loadDetails(_that.appInfo);case _:
+return loadDetails(_that.appInfo);case _RemoveService():
+return removeService(_that.pid);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +170,12 @@ return loadDetails(_that.appInfo);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( AppProcessInfo appInfo)?  loadDetails,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( AppProcessInfo appInfo)?  loadDetails,TResult? Function( int pid)?  removeService,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _LoadDetails() when loadDetails != null:
-return loadDetails(_that.appInfo);case _:
+return loadDetails(_that.appInfo);case _RemoveService() when removeService != null:
+return removeService(_that.pid);case _:
   return null;
 
 }
@@ -213,7 +219,7 @@ String toString() {
 
 
 class _LoadDetails implements AppDetailsEvent {
-  const _LoadDetails({required this.appInfo});
+  const _LoadDetails(this.appInfo);
   
 
  final  AppProcessInfo appInfo;
@@ -252,7 +258,7 @@ $Res call({
 });
 
 
-
+$AppProcessInfoCopyWith<$Res> get appInfo;
 
 }
 /// @nodoc
@@ -267,8 +273,83 @@ class __$LoadDetailsCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? appInfo = null,}) {
   return _then(_LoadDetails(
-appInfo: null == appInfo ? _self.appInfo : appInfo // ignore: cast_nullable_to_non_nullable
+null == appInfo ? _self.appInfo : appInfo // ignore: cast_nullable_to_non_nullable
 as AppProcessInfo,
+  ));
+}
+
+/// Create a copy of AppDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppProcessInfoCopyWith<$Res> get appInfo {
+  
+  return $AppProcessInfoCopyWith<$Res>(_self.appInfo, (value) {
+    return _then(_self.copyWith(appInfo: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class _RemoveService implements AppDetailsEvent {
+  const _RemoveService(this.pid);
+  
+
+ final  int pid;
+
+/// Create a copy of AppDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RemoveServiceCopyWith<_RemoveService> get copyWith => __$RemoveServiceCopyWithImpl<_RemoveService>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RemoveService&&(identical(other.pid, pid) || other.pid == pid));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,pid);
+
+@override
+String toString() {
+  return 'AppDetailsEvent.removeService(pid: $pid)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RemoveServiceCopyWith<$Res> implements $AppDetailsEventCopyWith<$Res> {
+  factory _$RemoveServiceCopyWith(_RemoveService value, $Res Function(_RemoveService) _then) = __$RemoveServiceCopyWithImpl;
+@useResult
+$Res call({
+ int pid
+});
+
+
+
+
+}
+/// @nodoc
+class __$RemoveServiceCopyWithImpl<$Res>
+    implements _$RemoveServiceCopyWith<$Res> {
+  __$RemoveServiceCopyWithImpl(this._self, this._then);
+
+  final _RemoveService _self;
+  final $Res Function(_RemoveService) _then;
+
+/// Create a copy of AppDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? pid = null,}) {
+  return _then(_RemoveService(
+null == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -528,7 +609,7 @@ $Res call({
 });
 
 
-
+$AppProcessInfoCopyWith<$Res> get appInfo;
 
 }
 /// @nodoc
@@ -548,7 +629,16 @@ as AppProcessInfo,
   ));
 }
 
-
+/// Create a copy of AppDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppProcessInfoCopyWith<$Res> get appInfo {
+  
+  return $AppProcessInfoCopyWith<$Res>(_self.appInfo, (value) {
+    return _then(_self.copyWith(appInfo: value));
+  });
+}
 }
 
 /// @nodoc
@@ -594,7 +684,7 @@ $Res call({
 });
 
 
-
+$AppProcessInfoCopyWith<$Res> get appInfo;
 
 }
 /// @nodoc
@@ -614,7 +704,16 @@ as AppProcessInfo,
   ));
 }
 
-
+/// Create a copy of AppDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppProcessInfoCopyWith<$Res> get appInfo {
+  
+  return $AppProcessInfoCopyWith<$Res>(_self.appInfo, (value) {
+    return _then(_self.copyWith(appInfo: value));
+  });
+}
 }
 
 /// @nodoc
@@ -661,7 +760,7 @@ $Res call({
 });
 
 
-
+$AppProcessInfoCopyWith<$Res> get appInfo;
 
 }
 /// @nodoc
@@ -682,7 +781,16 @@ as String,
   ));
 }
 
-
+/// Create a copy of AppDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppProcessInfoCopyWith<$Res> get appInfo {
+  
+  return $AppProcessInfoCopyWith<$Res>(_self.appInfo, (value) {
+    return _then(_self.copyWith(appInfo: value));
+  });
+}
 }
 
 // dart format on

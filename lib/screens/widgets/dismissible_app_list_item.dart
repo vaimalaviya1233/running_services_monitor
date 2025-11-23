@@ -58,7 +58,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                 ),
               );
             },
-            success: (packageName) {
+            success: (packageName, pid) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
