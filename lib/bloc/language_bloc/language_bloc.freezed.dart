@@ -196,12 +196,12 @@ _$ChangeLanguageCopyWith<_ChangeLanguage> get copyWith => __$ChangeLanguageCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeLanguage&&const DeepCollectionEquality().equals(other.locale, locale));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeLanguage&&(identical(other.locale, locale) || other.locale == locale));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(locale));
+int get hashCode => Object.hash(runtimeType,locale);
 
 @override
 String toString() {
@@ -233,9 +233,9 @@ class __$ChangeLanguageCopyWithImpl<$Res>
 
 /// Create a copy of LanguageEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? locale = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? locale = null,}) {
   return _then(_ChangeLanguage(
-freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as Locale,
   ));
 }
@@ -289,12 +289,12 @@ $LanguageStateCopyWith<LanguageState> get copyWith => _$LanguageStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LanguageState&&const DeepCollectionEquality().equals(other.locale, locale));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LanguageState&&(identical(other.locale, locale) || other.locale == locale));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(locale));
+int get hashCode => Object.hash(runtimeType,locale);
 
 @override
 String toString() {
@@ -326,9 +326,9 @@ class _$LanguageStateCopyWithImpl<$Res>
 
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? locale = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? locale = null,}) {
   return _then(_self.copyWith(
-locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as Locale,
   ));
 }
@@ -469,8 +469,8 @@ return $default(_that.locale);case _:
 /// @nodoc
 
 
-class _LanguageState implements LanguageState {
-  const _LanguageState({required this.locale});
+class _LanguageState extends LanguageState {
+  const _LanguageState({required this.locale}): super._();
   
 
 @override final  Locale locale;
@@ -485,12 +485,12 @@ _$LanguageStateCopyWith<_LanguageState> get copyWith => __$LanguageStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LanguageState&&const DeepCollectionEquality().equals(other.locale, locale));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LanguageState&&(identical(other.locale, locale) || other.locale == locale));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(locale));
+int get hashCode => Object.hash(runtimeType,locale);
 
 @override
 String toString() {
@@ -522,9 +522,9 @@ class __$LanguageStateCopyWithImpl<$Res>
 
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? locale = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? locale = null,}) {
   return _then(_LanguageState(
-locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as Locale,
   ));
 }

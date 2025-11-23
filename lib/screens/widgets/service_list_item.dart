@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:installed_apps/installed_apps.dart';
-import 'package:installed_apps/app_info.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'service_icon.dart';
 
 class ServiceListItem extends StatelessWidget {
   final RunningServiceInfo service;
@@ -87,36 +86,7 @@ class ServiceListItem extends StatelessWidget {
   }
 
   Widget _buildAppIcon(BuildContext context) {
-    return FutureBuilder<AppInfo?>(
-      future: _getAppInfo(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null && snapshot.data!.icon != null) {
-          return Image.memory(snapshot.data!.icon!, width: 40, height: 40);
-        }
-        return Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            service.isSystemApp ? Icons.android : Icons.apps,
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-          ),
-        );
-      },
-    );
-  }
-
-  Future<AppInfo?> _getAppInfo() async {
-    try {
-      // We use installed_apps here just to get the icon for this specific package
-      // This is lazy loading - only happens when the item is built
-      return await InstalledApps.getAppInfo(service.packageName);
-    } catch (e) {
-      return null;
-    }
+    return ServiceIcon(service: service);
   }
 
   void _showServiceDetails(BuildContext context) {

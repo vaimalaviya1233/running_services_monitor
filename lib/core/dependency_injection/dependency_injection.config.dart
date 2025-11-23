@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../bloc/app_details_bloc/app_details_bloc.dart' as _i543;
 import '../../bloc/home_bloc/home_bloc.dart' as _i98;
 import '../../bloc/language_bloc/language_bloc.dart' as _i663;
 import '../../services/process_service.dart' as _i622;
@@ -25,6 +26,7 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i543.AppDetailsBloc>(() => _i543.AppDetailsBloc());
     gh.factory<_i663.LanguageBloc>(() => _i663.LanguageBloc());
     gh.singleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i842.ShizukuService>(() => _i842.ShizukuService());
