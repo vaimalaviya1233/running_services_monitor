@@ -8,7 +8,7 @@ class AppDetailsDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       AppLocalizations.of(context)!.stopWarning,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[400]),
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 }

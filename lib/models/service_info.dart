@@ -4,7 +4,7 @@ import 'package:installed_apps/app_info.dart';
 
 part 'service_info.freezed.dart';
 
-/// Model for running service information
+
 @freezed
 abstract class RunningServiceInfo with _$RunningServiceInfo {
   const factory RunningServiceInfo({
@@ -16,13 +16,13 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     required bool isSystemApp,
     String? serviceClass,
     String? appName,
-    String? ramUsage, // e.g. "25 MB"
-    double? ramInKb, // Parsed value for aggregation
-    Uint8List? icon, // Service-specific icon from InstalledApps cache
+    String? ramUsage,
+    double? ramInKb,
+    Uint8List? icon,
   }) = _RunningServiceInfo;
 }
 
-/// Model for running app/process information (Grouped)
+
 @freezed
 abstract class AppProcessInfo with _$AppProcessInfo {
   const factory AppProcessInfo({
@@ -30,14 +30,14 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     required String appName,
     required List<RunningServiceInfo> services,
     required List<int> pids,
-    required String totalRam, // Formatted string e.g. "150 MB"
-    required double totalRamInKb, // For sorting/calculation
+    required String totalRam,
+    required double totalRamInKb,
     required bool isSystemApp,
-    AppInfo? appInfo, // AppInfo from installed_apps package
+    AppInfo? appInfo,
   }) = _AppProcessInfo;
 }
 
-/// Model for running process information (Raw from ps/dumpsys if needed)
+
 @freezed
 abstract class RunningProcessInfo with _$RunningProcessInfo {
   const factory RunningProcessInfo({

@@ -11,10 +11,7 @@ class ServiceDetailRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
-        ),
+        Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 2),
         SelectableText(value, style: const TextStyle(fontSize: 14)),
       ],

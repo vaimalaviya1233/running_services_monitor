@@ -23,7 +23,7 @@ class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
     try {
       var appInfo = event.appInfo;
 
-      // 1. Fetch main app icon if missing
+
       if (appInfo.appInfo == null || appInfo.appInfo!.icon == null) {
         try {
           final fetchedAppInfo = await _appInfoService.getAppInfo(appInfo.packageName);
@@ -31,11 +31,11 @@ class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
             appInfo = appInfo.copyWith(appInfo: fetchedAppInfo);
           }
         } catch (e) {
-          // Ignore
+
         }
       }
 
-      // 2. Fetch icons for each service
+
       final updatedServices = <RunningServiceInfo>[];
       for (var service in appInfo.services) {
         var updatedService = service;
@@ -46,7 +46,7 @@ class AppDetailsBloc extends Bloc<AppDetailsEvent, AppDetailsState> {
               updatedService = service.copyWith(icon: fetchedAppInfo.icon);
             }
           } catch (e) {
-            // Ignore
+
           }
         }
         updatedServices.add(updatedService);

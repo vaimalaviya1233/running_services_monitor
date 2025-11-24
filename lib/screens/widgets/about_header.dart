@@ -19,7 +19,7 @@ class AboutHeader extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          Text(version, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+          Text(version, style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ],
       ),
     );

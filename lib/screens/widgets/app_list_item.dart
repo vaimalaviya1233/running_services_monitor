@@ -19,7 +19,7 @@ class AppListItem extends StatelessWidget {
       title: Text(appInfo.appName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16)),
       subtitle: Text(
         '$processCount ${AppLocalizations.of(context)!.processAnd} $serviceCount ${AppLocalizations.of(context)!.services}',
-        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: Text(appInfo.totalRam, style: const TextStyle(fontSize: 14)),
       onTap: () {

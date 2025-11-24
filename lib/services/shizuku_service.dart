@@ -14,7 +14,7 @@ class ShizukuService {
   bool get isInitialized => _isInitialized;
   bool get hasPermission => _hasPermission;
 
-  /// Check if Shizuku is running
+
   Future<bool> isShizukuRunning() async {
     try {
       debugPrint('Checking if Shizuku is running...');
@@ -27,7 +27,7 @@ class ShizukuService {
     }
   }
 
-  /// Check if Shizuku permission is granted
+
   Future<bool> checkPermission() async {
     try {
       debugPrint('Checking Shizuku permission...');
@@ -41,7 +41,7 @@ class ShizukuService {
     }
   }
 
-  /// Request Shizuku permission
+
   Future<bool> requestPermission() async {
     try {
       debugPrint('Requesting Shizuku permission...');
@@ -55,24 +55,24 @@ class ShizukuService {
     }
   }
 
-  /// Initialize Shizuku service
+
   Future<bool> initialize() async {
     if (_isInitialized) {
       debugPrint('Shizuku already initialized');
       return true;
     }
 
-    // Check if Shizuku is running
+
     final isRunning = await isShizukuRunning();
     if (!isRunning) {
       debugPrint('Shizuku is not running');
       return false;
     }
 
-    // Check permission
+
     final hasPermission = await checkPermission();
     if (!hasPermission) {
-      // Request permission
+
       final granted = await requestPermission();
       if (!granted) {
         debugPrint('Shizuku permission not granted');
@@ -86,7 +86,7 @@ class ShizukuService {
     return true;
   }
 
-  /// Execute a shell command using Shizuku
+
   Future<String?> executeCommand(String command) async {
     if (!_isInitialized || !_hasPermission) {
       debugPrint('Shizuku not initialized or no permission');

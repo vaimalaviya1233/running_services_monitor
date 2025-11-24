@@ -32,15 +32,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // Initialize BLoCs
     homeBloc = getIt<HomeBloc>();
 
-    // Listen to search controller
     _searchController.addListener(() {
       homeBloc.add(HomeEvent.updateSearchQuery(_searchController.text.toLowerCase()));
     });
 
-    // Initialize Shizuku
     homeBloc.add(const HomeEvent.initializeShizuku());
   }
 
@@ -48,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void dispose() {
     _tabController.dispose();
     _searchController.dispose();
-    homeBloc.close();
     super.dispose();
   }
 
@@ -86,10 +82,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             previous.value.errorMessage != current.value.errorMessage ||
             previous.value.notification != current.value.notification,
         listener: (context, state) {
-          // Handle one-time side effects
           state.maybeWhen(
             failure: (value, message) {
-              // Show Shizuku setup dialog if needed
               if (message.contains('Shizuku is not running')) {
                 _showShizukuSetupDialog();
               }
@@ -112,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         },
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight + 48), // Approximate height including TabBar
+            preferredSize: const Size.fromHeight(kToolbarHeight + 48),
             child: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 final value = state.value;

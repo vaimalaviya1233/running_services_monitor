@@ -25,33 +25,33 @@ class ProcessService {
     try {
       if (services.isEmpty) return [];
 
-      // Ensure cache is valid and get the map
+
       await _appInfoService.ensureCacheValid();
       final appMap = _appInfoService.cachedAppsMap ?? {};
 
-      // Create a simplified map for the isolate
+
       final Map<String, String> appNames = {};
       for (var entry in appMap.entries) {
         appNames[entry.key] = entry.value.name;
       }
 
-      // Prepare data for isolate
+
       final isolateData = _IsolateData(servicesOutput: services, meminfoOutput: meminfo, appNames: appNames);
-      // Run heavy processing in background isolate
+
       final appProcessInfos = await compute(_processDataInIsolate, isolateData);
 
-    
+
       final updatedAppProcessInfos = <AppProcessInfo>[];
 
       for (var info in appProcessInfos) {
         var updatedInfo = info;
 
-        // Try to get AppInfo from map (synchronous)
+
         var appInfo = appMap[info.packageName];
 
         updatedInfo = updatedInfo.copyWith(appInfo: appInfo);
 
-        // Also attach icons to individual services from their package names
+
         final updatedServices = <RunningServiceInfo>[];
         for (var service in info.services) {
           var updatedService = service;
@@ -99,8 +99,8 @@ class ProcessService {
     }
   }
 
-  /// Get system RAM info (Total, Free, Used)
-  /// Returns [Total, Free, Used] in KB
+
+
   Future<({List<double>? ramInfo, String? meminfo})> getSystemRamInfo() async {
     try {
       final result = await meminfo();
@@ -113,15 +113,15 @@ class ProcessService {
     }
   }
 
-  /// Stop a service by killing its specific process ID using kill -9
-  /// This is more targeted than force-stop but may not work for all processes
-  /// Returns true if successful,false otherwise
+
+
+
   Future<bool> stopServiceByPid(int pid) async {
     try {
       debugPrint('Attempting to kill PID: $pid');
       final result = await _shizukuService.executeCommand('kill -9 $pid');
 
-      // kill command doesn't return output on success, null or empty means success
+
       if (result == null ||
           result.isEmpty ||
           !result.toLowerCase().contains('error') && !result.toLowerCase().contains('permission denied')) {
@@ -137,15 +137,15 @@ class ProcessService {
     }
   }
 
-  /// Stop all services for a package using am force-stop
-  /// This is the official Android method and stops ALL processes for the app
-  /// Returns true if successful, false otherwise
+
+
+
   Future<bool> stopService(String packageName) async {
     try {
       debugPrint('Attempting to stop service: $packageName');
       final result = await _shizukuService.executeCommand('am force-stop $packageName');
 
-      // force-stop doesn't return output on success, null or empty means success
+
       if (result == null || result.isEmpty || !result.toLowerCase().contains('error')) {
         debugPrint('Successfully stopped: $packageName');
         return true;
@@ -159,19 +159,19 @@ class ProcessService {
     }
   }
 
-  // --- Static methods for Isolate ---
+
 
   static List<double> _parseSystemRamInfo(String result) {
     double totalRam = 0;
     double freeRam = 0;
 
-    // Parse Total RAM: 11,366,712K
+
     final totalMatch = RegExp(r'Total RAM:\s+([\d,]+)K').firstMatch(result);
     if (totalMatch != null) {
       totalRam = double.tryParse(totalMatch.group(1)!.replaceAll(',', '')) ?? 0;
     }
 
-    // Parse Free RAM: 7,396,751K
+
     final freeMatch = RegExp(r'Free RAM:\s+([\d,]+)K').firstMatch(result);
     if (freeMatch != null) {
       freeRam = double.tryParse(freeMatch.group(1)!.replaceAll(',', '')) ?? 0;
@@ -183,17 +183,17 @@ class ProcessService {
   }
 
   static Future<List<AppProcessInfo>> _processDataInIsolate(_IsolateData data) async {
-    // 1. Parse services
+
     final services = _parseServices(data.servicesOutput);
     if (services.isEmpty) return [];
 
-    // 2. Parse RAM map
+
     final ramMap = _parseRamMap(data.meminfoOutput);
 
-    // 3. Enrich and Group
+
     final Map<String, List<RunningServiceInfo>> grouped = {};
 
-    // Helper to format RAM
+
     String formatRam(double kb) {
       if (kb > 1024 * 1024) {
         return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';
@@ -203,22 +203,22 @@ class ProcessService {
       return '${kb.toStringAsFixed(0)} KB';
     }
 
-    // Enrich services
+
     final enrichedServices = services.map((service) {
       var updatedService = service;
 
-      // Update RAM
+
       if (ramMap.containsKey(service.pid)) {
         final ramKb = ramMap[service.pid]!;
         updatedService = updatedService.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb));
       }
 
-      // Update App Name from Cache
+
       final cachedAppName = data.appNames[service.packageName];
       if (cachedAppName != null) {
         updatedService = updatedService.copyWith(appName: cachedAppName);
       } else {
-        // Fallback name generation
+
         final parts = service.packageName.split('.');
         if (parts.isNotEmpty) {
           String name = parts.last;
@@ -233,7 +233,7 @@ class ProcessService {
       return updatedService;
     }).toList();
 
-    // Group
+
     for (var service in enrichedServices) {
       if (!grouped.containsKey(service.packageName)) {
         grouped[service.packageName] = [];
@@ -241,7 +241,7 @@ class ProcessService {
       grouped[service.packageName]!.add(service);
     }
 
-    // 4. Create AppProcessInfo objects
+
     final List<AppProcessInfo> appProcessInfos = [];
 
     grouped.forEach((packageName, serviceList) {
@@ -250,7 +250,7 @@ class ProcessService {
       String appName = packageName;
       bool isSystem = false;
 
-      // Try to get name from cache or first service
+
       final cachedAppName = data.appNames[packageName];
       if (cachedAppName != null) {
         appName = cachedAppName;
@@ -273,12 +273,12 @@ class ProcessService {
           totalRam: formatRam(totalRamKb),
           totalRamInKb: totalRamKb,
           isSystemApp: isSystem,
-          appInfo: null, // Will be attached in main thread
+          appInfo: null,
         ),
       );
     });
 
-    // Sort
+
     appProcessInfos.sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
 
     return appProcessInfos;
@@ -296,7 +296,7 @@ class ProcessService {
     double? currentRamInKb;
     int? currentUid;
 
-    // Helper to format RAM (duplicated here as it's static)
+
     String formatRam(double kb) {
       if (kb > 1024 * 1024) {
         return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';

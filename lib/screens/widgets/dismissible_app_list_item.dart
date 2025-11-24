@@ -74,7 +74,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                   behavior: SnackBarBehavior.floating,
                 ),
               );
-              // Trigger refresh in HomeBloc
+
               if (packageName != null) {
                 context.read<HomeBloc>().add(HomeEvent.removeApp(packageName));
               }
@@ -125,7 +125,11 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                         ),
                         child: Text(
                           AppLocalizations.of(context)!.systemAppWarning,
-                          style: TextStyle(color: Colors.red[300], fontWeight: FontWeight.bold, fontSize: 13),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],

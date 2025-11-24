@@ -20,7 +20,7 @@ class StopServiceBloc extends Bloc<StopServiceEvent, StopServiceState> {
     emit(StopServiceState.stopping(packageName: event.packageName));
 
     try {
-      // Use force-stop for stopping all services of an app
+
       final success = await _processService.stopService(event.packageName);
 
       if (success) {

@@ -19,12 +19,12 @@ class HomeBody extends StatelessWidget {
         final value = state.value;
         final homeBloc = context.read<HomeBloc>();
 
-        // Loading state (initial load)
+
         if (value.isLoading && value.allApps.isEmpty) {
           return LoadingState(status: value.loadingStatus);
         }
 
-        // Error state (no data)
+
         if (value.errorMessage != null && value.allApps.isEmpty) {
           return ErrorState(
             errorMessage: value.errorMessage!,
@@ -32,7 +32,7 @@ class HomeBody extends StatelessWidget {
           );
         }
 
-        // Success state
+
         return BlocSelector<HomeBloc, HomeState, ({double total, double used, double apps, double free})>(
           selector: (state) => (
             total: state.value.totalRamKb,
@@ -99,10 +99,10 @@ class _RamBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 195; // Adjusted for actual RamBar height with padding
+  double get maxExtent => 195;
 
   @override
-  double get minExtent => 195; // Keep it the same size when pinned
+  double get minExtent => 195;
 
   @override
   bool shouldRebuild(covariant _RamBarDelegate oldDelegate) {

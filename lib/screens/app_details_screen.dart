@@ -116,14 +116,14 @@ class AppDetailsScreen extends StatelessWidget {
                           AppHeader(appInfo: currentAppInfo),
                           const SizedBox(height: 24),
 
-                          // Description
+
                           const AppDetailsDescription(),
 
                           const SizedBox(height: 32),
                           const Divider(),
                           const SizedBox(height: 16),
 
-                          // Service List
+
                           AppDetailsSectionTitle(title: AppLocalizations.of(context)!.activeServices),
                           const SizedBox(height: 8),
                         ]),
@@ -156,7 +156,11 @@ class AppDetailsScreen extends StatelessWidget {
                                 ),
                                 child: Text(
                                   AppLocalizations.of(context)!.systemAppWarning,
-                                  style: TextStyle(color: Colors.red[300], fontWeight: FontWeight.bold, fontSize: 13),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ],

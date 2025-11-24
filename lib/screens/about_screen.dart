@@ -13,7 +13,7 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  // static const String appName = 'Running Services Monitor';
+
   String version = '';
   static const String email = 'biplobsd11@gmail.com';
   static const String sourceCodeUrl = 'https://github.com/biplobsd/running_services_monitor';
@@ -24,7 +24,7 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   void initState() {
     super.initState();
-    // version = AppLocalizations.of(context)!.loading; // Context not available in initState for localization usually, but we can init with empty or loading
+
     _loadPackageInfo();
   }
 
@@ -46,7 +46,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      // Handle error
+
       debugPrint('Could not launch $url');
     }
   }
@@ -100,7 +100,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   Center(
                     child: Text(
                       AppLocalizations.of(context)!.madeInBangladesh,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ),
                 ]),

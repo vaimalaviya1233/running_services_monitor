@@ -18,7 +18,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ProcessService _processService;
   Timer? _autoUpdateTimer;
 
-  HomeBloc(this._shizukuService, this._appInfoService, this._processService) : super(const HomeState.initial(HomeStateModel())) {
+  HomeBloc(this._shizukuService, this._appInfoService, this._processService)
+    : super(const HomeState.initial(HomeStateModel())) {
     on<_InitializeShizuku>(_onInitializeShizuku);
     on<_LoadData>(_onLoadData);
     on<_ToggleAutoUpdate>(_onToggleAutoUpdate);
@@ -36,10 +37,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onInitializeShizuku(_InitializeShizuku event, Emitter<HomeState> emit) async {
-    emit(HomeState.loading(state.value.copyWith(isLoading: true, errorMessage: null)));
+    final isAlreadyReady = state.value.shizukuReady;
+
+    if (!isAlreadyReady) {
+      emit(
+        HomeState.loading(
+          state.value.copyWith(isLoading: true, errorMessage: null, loadingStatus: 'Checking permissions...'),
+        ),
+      );
+    }
 
     try {
-      // Check if Shizuku is running
       final isRunning = await _shizukuService.isShizukuRunning();
       if (!isRunning) {
         emit(
@@ -51,7 +59,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         return;
       }
 
-      // Initialize Shizuku
       final initialized = await _shizukuService.initialize();
       if (!initialized) {
         emit(
@@ -63,10 +70,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         return;
       }
 
-      emit(HomeState.success(state.value.copyWith(shizukuReady: true)));
+      if (!isAlreadyReady) {
+        emit(HomeState.success(state.value.copyWith(shizukuReady: true)));
+      }
 
-      // Load data after successful initialization
-      add(const HomeEvent.loadData());
+      add(HomeEvent.loadData(silent: isAlreadyReady));
     } catch (e) {
       emit(HomeState.failure(state.value.copyWith(isLoading: false, shizukuReady: false), 'Error: $e'));
     }
@@ -87,13 +95,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     try {
-      // Parallel execution of independent tasks
       final results = await Future.wait([
-        // 1. Ensure app info cache is valid
         _appInfoService.ensureCacheValid(),
-        // 2. Get RAM info
+
         _processService.getSystemRamInfo(),
-        // 3. Get raw service data
+
         _processService.fetchRawServicesData(),
       ]);
 
@@ -122,7 +128,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeState.loading(state.value.copyWith(isLoading: true, loadingStatus: 'Processing data...')));
       }
 
-      // Process the raw data
       final apps = await _processService
           .processServiceData(services: services, meminfo: memInfo ?? '')
           .timeout(
@@ -132,11 +137,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             },
           );
 
-      // Separate into user and system
       final userApps = apps.where((a) => !a.isSystemApp).toList();
       final systemApps = apps.where((a) => a.isSystemApp).toList();
 
-      // Calculate Apps RAM
       double appsRam = 0;
       for (var app in apps) {
         appsRam += app.totalRamInKb;
@@ -179,12 +182,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final newAutoUpdateState = !state.value.isAutoUpdateEnabled;
 
     if (newAutoUpdateState) {
-      // Start auto-update
       _autoUpdateTimer = Timer.periodic(const Duration(seconds: 3), (_) {
         add(const HomeEvent.autoUpdateTick());
       });
     } else {
-      // Stop auto-update
       _autoUpdateTimer?.cancel();
       _autoUpdateTimer = null;
     }
@@ -193,7 +194,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onAutoUpdateTick(_AutoUpdateTick event, Emitter<HomeState> emit) async {
-    // Trigger silent data load
     add(const HomeEvent.loadData(silent: true));
   }
 
@@ -217,7 +217,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final updatedUserApps = currentState.userApps.where((app) => app.packageName != event.packageName).toList();
     final updatedSystemApps = currentState.systemApps.where((app) => app.packageName != event.packageName).toList();
 
-    // Recalculate Apps RAM
     double appsRam = 0;
     for (var app in updatedAllApps) {
       appsRam += app.totalRamInKb;

@@ -24,7 +24,9 @@ class AppHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '$processCount process and $serviceCount services',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ],
           ),

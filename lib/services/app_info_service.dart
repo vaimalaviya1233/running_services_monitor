@@ -24,7 +24,7 @@ class AppInfoService {
         throw Exception('RootIsolateToken is null');
       }
 
-      // Fetch ALL apps with icons to populate the cache comprehensively
+
       final appsList = await compute(_fetchInstalledApps, _FetchAppsParams(token: token));
 
       _cachedApps = {for (var app in appsList) app.packageName: app};
@@ -42,12 +42,12 @@ class AppInfoService {
   Future<AppInfo?> getAppInfo(String packageName) async {
     await _ensureCacheValid();
 
-    // Try to find in cache
+
     if (_cachedApps!.containsKey(packageName)) {
       return _cachedApps![packageName];
     }
 
-    // Not found in cache (maybe new app?), fetch directly
+
     try {
       final token = RootIsolateToken.instance;
       if (token == null) {
@@ -56,7 +56,7 @@ class AppInfoService {
 
       final app = await compute(_fetchAppInfo, _FetchAppInfoParams(token: token, packageName: packageName));
       if (app != null) {
-        _cachedApps![app.packageName] = app; // Update cache
+        _cachedApps![app.packageName] = app;
       }
       return app;
     } catch (e) {

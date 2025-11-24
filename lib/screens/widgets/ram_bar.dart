@@ -4,8 +4,8 @@ import 'ram_legend_item.dart';
 
 class RamBar extends StatelessWidget {
   final double totalRamKb;
-  final double usedRamKb; // Total used (System + Apps)
-  final double appsRamKb; // Just Apps
+  final double usedRamKb;
+  final double appsRamKb;
   final double freeRamKb;
 
   const RamBar({
@@ -27,12 +27,12 @@ class RamBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate proportions
-    // System RAM = Total Used - Apps RAM
-    double systemRamKb = usedRamKb - appsRamKb;
-    if (systemRamKb < 0) systemRamKb = 0; // Safety
 
-    // Avoid division by zero
+
+    double systemRamKb = usedRamKb - appsRamKb;
+    if (systemRamKb < 0) systemRamKb = 0;
+
+
     if (totalRamKb <= 0) {
       return const SizedBox.shrink();
     }
@@ -51,24 +51,24 @@ class RamBar extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 16),
-          // The Bar
+
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: SizedBox(
               height: 24,
               child: Row(
                 children: [
-                  // System (Dark Grey)
+
                   Expanded(
                     flex: (systemFlex * 1000).toInt(),
                     child: Container(color: Colors.grey[700]),
                   ),
-                  // Apps (Light Blue)
+
                   Expanded(
                     flex: (appsFlex * 1000).toInt(),
                     child: Container(color: Colors.lightBlue[200]),
                   ),
-                  // Free (Light Grey)
+
                   Expanded(
                     flex: (freeFlex * 1000).toInt(),
                     child: Container(color: Colors.grey[300]),
@@ -78,7 +78,7 @@ class RamBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // Legend
+
           RamLegendItem(
             color: Colors.grey[700]!,
             label: AppLocalizations.of(context)!.system,

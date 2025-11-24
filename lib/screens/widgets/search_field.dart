@@ -11,12 +11,7 @@ class SearchField extends StatelessWidget {
     return TextField(
       controller: controller,
       autofocus: true,
-      decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)!.searchApps,
-        border: InputBorder.none,
-        hintStyle: const TextStyle(color: Colors.white70),
-      ),
-      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.searchApps, border: InputBorder.none),
     );
   }
 }
