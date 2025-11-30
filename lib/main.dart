@@ -82,7 +82,10 @@ class MyApp extends StatelessWidget {
                 ),
                 themeMode: themeMode,
                 builder: (context, child) {
+                  final orientation = MediaQuery.of(context).orientation;
                   return ScaleKitBuilder(
+                    autoScalePortrait: true,
+                    key: ValueKey(orientation),
                     designWidth: 375,
                     designHeight: 812,
                     designType: DeviceType.mobile,

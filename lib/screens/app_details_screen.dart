@@ -41,7 +41,7 @@ class AppDetailsScreen extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       ),
                       const SizedBox(width: 16),
-                      Text(context.loc.loading),
+                      Text(context.loc.loading, style: TextStyle(fontSize: 14.sp)),
                     ],
                   ),
                   duration: const Duration(seconds: 10),
@@ -57,7 +57,7 @@ class AppDetailsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.check_circle, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text(context.loc.allServicesStopped)),
+                      Expanded(child: Text(context.loc.allServicesStopped, style: TextStyle(fontSize: 14.sp))),
                     ],
                   ),
                   backgroundColor: Colors.green[700],
@@ -84,7 +84,7 @@ class AppDetailsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.error, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text('${context.loc.stopServiceError}: $message')),
+                      Expanded(child: Text('${context.loc.stopServiceError}: $message', style: TextStyle(fontSize: 14.sp))),
                     ],
                   ),
                   backgroundColor: Colors.red[700],
@@ -107,7 +107,7 @@ class AppDetailsScreen extends StatelessWidget {
 
             return SelectionArea(
               child: Scaffold(
-                appBar: AppBar(title: Text(context.loc.runningApp)),
+                appBar: AppBar(title: Text(context.loc.runningApp, style: TextStyle(fontSize: 20.sp))),
                 body: CustomScrollView(
                   slivers: [
                     SliverPadding(
@@ -138,14 +138,14 @@ class AppDetailsScreen extends StatelessWidget {
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (dialogContext) => AlertDialog(
-                        title: Text(context.loc.stopAllServicesConfirm),
+                        title: Text(context.loc.stopAllServicesConfirm, style: TextStyle(fontSize: 18.sp)),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(currentAppInfo.appName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(currentAppInfo.appName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
                             SizedBox(height: 8.h),
-                            Text(context.loc.stopServiceWarning),
+                            Text(context.loc.stopServiceWarning, style: TextStyle(fontSize: 14.sp)),
                             if (currentAppInfo.isSystemApp) ...[
                               SizedBox(height: 12.h),
                               Container(
@@ -170,12 +170,12 @@ class AppDetailsScreen extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(dialogContext).pop(false),
-                            child: Text(context.loc.cancel),
+                            child: Text(context.loc.cancel, style: TextStyle(fontSize: 14.sp)),
                           ),
                           FilledButton(
                             onPressed: () => Navigator.of(dialogContext).pop(true),
                             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-                            child: Text(context.loc.stop),
+                            child: Text(context.loc.stop, style: TextStyle(fontSize: 14.sp)),
                           ),
                         ],
                       ),
@@ -194,7 +194,7 @@ class AppDetailsScreen extends StatelessWidget {
                   },
                   backgroundColor: Colors.red,
                   icon: const Icon(Icons.stop_circle),
-                  label: Text(context.loc.stopAllServices),
+                  label: Text(context.loc.stopAllServices, style: TextStyle(fontSize: 14.sp)),
                 ),
               ),
             );

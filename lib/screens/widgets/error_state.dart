@@ -23,7 +23,7 @@ class ErrorState extends StatelessWidget {
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: Text(AppLocalizations.of(context)!.retry),
+              label: Text(AppLocalizations.of(context)!.retry, style: TextStyle(fontSize: 14.sp)),
             ),
           ],
         ),

@@ -51,7 +51,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       ),
                       const SizedBox(width: 16),
-                      Text(AppLocalizations.of(context)!.loading),
+                      Text(AppLocalizations.of(context)!.loading, style: TextStyle(fontSize: 14.sp)),
                     ],
                   ),
                   duration: const Duration(seconds: 10),
@@ -67,7 +67,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                     children: [
                       const Icon(Icons.check_circle, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text(AppLocalizations.of(context)!.allServicesStopped)),
+                      Expanded(child: Text(AppLocalizations.of(context)!.allServicesStopped, style: TextStyle(fontSize: 14.sp))),
                     ],
                   ),
                   backgroundColor: Colors.green[700],
@@ -88,7 +88,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                     children: [
                       const Icon(Icons.error, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text('${AppLocalizations.of(context)!.stopServiceError}: $message')),
+                      Expanded(child: Text('${AppLocalizations.of(context)!.stopServiceError}: $message', style: TextStyle(fontSize: 14.sp))),
                     ],
                   ),
                   backgroundColor: Colors.red[700],
@@ -107,14 +107,14 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
             return await showDialog<bool>(
               context: context,
               builder: (dialogContext) => AlertDialog(
-                title: Text(AppLocalizations.of(context)!.stopAllServicesConfirm),
+                title: Text(AppLocalizations.of(context)!.stopAllServicesConfirm, style: TextStyle(fontSize: 18.sp)),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.appInfo.appName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(widget.appInfo.appName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
                     const SizedBox(height: 8),
-                    Text(AppLocalizations.of(context)!.stopServiceWarning),
+                    Text(AppLocalizations.of(context)!.stopServiceWarning, style: TextStyle(fontSize: 14.sp)),
                     if (widget.appInfo.isSystemApp) ...[
                       const SizedBox(height: 12),
                       Container(
@@ -139,7 +139,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(dialogContext).pop(false),
-                    child: Text(AppLocalizations.of(context)!.cancel),
+                    child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(fontSize: 14.sp)),
                   ),
                   FilledButton(
                     onPressed: () {
@@ -152,7 +152,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                       );
                     },
                     style: FilledButton.styleFrom(backgroundColor: Colors.red),
-                    child: Text(AppLocalizations.of(context)!.stop),
+                    child: Text(AppLocalizations.of(context)!.stop, style: TextStyle(fontSize: 14.sp)),
                   ),
                 ],
               ),
@@ -162,14 +162,14 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
             color: Colors.red,
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.only(right: 16),
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.stop_circle, color: Colors.white, size: 32),
-                SizedBox(height: 4),
+                const Icon(Icons.stop_circle, color: Colors.white, size: 32),
+                const SizedBox(height: 4),
                 Text(
-                  'Stop All',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  AppLocalizations.of(context)!.stop,
+                  style: TextStyle(fontSize: 12.sp, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

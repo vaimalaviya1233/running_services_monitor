@@ -52,7 +52,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return SelectionArea(
       child: Scaffold(
-        appBar: AppBar(title: Text(context.loc.about)),
+        appBar: AppBar(title: Text(context.loc.about, style: TextStyle(fontSize: 20.sp))),
         body: CustomScrollView(
           slivers: [
             SliverPadding(
@@ -89,7 +89,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     child: FilledButton.icon(
                       onPressed: () => _launchUrl(AppConstants.buyMeCoffeeUrl),
                       icon: const Icon(Icons.coffee),
-                      label: Text(context.loc.buyMeCoffee),
+                      label: Text(context.loc.buyMeCoffee, style: TextStyle(fontSize: 14.sp)),
                       style: FilledButton.styleFrom(backgroundColor: Colors.amber[800], foregroundColor: Colors.white),
                     ),
                   ),

@@ -17,7 +17,7 @@ class ServiceListItem extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       child: ListTile(
         leading: ServiceIcon(service: service),
-        title: Text(service.appName ?? service.packageName, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(service.appName ?? service.packageName, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

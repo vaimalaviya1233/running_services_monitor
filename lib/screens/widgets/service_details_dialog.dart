@@ -11,7 +11,7 @@ class ServiceDetailsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(service.appName ?? service.packageName),
+      title: Text(service.appName ?? service.packageName, style: TextStyle(fontSize: 18.sp)),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class ServiceDetailsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Close'))],
+      actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Close', style: TextStyle(fontSize: 14.sp)))],
     );
   }
 }
