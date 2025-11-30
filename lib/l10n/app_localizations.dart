@@ -422,6 +422,54 @@ abstract class AppLocalizations {
   /// **'Stop'**
   String get stop;
 
+  /// No description provided for @permissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get permissionRequired;
+
+  /// No description provided for @permissionRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Shizuku permission is required to access running services information.'**
+  String get permissionRequiredMessage;
+
+  /// No description provided for @permissionSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Grant Permission:'**
+  String get permissionSteps;
+
+  /// No description provided for @permissionStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Shizuku app'**
+  String get permissionStep1;
+
+  /// No description provided for @permissionStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to \'Authorized Apps\' or \'Permissions\''**
+  String get permissionStep2;
+
+  /// No description provided for @permissionStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Find \'Running Services Monitor\' and grant permission'**
+  String get permissionStep3;
+
+  /// No description provided for @permissionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure Shizuku service is running before granting permission.'**
+  String get permissionNote;
+
+  /// No description provided for @openShizuku.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Shizuku'**
+  String get openShizuku;
+
   /// No description provided for @systemAppWarning.
   ///
   /// In en, this message translates to:

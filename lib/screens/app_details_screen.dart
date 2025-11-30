@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/service_info.dart';
-import 'package:running_services_monitor/l10n/app_localizations.dart';
+import 'package:running_services_monitor/core/extensions.dart';
 import 'widgets/app_header.dart';
 import 'widgets/service_list.dart';
 import 'widgets/app_details_description.dart';
@@ -40,7 +40,7 @@ class AppDetailsScreen extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       ),
                       const SizedBox(width: 16),
-                      Text(AppLocalizations.of(context)!.loading),
+                      Text(context.loc.loading),
                     ],
                   ),
                   duration: const Duration(seconds: 10),
@@ -56,7 +56,7 @@ class AppDetailsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.check_circle, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text(AppLocalizations.of(context)!.allServicesStopped)),
+                      Expanded(child: Text(context.loc.allServicesStopped)),
                     ],
                   ),
                   backgroundColor: Colors.green[700],
@@ -83,7 +83,7 @@ class AppDetailsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.error, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text('${AppLocalizations.of(context)!.stopServiceError}: $message')),
+                      Expanded(child: Text('${context.loc.stopServiceError}: $message')),
                     ],
                   ),
                   backgroundColor: Colors.red[700],
@@ -106,7 +106,7 @@ class AppDetailsScreen extends StatelessWidget {
 
             return SelectionArea(
               child: Scaffold(
-                appBar: AppBar(title: Text(AppLocalizations.of(context)!.runningApp)),
+                appBar: AppBar(title: Text(context.loc.runningApp)),
                 body: CustomScrollView(
                   slivers: [
                     SliverPadding(
@@ -124,7 +124,7 @@ class AppDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 16),
 
 
-                          AppDetailsSectionTitle(title: AppLocalizations.of(context)!.activeServices),
+                          AppDetailsSectionTitle(title: context.loc.activeServices),
                           const SizedBox(height: 8),
                         ]),
                       ),
@@ -137,14 +137,14 @@ class AppDetailsScreen extends StatelessWidget {
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (dialogContext) => AlertDialog(
-                        title: Text(AppLocalizations.of(context)!.stopAllServicesConfirm),
+                        title: Text(context.loc.stopAllServicesConfirm),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(currentAppInfo.appName, style: const TextStyle(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 8),
-                            Text(AppLocalizations.of(context)!.stopServiceWarning),
+                            Text(context.loc.stopServiceWarning),
                             if (currentAppInfo.isSystemApp) ...[
                               const SizedBox(height: 12),
                               Container(
@@ -155,7 +155,7 @@ class AppDetailsScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  AppLocalizations.of(context)!.systemAppWarning,
+                                  context.loc.systemAppWarning,
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.error,
                                     fontWeight: FontWeight.bold,
@@ -169,12 +169,12 @@ class AppDetailsScreen extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(dialogContext).pop(false),
-                            child: Text(AppLocalizations.of(context)!.cancel),
+                            child: Text(context.loc.cancel),
                           ),
                           FilledButton(
                             onPressed: () => Navigator.of(dialogContext).pop(true),
                             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-                            child: Text(AppLocalizations.of(context)!.stop),
+                            child: Text(context.loc.stop),
                           ),
                         ],
                       ),
@@ -193,7 +193,7 @@ class AppDetailsScreen extends StatelessWidget {
                   },
                   backgroundColor: Colors.red,
                   icon: const Icon(Icons.stop_circle),
-                  label: Text(AppLocalizations.of(context)!.stopAllServices),
+                  label: Text(context.loc.stopAllServices),
                 ),
               ),
             );

@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
+import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'widgets/shizuku_setup_dialog.dart';
+import 'widgets/shizuku_permission_dialog.dart';
 import 'widgets/home_body.dart';
-import 'package:running_services_monitor/l10n/app_localizations.dart';
 import 'widgets/language_selector.dart';
 import 'widgets/theme_toggle_button.dart';
 import 'widgets/about_button.dart';
@@ -61,13 +62,26 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
+  void _showPermissionDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ShizukuPermissionDialog(
+        onRetry: () {
+          Navigator.of(context).pop();
+          homeBloc.add(const HomeEvent.initializeShizuku());
+        },
+      ),
+    );
+  }
+
   void _checkReviewRequest() {
     _refreshCount++;
     if (_refreshCount % 5 == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.enjoyingApp),
-          action: SnackBarAction(label: AppLocalizations.of(context)!.donate, onPressed: () => context.push('/about')),
+          content: Text(context.loc.enjoyingApp),
+          action: SnackBarAction(label: context.loc.donate, onPressed: () => context.push('/about')),
         ),
       );
     }
@@ -78,14 +92,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return MultiBlocProvider(
       providers: [BlocProvider.value(value: homeBloc)],
       child: BlocListener<HomeBloc, HomeState>(
-        listenWhen: (previous, current) =>
-            previous.value.errorMessage != current.value.errorMessage ||
-            previous.value.notification != current.value.notification,
         listener: (context, state) {
           state.maybeWhen(
             failure: (value, message) {
               if (message.contains('Shizuku is not running')) {
                 _showShizukuSetupDialog();
+              } else if (message.contains('Permission denied') || message.contains('grant permission')) {
+                _showPermissionDialog();
               }
             },
             success: (value) {
@@ -118,9 +131,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           child: TabBar(
                             controller: _tabController,
                             tabs: [
-                              Tab(text: '${AppLocalizations.of(context)!.all} (${value.allApps.length})'),
-                              Tab(text: '${AppLocalizations.of(context)!.user} (${value.userApps.length})'),
-                              Tab(text: '${AppLocalizations.of(context)!.system} (${value.systemApps.length})'),
+                              Tab(text: '${context.loc.all} (${value.allApps.length})'),
+                              Tab(text: '${context.loc.user} (${value.userApps.length})'),
+                              Tab(text: '${context.loc.system} (${value.systemApps.length})'),
                             ],
                           ),
                         )
@@ -138,8 +151,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           }
                         },
                         tooltip: value.isSearching
-                            ? AppLocalizations.of(context)!.closeSearch
-                            : AppLocalizations.of(context)!.search,
+                            ? context.loc.closeSearch
+                            : context.loc.search,
                       ),
                       IconButton(
                         icon: Icon(
@@ -147,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           color: value.isAutoUpdateEnabled ? Theme.of(context).colorScheme.primary : null,
                         ),
                         onPressed: () => homeBloc.add(const HomeEvent.toggleAutoUpdate()),
-                        tooltip: AppLocalizations.of(context)!.autoUpdate,
+                        tooltip: context.loc.autoUpdate,
                       ),
                       IconButton(
                         icon:
@@ -158,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                             : const Icon(Icons.refresh),
                         onPressed: value.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
-                        tooltip: AppLocalizations.of(context)!.refresh,
+                        tooltip: context.loc.refresh,
                       ),
                     ],
                     const LanguageSelector(),

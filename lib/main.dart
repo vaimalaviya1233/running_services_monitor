@@ -5,6 +5,7 @@ import 'l10n/app_localizations.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'core/dependency_injection/dependency_injection.dart';
+import 'core/extensions.dart';
 import 'core/theme/theme_bloc.dart';
 import 'bloc/language_bloc/language_bloc.dart';
 import 'core/routing/app_router.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
             builder: (context, languageState) {
               return MaterialApp.router(
                 routerConfig: createAppRouter(),
-                onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+                onGenerateTitle: (context) => context.loc.appTitle,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
