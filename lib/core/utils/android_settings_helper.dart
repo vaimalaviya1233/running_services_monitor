@@ -24,7 +24,6 @@ class AndroidSettingsHelper {
       }
     } catch (e) {
       final errorMsg = e.toString().toLowerCase();
-      print("Error: $errorMsg");
       final message = errorMsg.contains('permission')
           ? 'You need root permission to open Running Services settings Or try with Shizuku'
           : 'Error opening Running Services: ${e.toString()}';

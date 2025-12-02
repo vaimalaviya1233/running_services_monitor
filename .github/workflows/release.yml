@@ -63,6 +63,7 @@ jobs:
 
       - name: 🏗️ Build APK and App Bundle
         run: |
+          flutter build apk --release --split-per-abi
           flutter build apk --release
           flutter build appbundle --release
 
@@ -86,6 +87,9 @@ jobs:
           VERSION=${{ steps.version_info.outputs.version }}
           BUILD_NUMBER=${{ steps.version_info.outputs.build_number }}
           mkdir -p app_build
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk app_build/rsm_${VERSION}+${BUILD_NUMBER}_armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk app_build/rsm_${VERSION}+${BUILD_NUMBER}_arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk app_build/rsm_${VERSION}+${BUILD_NUMBER}_x86_64.apk
           cp build/app/outputs/apk/release/app-release.apk app_build/rsm_${VERSION}+${BUILD_NUMBER}.apk
           cp build/app/outputs/bundle/release/app-release.aab app_build/rsm_${VERSION}+${BUILD_NUMBER}.aab
         shell: bash
@@ -125,20 +129,27 @@ jobs:
           
           files = []
           
-          # Check if app files exist and add them
           version = "${{ needs.build-android.outputs.version }}"
           build_number = "${{ needs.build-android.outputs.build_number }}"
           
           if version and build_number:
-              apk_file = f"release_files/rsm_{version}+{build_number}.apk"
+              universal_apk = f"release_files/rsm_{version}+{build_number}.apk"
+              armeabi_apk = f"release_files/rsm_{version}+{build_number}_armeabi-v7a.apk"
+              arm64_apk = f"release_files/rsm_{version}+{build_number}_arm64-v8a.apk"
+              x86_64_apk = f"release_files/rsm_{version}+{build_number}_x86_64.apk"
               aab_file = f"release_files/rsm_{version}+{build_number}.aab"
               
-              if os.path.isfile(apk_file):
-                  files.append(apk_file)
+              if os.path.isfile(universal_apk):
+                  files.append(universal_apk)
+              if os.path.isfile(armeabi_apk):
+                  files.append(armeabi_apk)
+              if os.path.isfile(arm64_apk):
+                  files.append(arm64_apk)
+              if os.path.isfile(x86_64_apk):
+                  files.append(x86_64_apk)
               if os.path.isfile(aab_file):
                   files.append(aab_file)
           
-          # Write files to GitHub output
           files_str = "\n".join(files)
           
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
