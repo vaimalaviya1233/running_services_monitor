@@ -1,6 +1,8 @@
 # Running Services Monitor
 
-[![Download APK](https://img.shields.io/github/v/release/biplobsd/running_services_monitor?style=for-the-badge&label=Download%20APK&color=blue)](https://github.com/biplobsd/running_services_monitor/releases/latest)
+| Android | Release |
+|:-:|:-:|
+| [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75">](https://play.google.com/store/apps/details?id=me.biplobsd.rsm) | [![Download APK](https://img.shields.io/github/v/release/biplobsd/running_services_monitor?style=for-the-badge&label=Download%20APK&color=blue)](https://github.com/biplobsd/running_services_monitor/releases/latest) |
 
 Running Services Monitor is a powerful Flutter application designed to help you Monitor running services on your Android device. With a clean and intuitive interface, you can easily view system and user apps, check their status efficiently.
 
