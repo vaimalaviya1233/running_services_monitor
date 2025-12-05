@@ -103,12 +103,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 _showPermissionDialog();
               }
             },
-            success: (value) {
-              if (value.notification != null) {
+            success: (value, toast) {
+              if (toast != null) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(value.notification!, style: TextStyle(fontSize: 14.sp)),
+                    content: Text(toast, style: TextStyle(fontSize: 14.sp)),
                     duration: const Duration(seconds: 1),
                     behavior: SnackBarBehavior.floating,
                   ),
@@ -150,7 +150,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   child: BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       final value = state.value;
-                      return Text('${context.loc.system} (${value.systemApps.length})', style: TextStyle(fontSize: 14.sp));
+                      return Text(
+                        '${context.loc.system} (${value.systemApps.length})',
+                        style: TextStyle(fontSize: 14.sp),
+                      );
                     },
                   ),
                 ),
@@ -189,18 +192,30 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   );
                 },
               ),
-              BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
-                  final value = state.value;
-                  if (!value.shizukuReady) return const SizedBox.shrink();
+              BlocSelector<HomeBloc, HomeState, ({bool shizukuReady, bool isLoading, bool hasApps})>(
+                selector: (state) {
+                  final isLoading = state.mapOrNull(loading: (_) => true) ?? false;
+
+                  return (
+                    shizukuReady: state.value.shizukuReady,
+                    isLoading: isLoading,
+                    hasApps:
+                        state.value.systemApps.isNotEmpty &&
+                        state.value.userApps.isNotEmpty &&
+                        state.value.allApps.isNotEmpty,
+                  );
+                },
+                builder: (context, data) {
+                  if (!data.shizukuReady) return const SizedBox.shrink();
                   return IconButton(
-                    icon: value.isLoading &&
-                            value.systemApps.isNotEmpty &&
-                            value.userApps.isNotEmpty &&
-                            value.allApps.isNotEmpty
-                        ? SizedBox(width: 18.w, height: 24.h, child: const FittedBox(child: CircularProgressIndicator()))
+                    icon: data.isLoading
+                        ? SizedBox(
+                            width: 18.w,
+                            height: 24.h,
+                            child: const FittedBox(child: CircularProgressIndicator()),
+                          )
                         : const Icon(Icons.refresh),
-                    onPressed: value.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
+                    onPressed: data.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
                     tooltip: context.loc.refresh,
                   );
                 },

@@ -505,6 +505,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Page not found: {location}'**
   String pageNotFound(String location);
+
+  /// No description provided for @package.
+  ///
+  /// In en, this message translates to:
+  /// **'Package'**
+  String get package;
+
+  /// No description provided for @service.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get service;
+
+  /// No description provided for @process.
+  ///
+  /// In en, this message translates to:
+  /// **'Process'**
+  String get process;
+
+  /// No description provided for @pid.
+  ///
+  /// In en, this message translates to:
+  /// **'PID'**
+  String get pid;
+
+  /// No description provided for @uid.
+  ///
+  /// In en, this message translates to:
+  /// **'UID'**
+  String get uid;
+
+  /// No description provided for @ramUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Usage'**
+  String get ramUsage;
+
+  /// No description provided for @intent.
+  ///
+  /// In en, this message translates to:
+  /// **'Intent'**
+  String get intent;
+
+  /// No description provided for @foreground.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreground'**
+  String get foreground;
+
+  /// No description provided for @foregroundId.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreground ID'**
+  String get foregroundId;
+
+  /// No description provided for @startRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Requested'**
+  String get startRequested;
+
+  /// No description provided for @createdFromFg.
+  ///
+  /// In en, this message translates to:
+  /// **'Created From FG'**
+  String get createdFromFg;
+
+  /// No description provided for @createTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Time'**
+  String get createTime;
+
+  /// No description provided for @lastActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Activity'**
+  String get lastActivity;
+
+  /// No description provided for @baseDir.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Dir'**
+  String get baseDir;
+
+  /// No description provided for @dataDir.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Dir'**
+  String get dataDir;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @systemApp.
+  ///
+  /// In en, this message translates to:
+  /// **'System App'**
+  String get systemApp;
+
+  /// No description provided for @userApp.
+  ///
+  /// In en, this message translates to:
+  /// **'User App'**
+  String get userApp;
+
+  /// No description provided for @rawOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw Output'**
+  String get rawOutput;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
 }
 
 class _AppLocalizationsDelegate

@@ -41,7 +41,7 @@ class AppList extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: () async {
             final homeBloc = context.read<HomeBloc>();
-            final future = homeBloc.stream.firstWhere((state) => !state.value.isLoading);
+            final future = homeBloc.stream.first;
             homeBloc.add(const HomeEvent.loadData());
             await future;
           },

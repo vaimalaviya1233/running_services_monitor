@@ -1,8 +1,11 @@
 package me.biplobsd.rsm
 
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.Looper
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,13 +17,14 @@ import java.io.InputStreamReader
 
 class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListener {
     private val CHANNEL = "com.runningservices/shizuku"
+    private val STREAM_CHANNEL = "com.runningservices/shizuku_stream"
     private val SHIZUKU_PERMISSION_REQUEST_CODE = 1001
     private var pendingPermissionResult: MethodChannel.Result? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        // Register permission listener
         Shizuku.addRequestPermissionResultListener(this)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
@@ -43,7 +47,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
                 "checkPermission" -> {
                     try {
                         if (Shizuku.isPreV11()) {
-                            result.success(false) // Not supported pre-v11 for this check usually
+                            result.success(false)
                         } else {
                             result.success(Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED)
                         }
@@ -56,7 +60,6 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
                         if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
                             result.success(true)
                         } else if (Shizuku.shouldShowRequestPermissionRationale()) {
-                            // User denied before, maybe show explanation? For now just request.
                             pendingPermissionResult = result
                             Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
                         } else {
@@ -70,6 +73,38 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
                 else -> result.notImplemented()
             }
         }
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM_CHANNEL).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    if (events == null) return
+                    
+                    val command = arguments as? String
+                    if (command == null) {
+                        events.error("INVALID_ARGUMENT", "Command cannot be null", null)
+                        events.endOfStream()
+                        return
+                    }
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            executeShizukuCommandWithStream(command, events)
+                            withContext(Dispatchers.Main) {
+                                events.endOfStream()
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                events.error("EXECUTION_ERROR", e.message, null)
+                                events.endOfStream()
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancel(arguments: Any?) {
+                }
+            }
+        )
     }
 
     override fun onDestroy() {
@@ -116,5 +151,38 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
 
         process.waitFor()
         return output.toString()
+    }
+
+    private fun executeShizukuCommandWithStream(command: String, events: EventChannel.EventSink) {
+        if (!Shizuku.pingBinder()) {
+            throw Exception("Shizuku is not running")
+        }
+
+        val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+        var line: String?
+
+        while (reader.readLine().also { line = it } != null) {
+            line?.let {
+                val finalLine = it
+                mainHandler.post {
+                    events.success(finalLine)
+                }
+            }
+        }
+
+        val errorReader = BufferedReader(InputStreamReader(process.errorStream))
+        while (errorReader.readLine().also { line = it } != null) {
+            line?.let {
+                val finalLine = it
+                mainHandler.post {
+                    events.success("ERROR: $finalLine")
+                }
+            }
+        }
+
+        process.waitFor()
+        reader.close()
+        errorReader.close()
     }
 }

@@ -690,12 +690,12 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( HomeStateModel value)?  initial,TResult Function( HomeStateModel value)?  loading,TResult Function( HomeStateModel value)?  success,TResult Function( HomeStateModel value,  String message)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( HomeStateModel value)?  initial,TResult Function( HomeStateModel value,  String? message)?  loading,TResult Function( HomeStateModel value,  String? toast)?  success,TResult Function( HomeStateModel value,  String message)?  failure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that.value);case _Loading() when loading != null:
-return loading(_that.value);case _Success() when success != null:
-return success(_that.value);case _Failure() when failure != null:
+return loading(_that.value,_that.message);case _Success() when success != null:
+return success(_that.value,_that.toast);case _Failure() when failure != null:
 return failure(_that.value,_that.message);case _:
   return orElse();
 
@@ -714,12 +714,12 @@ return failure(_that.value,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( HomeStateModel value)  initial,required TResult Function( HomeStateModel value)  loading,required TResult Function( HomeStateModel value)  success,required TResult Function( HomeStateModel value,  String message)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( HomeStateModel value)  initial,required TResult Function( HomeStateModel value,  String? message)  loading,required TResult Function( HomeStateModel value,  String? toast)  success,required TResult Function( HomeStateModel value,  String message)  failure,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that.value);case _Loading():
-return loading(_that.value);case _Success():
-return success(_that.value);case _Failure():
+return loading(_that.value,_that.message);case _Success():
+return success(_that.value,_that.toast);case _Failure():
 return failure(_that.value,_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -737,12 +737,12 @@ return failure(_that.value,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( HomeStateModel value)?  initial,TResult? Function( HomeStateModel value)?  loading,TResult? Function( HomeStateModel value)?  success,TResult? Function( HomeStateModel value,  String message)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( HomeStateModel value)?  initial,TResult? Function( HomeStateModel value,  String? message)?  loading,TResult? Function( HomeStateModel value,  String? toast)?  success,TResult? Function( HomeStateModel value,  String message)?  failure,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that.value);case _Loading() when loading != null:
-return loading(_that.value);case _Success() when success != null:
-return success(_that.value);case _Failure() when failure != null:
+return loading(_that.value,_that.message);case _Success() when success != null:
+return success(_that.value,_that.toast);case _Failure() when failure != null:
 return failure(_that.value,_that.message);case _:
   return null;
 
@@ -830,10 +830,11 @@ $HomeStateModelCopyWith<$Res> get value {
 
 
 class _Loading extends HomeState {
-  const _Loading(this.value): super._();
+  const _Loading(this.value, [this.message]): super._();
   
 
 @override final  HomeStateModel value;
+ final  String? message;
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
@@ -845,16 +846,16 @@ _$LoadingCopyWith<_Loading> get copyWith => __$LoadingCopyWithImpl<_Loading>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading&&(identical(other.value, value) || other.value == value)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,value);
+int get hashCode => Object.hash(runtimeType,value,message);
 
 @override
 String toString() {
-  return 'HomeState.loading(value: $value)';
+  return 'HomeState.loading(value: $value, message: $message)';
 }
 
 
@@ -865,7 +866,7 @@ abstract mixin class _$LoadingCopyWith<$Res> implements $HomeStateCopyWith<$Res>
   factory _$LoadingCopyWith(_Loading value, $Res Function(_Loading) _then) = __$LoadingCopyWithImpl;
 @override @useResult
 $Res call({
- HomeStateModel value
+ HomeStateModel value, String? message
 });
 
 
@@ -882,10 +883,11 @@ class __$LoadingCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? message = freezed,}) {
   return _then(_Loading(
 null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as HomeStateModel,
+as HomeStateModel,freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -905,10 +907,11 @@ $HomeStateModelCopyWith<$Res> get value {
 
 
 class _Success extends HomeState {
-  const _Success(this.value): super._();
+  const _Success(this.value, [this.toast]): super._();
   
 
 @override final  HomeStateModel value;
+ final  String? toast;
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
@@ -920,16 +923,16 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.value, value) || other.value == value)&&(identical(other.toast, toast) || other.toast == toast));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,value);
+int get hashCode => Object.hash(runtimeType,value,toast);
 
 @override
 String toString() {
-  return 'HomeState.success(value: $value)';
+  return 'HomeState.success(value: $value, toast: $toast)';
 }
 
 
@@ -940,7 +943,7 @@ abstract mixin class _$SuccessCopyWith<$Res> implements $HomeStateCopyWith<$Res>
   factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) = __$SuccessCopyWithImpl;
 @override @useResult
 $Res call({
- HomeStateModel value
+ HomeStateModel value, String? toast
 });
 
 
@@ -957,10 +960,11 @@ class __$SuccessCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? toast = freezed,}) {
   return _then(_Success(
 null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as HomeStateModel,
+as HomeStateModel,freezed == toast ? _self.toast : toast // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

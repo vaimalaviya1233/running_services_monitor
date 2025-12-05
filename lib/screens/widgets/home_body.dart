@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
+import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'app_list.dart';
 import 'ram_bar.dart';
@@ -15,19 +16,33 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        final value = state.value;
-        final homeBloc = context.read<HomeBloc>();
+    return BlocSelector<
+      HomeBloc,
+      HomeState,
+      ({bool isLoading, String? loadingMessage, bool isError, String? errorMessage, bool hasApps})
+    >(
+      selector: (state) {
+        final (isLoading, loadingMessage) = state.mapOrNull(loading: (s) => (true, s.message)) ?? (false, null);
 
-        if (value.isLoading && value.allApps.isEmpty) {
-          return LoadingState(status: value.loadingStatus);
+        final (isError, errorMessage) = state.mapOrNull(failure: (s) => (true, s.message)) ?? (false, null);
+
+        return (
+          isLoading: isLoading,
+          loadingMessage: loadingMessage,
+          isError: isError,
+          errorMessage: errorMessage,
+          hasApps: state.value.allApps.isNotEmpty,
+        );
+      },
+      builder: (context, data) {
+        if (data.isLoading && !data.hasApps) {
+          return LoadingState(status: data.loadingMessage);
         }
 
-        if (value.errorMessage != null && value.allApps.isEmpty) {
+        if (data.isError && !data.hasApps) {
           return ErrorState(
-            errorMessage: value.errorMessage!,
-            onRetry: () => homeBloc.add(const HomeEvent.initializeShizuku()),
+            errorMessage: data.errorMessage ?? context.loc.error,
+            onRetry: () => context.read<HomeBloc>().add(const HomeEvent.initializeShizuku()),
           );
         }
 

@@ -14,7 +14,11 @@ class ServiceDetailRow extends StatelessWidget {
       children: [
         Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
         SizedBox(height: 2.h),
-        SelectableText(value, style: TextStyle(fontSize: 14.sp)),
+        SelectableText(
+          scrollPhysics: NeverScrollableScrollPhysics(),
+          value,
+          style: TextStyle(fontSize: 14.sp),
+        ),
       ],
     );
   }

@@ -4,7 +4,6 @@ import 'package:installed_apps/app_info.dart';
 
 part 'service_info.freezed.dart';
 
-
 @freezed
 abstract class RunningServiceInfo with _$RunningServiceInfo {
   const factory RunningServiceInfo({
@@ -19,9 +18,19 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     String? ramUsage,
     double? ramInKb,
     Uint8List? icon,
+    String? intent,
+    String? baseDir,
+    String? dataDir,
+    bool? isForeground,
+    int? foregroundId,
+    String? createTime,
+    String? lastActivityTime,
+    bool? startRequested,
+    bool? createdFromFg,
+    String? rawServiceRecord,
+    int? uid,
   }) = _RunningServiceInfo;
 }
-
 
 @freezed
 abstract class AppProcessInfo with _$AppProcessInfo {
@@ -36,7 +45,6 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     AppInfo? appInfo,
   }) = _AppProcessInfo;
 }
-
 
 @freezed
 abstract class RunningProcessInfo with _$RunningProcessInfo {

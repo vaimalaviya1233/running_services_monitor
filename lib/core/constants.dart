@@ -6,6 +6,7 @@ class AppConstants {
   static const String shizukuPackageName = 'moe.shizuku.privileged.api';
   static const String shizukuPlayStoreUrl = 'https://play.google.com/store/apps/details?id=$shizukuPackageName';
   static const String shizukuChannelName = 'com.runningservices/shizuku';
+  static const String shizukuStreamChannelName = 'com.runningservices/shizuku_stream';
 
   // Android system commands
   static const String cmdDumpsysActivityServices = 'dumpsys activity services';

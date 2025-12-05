@@ -222,4 +222,70 @@ class AppLocalizationsEn extends AppLocalizations {
   String pageNotFound(String location) {
     return 'Page not found: $location';
   }
+
+  @override
+  String get package => 'Package';
+
+  @override
+  String get service => 'Service';
+
+  @override
+  String get process => 'Process';
+
+  @override
+  String get pid => 'PID';
+
+  @override
+  String get uid => 'UID';
+
+  @override
+  String get ramUsage => 'RAM Usage';
+
+  @override
+  String get intent => 'Intent';
+
+  @override
+  String get foreground => 'Foreground';
+
+  @override
+  String get foregroundId => 'Foreground ID';
+
+  @override
+  String get startRequested => 'Start Requested';
+
+  @override
+  String get createdFromFg => 'Created From FG';
+
+  @override
+  String get createTime => 'Create Time';
+
+  @override
+  String get lastActivity => 'Last Activity';
+
+  @override
+  String get baseDir => 'Base Dir';
+
+  @override
+  String get dataDir => 'Data Dir';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get systemApp => 'System App';
+
+  @override
+  String get userApp => 'User App';
+
+  @override
+  String get rawOutput => 'Raw Output';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
 }

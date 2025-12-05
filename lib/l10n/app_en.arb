@@ -78,5 +78,27 @@
         "description": "The requested page location"
       }
     }
-  }
+  },
+  "package": "Package",
+  "service": "Service",
+  "process": "Process",
+  "pid": "PID",
+  "uid": "UID",
+  "ramUsage": "RAM Usage",
+  "intent": "Intent",
+  "foreground": "Foreground",
+  "foregroundId": "Foreground ID",
+  "startRequested": "Start Requested",
+  "createdFromFg": "Created From FG",
+  "createTime": "Create Time",
+  "lastActivity": "Last Activity",
+  "baseDir": "Base Dir",
+  "dataDir": "Data Dir",
+  "type": "Type",
+  "systemApp": "System App",
+  "userApp": "User App",
+  "rawOutput": "Raw Output",
+  "close": "Close",
+  "yes": "Yes",
+  "no": "No"
 }

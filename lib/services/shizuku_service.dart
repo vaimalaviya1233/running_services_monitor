@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
@@ -8,13 +10,13 @@ class ShizukuService {
   ShizukuService();
 
   static const _channel = MethodChannel(AppConstants.shizukuChannelName);
+  static const _streamChannel = EventChannel(AppConstants.shizukuStreamChannelName);
 
   bool _isInitialized = false;
   bool _hasPermission = false;
 
   bool get isInitialized => _isInitialized;
   bool get hasPermission => _hasPermission;
-
 
   Future<bool> isShizukuRunning() async {
     try {
@@ -27,7 +29,6 @@ class ShizukuService {
       return false;
     }
   }
-
 
   Future<bool> checkPermission() async {
     try {
@@ -42,7 +43,6 @@ class ShizukuService {
     }
   }
 
-
   Future<bool> requestPermission() async {
     try {
       debugPrint('Requesting Shizuku permission...');
@@ -56,13 +56,11 @@ class ShizukuService {
     }
   }
 
-
   Future<bool> initialize() async {
     if (_isInitialized) {
       debugPrint('Shizuku already initialized');
       return true;
     }
-
 
     final isRunning = await isShizukuRunning();
     if (!isRunning) {
@@ -70,10 +68,8 @@ class ShizukuService {
       return false;
     }
 
-
     final hasPermission = await checkPermission();
     if (!hasPermission) {
-
       final granted = await requestPermission();
       if (!granted) {
         debugPrint('Shizuku permission not granted');
@@ -86,7 +82,6 @@ class ShizukuService {
     debugPrint('Shizuku initialized successfully');
     return true;
   }
-
 
   Future<String?> executeCommand(String command) async {
     if (!_isInitialized || !_hasPermission) {
@@ -102,6 +97,24 @@ class ShizukuService {
     } catch (e) {
       debugPrint('Error executing command: $e');
       return null;
+    }
+  }
+
+  Stream<String> executeCommandStream(String command) {
+    if (!_isInitialized || !_hasPermission) {
+      debugPrint('Shizuku not initialized or no permission');
+      return Stream.error(Exception('Shizuku not initialized or no permission'));
+    }
+
+    try {
+      debugPrint('Executing command with streaming: $command');
+      return _streamChannel.receiveBroadcastStream(command).map((event) {
+        debugPrint('Received stream event: $event');
+        return event.toString();
+      });
+    } catch (e) {
+      debugPrint('Error executing command with streaming: $e');
+      return Stream.error(e);
     }
   }
 }
