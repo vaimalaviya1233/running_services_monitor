@@ -27,6 +27,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<_ToggleSearch>(_onToggleSearch);
     on<_UpdateSearchQuery>(_onUpdateSearchQuery);
     on<_RemoveApp>(_onRemoveApp);
+    on<_RemoveService>(_onRemoveService);
     on<_AutoUpdateTick>(_onAutoUpdateTick);
     on<_UpdateAppInfoIcons>(_onUpdateAppInfoIcons);
   }
@@ -192,6 +193,61 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       ),
     );
+  }
+
+  Future<void> _onRemoveService(_RemoveService event, Emitter<HomeState> emit) async {
+    final currentState = state.value;
+
+    AppProcessInfo? updateApp(AppProcessInfo app) {
+      if (app.packageName != event.packageName) return app;
+
+      final updatedServices = app.services.where((s) => s.serviceName != event.serviceName).toList();
+
+      if (updatedServices.isEmpty) return null;
+
+      double totalRamKb = 0;
+      final Set<int> pids = {};
+      for (var service in updatedServices) {
+        totalRamKb += service.ramInKb ?? 0;
+        if (service.pid != null) pids.add(service.pid!);
+      }
+
+      return app.copyWith(
+        services: updatedServices,
+        pids: pids.toList(),
+        totalRamInKb: totalRamKb,
+        totalRam: _formatRam(totalRamKb),
+      );
+    }
+
+    final updatedAllApps = currentState.allApps.map(updateApp).whereType<AppProcessInfo>().toList();
+    final updatedUserApps = currentState.userApps.map(updateApp).whereType<AppProcessInfo>().toList();
+    final updatedSystemApps = currentState.systemApps.map(updateApp).whereType<AppProcessInfo>().toList();
+
+    double appsRam = 0;
+    for (var app in updatedAllApps) {
+      appsRam += app.totalRamInKb;
+    }
+
+    emit(
+      HomeState.success(
+        currentState.copyWith(
+          allApps: updatedAllApps,
+          userApps: updatedUserApps,
+          systemApps: updatedSystemApps,
+          appsRamKb: appsRam,
+        ),
+      ),
+    );
+  }
+
+  String _formatRam(double kb) {
+    if (kb > 1024 * 1024) {
+      return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';
+    } else if (kb > 1024) {
+      return '${(kb / 1024).toStringAsFixed(1)} MB';
+    }
+    return '${kb.toStringAsFixed(0)} KB';
   }
 
   Future<void> _onUpdateAppInfoIcons(_UpdateAppInfoIcons event, Emitter<HomeState> emit) async {

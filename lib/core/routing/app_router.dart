@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:running_services_monitor/l10n/app_localizations.dart';
-import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/screens/home_screen.dart';
 import 'package:running_services_monitor/screens/about_screen.dart';
 import 'package:running_services_monitor/screens/app_details_screen.dart';
@@ -16,9 +15,9 @@ GoRouter createAppRouter() {
         path: '/app-details',
         name: 'app-details',
         builder: (context, state) {
-          final appInfo = state.extra as AppProcessInfo?;
+          final packageId = state.extra as String?;
 
-          if (appInfo == null) {
+          if (packageId == null) {
             final l10n = AppLocalizations.of(context)!;
             return Scaffold(
               appBar: AppBar(title: Text(l10n.error)),
@@ -26,7 +25,7 @@ GoRouter createAppRouter() {
             );
           }
 
-          return AppDetailsScreen(appInfo: appInfo);
+          return AppDetailsScreen(packageId: packageId);
         },
       ),
     ],

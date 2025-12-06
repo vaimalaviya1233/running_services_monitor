@@ -27,7 +27,7 @@ class ServiceListItem extends StatelessWidget {
           children: [
             SizedBox(height: 4.h),
             Text(
-              service.packageName,
+              service.serviceName,
               style: TextStyle(fontSize: 12.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             if (service.ramUsage != null) ...[
@@ -62,7 +62,7 @@ class ServiceListItem extends StatelessWidget {
                 Icon(Icons.numbers, size: 12.w, color: Theme.of(context).colorScheme.primary),
                 SizedBox(width: 4.w),
                 Text(
-                  '${context.loc.pid}: ${service.pid}',
+                  '${context.loc.pid}: ${service.pid?.toString() ?? 'N/A'}',
                   style: TextStyle(fontSize: 11.sp, color: Theme.of(context).colorScheme.primary),
                 ),
                 SizedBox(width: 12.w),

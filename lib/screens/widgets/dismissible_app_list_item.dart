@@ -40,7 +40,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
         listener: (context, state) {
           state.when(
             initial: () {},
-            stopping: (_) {
+            stopping: (_, _) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Row(
@@ -59,7 +59,7 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                 ),
               );
             },
-            success: (packageName, pid) {
+            success: (packageName, serviceName, pid) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -67,7 +67,12 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                     children: [
                       const Icon(Icons.check_circle, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text(AppLocalizations.of(context)!.allServicesStopped, style: TextStyle(fontSize: 14.sp))),
+                      Expanded(
+                        child: Text(
+                          AppLocalizations.of(context)!.allServicesStopped,
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      ),
                     ],
                   ),
                   backgroundColor: Colors.green[700],
@@ -88,7 +93,12 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                     children: [
                       const Icon(Icons.error, color: Colors.white),
                       const SizedBox(width: 16),
-                      Expanded(child: Text('${AppLocalizations.of(context)!.stopServiceError}: $message', style: TextStyle(fontSize: 14.sp))),
+                      Expanded(
+                        child: Text(
+                          '${AppLocalizations.of(context)!.stopServiceError}: $message',
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      ),
                     ],
                   ),
                   backgroundColor: Colors.red[700],
@@ -112,7 +122,10 @@ class _DismissibleAppListItemState extends State<DismissibleAppListItem> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.appInfo.appName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                    Text(
+                      widget.appInfo.appName,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                    ),
                     const SizedBox(height: 8),
                     Text(AppLocalizations.of(context)!.stopServiceWarning, style: TextStyle(fontSize: 14.sp)),
                     if (widget.appInfo.isSystemApp) ...[

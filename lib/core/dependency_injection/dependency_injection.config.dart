@@ -12,7 +12,6 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../bloc/app_details_bloc/app_details_bloc.dart' as _i543;
 import '../../bloc/home_bloc/home_bloc.dart' as _i98;
 import '../../bloc/language_bloc/language_bloc.dart' as _i663;
 import '../../bloc/stop_service_bloc/stop_service_bloc.dart' as _i256;
@@ -32,9 +31,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());
     gh.lazySingleton<_i842.ShizukuService>(() => _i842.ShizukuService());
-    gh.factory<_i543.AppDetailsBloc>(
-      () => _i543.AppDetailsBloc(gh<_i825.AppInfoService>()),
-    );
     gh.lazySingleton<_i622.ProcessService>(
       () => _i622.ProcessService(
         gh<_i842.ShizukuService>(),

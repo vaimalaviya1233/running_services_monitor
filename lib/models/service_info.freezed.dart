@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RunningServiceInfo {
 
- String get user; int get pid; String get processName; String get serviceName; String get packageName; bool get isSystemApp; String? get serviceClass; String? get appName; String? get ramUsage; double? get ramInKb; Uint8List? get icon; String? get intent; String? get baseDir; String? get dataDir; bool? get isForeground; int? get foregroundId; String? get createTime; String? get lastActivityTime; bool? get startRequested; bool? get createdFromFg; String? get rawServiceRecord; int? get uid; List<ConnectionRecord> get connections;
+ String get user; int? get pid; String get processName; String get serviceName; String get packageName; bool get isSystemApp; String? get serviceClass; String? get appName; String? get ramUsage; double? get ramInKb; Uint8List? get icon; String? get intent; String? get baseDir; String? get dataDir; bool? get isForeground; int? get foregroundId; String? get createTime; String? get lastActivityTime; bool? get startRequested; bool? get createdFromFg; String? get rawServiceRecord; int? get uid; int? get recentCallingUid; List<ConnectionRecord> get connections;
 /// Create a copy of RunningServiceInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $RunningServiceInfoCopyWith<RunningServiceInfo> get copyWith => _$RunningService
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RunningServiceInfo&&(identical(other.user, user) || other.user == user)&&(identical(other.pid, pid) || other.pid == pid)&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName)&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&(identical(other.serviceClass, serviceClass) || other.serviceClass == serviceClass)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.ramUsage, ramUsage) || other.ramUsage == ramUsage)&&(identical(other.ramInKb, ramInKb) || other.ramInKb == ramInKb)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.intent, intent) || other.intent == intent)&&(identical(other.baseDir, baseDir) || other.baseDir == baseDir)&&(identical(other.dataDir, dataDir) || other.dataDir == dataDir)&&(identical(other.isForeground, isForeground) || other.isForeground == isForeground)&&(identical(other.foregroundId, foregroundId) || other.foregroundId == foregroundId)&&(identical(other.createTime, createTime) || other.createTime == createTime)&&(identical(other.lastActivityTime, lastActivityTime) || other.lastActivityTime == lastActivityTime)&&(identical(other.startRequested, startRequested) || other.startRequested == startRequested)&&(identical(other.createdFromFg, createdFromFg) || other.createdFromFg == createdFromFg)&&(identical(other.rawServiceRecord, rawServiceRecord) || other.rawServiceRecord == rawServiceRecord)&&(identical(other.uid, uid) || other.uid == uid)&&const DeepCollectionEquality().equals(other.connections, connections));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RunningServiceInfo&&(identical(other.user, user) || other.user == user)&&(identical(other.pid, pid) || other.pid == pid)&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName)&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&(identical(other.serviceClass, serviceClass) || other.serviceClass == serviceClass)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.ramUsage, ramUsage) || other.ramUsage == ramUsage)&&(identical(other.ramInKb, ramInKb) || other.ramInKb == ramInKb)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.intent, intent) || other.intent == intent)&&(identical(other.baseDir, baseDir) || other.baseDir == baseDir)&&(identical(other.dataDir, dataDir) || other.dataDir == dataDir)&&(identical(other.isForeground, isForeground) || other.isForeground == isForeground)&&(identical(other.foregroundId, foregroundId) || other.foregroundId == foregroundId)&&(identical(other.createTime, createTime) || other.createTime == createTime)&&(identical(other.lastActivityTime, lastActivityTime) || other.lastActivityTime == lastActivityTime)&&(identical(other.startRequested, startRequested) || other.startRequested == startRequested)&&(identical(other.createdFromFg, createdFromFg) || other.createdFromFg == createdFromFg)&&(identical(other.rawServiceRecord, rawServiceRecord) || other.rawServiceRecord == rawServiceRecord)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.recentCallingUid, recentCallingUid) || other.recentCallingUid == recentCallingUid)&&const DeepCollectionEquality().equals(other.connections, connections));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,user,pid,processName,serviceName,packageName,isSystemApp,serviceClass,appName,ramUsage,ramInKb,const DeepCollectionEquality().hash(icon),intent,baseDir,dataDir,isForeground,foregroundId,createTime,lastActivityTime,startRequested,createdFromFg,rawServiceRecord,uid,const DeepCollectionEquality().hash(connections)]);
+int get hashCode => Object.hashAll([runtimeType,user,pid,processName,serviceName,packageName,isSystemApp,serviceClass,appName,ramUsage,ramInKb,const DeepCollectionEquality().hash(icon),intent,baseDir,dataDir,isForeground,foregroundId,createTime,lastActivityTime,startRequested,createdFromFg,rawServiceRecord,uid,recentCallingUid,const DeepCollectionEquality().hash(connections)]);
 
 @override
 String toString() {
-  return 'RunningServiceInfo(user: $user, pid: $pid, processName: $processName, serviceName: $serviceName, packageName: $packageName, isSystemApp: $isSystemApp, serviceClass: $serviceClass, appName: $appName, ramUsage: $ramUsage, ramInKb: $ramInKb, icon: $icon, intent: $intent, baseDir: $baseDir, dataDir: $dataDir, isForeground: $isForeground, foregroundId: $foregroundId, createTime: $createTime, lastActivityTime: $lastActivityTime, startRequested: $startRequested, createdFromFg: $createdFromFg, rawServiceRecord: $rawServiceRecord, uid: $uid, connections: $connections)';
+  return 'RunningServiceInfo(user: $user, pid: $pid, processName: $processName, serviceName: $serviceName, packageName: $packageName, isSystemApp: $isSystemApp, serviceClass: $serviceClass, appName: $appName, ramUsage: $ramUsage, ramInKb: $ramInKb, icon: $icon, intent: $intent, baseDir: $baseDir, dataDir: $dataDir, isForeground: $isForeground, foregroundId: $foregroundId, createTime: $createTime, lastActivityTime: $lastActivityTime, startRequested: $startRequested, createdFromFg: $createdFromFg, rawServiceRecord: $rawServiceRecord, uid: $uid, recentCallingUid: $recentCallingUid, connections: $connections)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $RunningServiceInfoCopyWith<$Res>  {
   factory $RunningServiceInfoCopyWith(RunningServiceInfo value, $Res Function(RunningServiceInfo) _then) = _$RunningServiceInfoCopyWithImpl;
 @useResult
 $Res call({
- String user, int pid, String processName, String serviceName, String packageName, bool isSystemApp, String? serviceClass, String? appName, String? ramUsage, double? ramInKb, Uint8List? icon, String? intent, String? baseDir, String? dataDir, bool? isForeground, int? foregroundId, String? createTime, String? lastActivityTime, bool? startRequested, bool? createdFromFg, String? rawServiceRecord, int? uid, List<ConnectionRecord> connections
+ String user, int? pid, String processName, String serviceName, String packageName, bool isSystemApp, String? serviceClass, String? appName, String? ramUsage, double? ramInKb, Uint8List? icon, String? intent, String? baseDir, String? dataDir, bool? isForeground, int? foregroundId, String? createTime, String? lastActivityTime, bool? startRequested, bool? createdFromFg, String? rawServiceRecord, int? uid, int? recentCallingUid, List<ConnectionRecord> connections
 });
 
 
@@ -62,11 +62,11 @@ class _$RunningServiceInfoCopyWithImpl<$Res>
 
 /// Create a copy of RunningServiceInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? user = null,Object? pid = null,Object? processName = null,Object? serviceName = null,Object? packageName = null,Object? isSystemApp = null,Object? serviceClass = freezed,Object? appName = freezed,Object? ramUsage = freezed,Object? ramInKb = freezed,Object? icon = freezed,Object? intent = freezed,Object? baseDir = freezed,Object? dataDir = freezed,Object? isForeground = freezed,Object? foregroundId = freezed,Object? createTime = freezed,Object? lastActivityTime = freezed,Object? startRequested = freezed,Object? createdFromFg = freezed,Object? rawServiceRecord = freezed,Object? uid = freezed,Object? connections = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? user = null,Object? pid = freezed,Object? processName = null,Object? serviceName = null,Object? packageName = null,Object? isSystemApp = null,Object? serviceClass = freezed,Object? appName = freezed,Object? ramUsage = freezed,Object? ramInKb = freezed,Object? icon = freezed,Object? intent = freezed,Object? baseDir = freezed,Object? dataDir = freezed,Object? isForeground = freezed,Object? foregroundId = freezed,Object? createTime = freezed,Object? lastActivityTime = freezed,Object? startRequested = freezed,Object? createdFromFg = freezed,Object? rawServiceRecord = freezed,Object? uid = freezed,Object? recentCallingUid = freezed,Object? connections = null,}) {
   return _then(_self.copyWith(
 user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as String,pid: null == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
-as int,processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
+as String,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int?,processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
 as String,serviceName: null == serviceName ? _self.serviceName : serviceName // ignore: cast_nullable_to_non_nullable
 as String,packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
@@ -86,6 +86,7 @@ as String?,startRequested: freezed == startRequested ? _self.startRequested : st
 as bool?,createdFromFg: freezed == createdFromFg ? _self.createdFromFg : createdFromFg // ignore: cast_nullable_to_non_nullable
 as bool?,rawServiceRecord: freezed == rawServiceRecord ? _self.rawServiceRecord : rawServiceRecord // ignore: cast_nullable_to_non_nullable
 as String?,uid: freezed == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as int?,recentCallingUid: freezed == recentCallingUid ? _self.recentCallingUid : recentCallingUid // ignore: cast_nullable_to_non_nullable
 as int?,connections: null == connections ? _self.connections : connections // ignore: cast_nullable_to_non_nullable
 as List<ConnectionRecord>,
   ));
@@ -172,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String user,  int pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  List<ConnectionRecord> connections)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String user,  int? pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  int? recentCallingUid,  List<ConnectionRecord> connections)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RunningServiceInfo() when $default != null:
-return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.connections);case _:
+return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.recentCallingUid,_that.connections);case _:
   return orElse();
 
 }
@@ -193,10 +194,10 @@ return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String user,  int pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  List<ConnectionRecord> connections)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String user,  int? pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  int? recentCallingUid,  List<ConnectionRecord> connections)  $default,) {final _that = this;
 switch (_that) {
 case _RunningServiceInfo():
-return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.connections);case _:
+return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.recentCallingUid,_that.connections);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +214,10 @@ return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String user,  int pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  List<ConnectionRecord> connections)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String user,  int? pid,  String processName,  String serviceName,  String packageName,  bool isSystemApp,  String? serviceClass,  String? appName,  String? ramUsage,  double? ramInKb,  Uint8List? icon,  String? intent,  String? baseDir,  String? dataDir,  bool? isForeground,  int? foregroundId,  String? createTime,  String? lastActivityTime,  bool? startRequested,  bool? createdFromFg,  String? rawServiceRecord,  int? uid,  int? recentCallingUid,  List<ConnectionRecord> connections)?  $default,) {final _that = this;
 switch (_that) {
 case _RunningServiceInfo() when $default != null:
-return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.connections);case _:
+return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.packageName,_that.isSystemApp,_that.serviceClass,_that.appName,_that.ramUsage,_that.ramInKb,_that.icon,_that.intent,_that.baseDir,_that.dataDir,_that.isForeground,_that.foregroundId,_that.createTime,_that.lastActivityTime,_that.startRequested,_that.createdFromFg,_that.rawServiceRecord,_that.uid,_that.recentCallingUid,_that.connections);case _:
   return null;
 
 }
@@ -228,11 +229,11 @@ return $default(_that.user,_that.pid,_that.processName,_that.serviceName,_that.p
 
 
 class _RunningServiceInfo implements RunningServiceInfo {
-  const _RunningServiceInfo({required this.user, required this.pid, required this.processName, required this.serviceName, required this.packageName, required this.isSystemApp, this.serviceClass, this.appName, this.ramUsage, this.ramInKb, this.icon, this.intent, this.baseDir, this.dataDir, this.isForeground, this.foregroundId, this.createTime, this.lastActivityTime, this.startRequested, this.createdFromFg, this.rawServiceRecord, this.uid, final  List<ConnectionRecord> connections = const []}): _connections = connections;
+  const _RunningServiceInfo({required this.user, this.pid, required this.processName, required this.serviceName, required this.packageName, required this.isSystemApp, this.serviceClass, this.appName, this.ramUsage, this.ramInKb, this.icon, this.intent, this.baseDir, this.dataDir, this.isForeground, this.foregroundId, this.createTime, this.lastActivityTime, this.startRequested, this.createdFromFg, this.rawServiceRecord, this.uid, this.recentCallingUid, final  List<ConnectionRecord> connections = const []}): _connections = connections;
   
 
 @override final  String user;
-@override final  int pid;
+@override final  int? pid;
 @override final  String processName;
 @override final  String serviceName;
 @override final  String packageName;
@@ -253,6 +254,7 @@ class _RunningServiceInfo implements RunningServiceInfo {
 @override final  bool? createdFromFg;
 @override final  String? rawServiceRecord;
 @override final  int? uid;
+@override final  int? recentCallingUid;
  final  List<ConnectionRecord> _connections;
 @override@JsonKey() List<ConnectionRecord> get connections {
   if (_connections is EqualUnmodifiableListView) return _connections;
@@ -271,16 +273,16 @@ _$RunningServiceInfoCopyWith<_RunningServiceInfo> get copyWith => __$RunningServ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RunningServiceInfo&&(identical(other.user, user) || other.user == user)&&(identical(other.pid, pid) || other.pid == pid)&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName)&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&(identical(other.serviceClass, serviceClass) || other.serviceClass == serviceClass)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.ramUsage, ramUsage) || other.ramUsage == ramUsage)&&(identical(other.ramInKb, ramInKb) || other.ramInKb == ramInKb)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.intent, intent) || other.intent == intent)&&(identical(other.baseDir, baseDir) || other.baseDir == baseDir)&&(identical(other.dataDir, dataDir) || other.dataDir == dataDir)&&(identical(other.isForeground, isForeground) || other.isForeground == isForeground)&&(identical(other.foregroundId, foregroundId) || other.foregroundId == foregroundId)&&(identical(other.createTime, createTime) || other.createTime == createTime)&&(identical(other.lastActivityTime, lastActivityTime) || other.lastActivityTime == lastActivityTime)&&(identical(other.startRequested, startRequested) || other.startRequested == startRequested)&&(identical(other.createdFromFg, createdFromFg) || other.createdFromFg == createdFromFg)&&(identical(other.rawServiceRecord, rawServiceRecord) || other.rawServiceRecord == rawServiceRecord)&&(identical(other.uid, uid) || other.uid == uid)&&const DeepCollectionEquality().equals(other._connections, _connections));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RunningServiceInfo&&(identical(other.user, user) || other.user == user)&&(identical(other.pid, pid) || other.pid == pid)&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName)&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&(identical(other.serviceClass, serviceClass) || other.serviceClass == serviceClass)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.ramUsage, ramUsage) || other.ramUsage == ramUsage)&&(identical(other.ramInKb, ramInKb) || other.ramInKb == ramInKb)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.intent, intent) || other.intent == intent)&&(identical(other.baseDir, baseDir) || other.baseDir == baseDir)&&(identical(other.dataDir, dataDir) || other.dataDir == dataDir)&&(identical(other.isForeground, isForeground) || other.isForeground == isForeground)&&(identical(other.foregroundId, foregroundId) || other.foregroundId == foregroundId)&&(identical(other.createTime, createTime) || other.createTime == createTime)&&(identical(other.lastActivityTime, lastActivityTime) || other.lastActivityTime == lastActivityTime)&&(identical(other.startRequested, startRequested) || other.startRequested == startRequested)&&(identical(other.createdFromFg, createdFromFg) || other.createdFromFg == createdFromFg)&&(identical(other.rawServiceRecord, rawServiceRecord) || other.rawServiceRecord == rawServiceRecord)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.recentCallingUid, recentCallingUid) || other.recentCallingUid == recentCallingUid)&&const DeepCollectionEquality().equals(other._connections, _connections));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,user,pid,processName,serviceName,packageName,isSystemApp,serviceClass,appName,ramUsage,ramInKb,const DeepCollectionEquality().hash(icon),intent,baseDir,dataDir,isForeground,foregroundId,createTime,lastActivityTime,startRequested,createdFromFg,rawServiceRecord,uid,const DeepCollectionEquality().hash(_connections)]);
+int get hashCode => Object.hashAll([runtimeType,user,pid,processName,serviceName,packageName,isSystemApp,serviceClass,appName,ramUsage,ramInKb,const DeepCollectionEquality().hash(icon),intent,baseDir,dataDir,isForeground,foregroundId,createTime,lastActivityTime,startRequested,createdFromFg,rawServiceRecord,uid,recentCallingUid,const DeepCollectionEquality().hash(_connections)]);
 
 @override
 String toString() {
-  return 'RunningServiceInfo(user: $user, pid: $pid, processName: $processName, serviceName: $serviceName, packageName: $packageName, isSystemApp: $isSystemApp, serviceClass: $serviceClass, appName: $appName, ramUsage: $ramUsage, ramInKb: $ramInKb, icon: $icon, intent: $intent, baseDir: $baseDir, dataDir: $dataDir, isForeground: $isForeground, foregroundId: $foregroundId, createTime: $createTime, lastActivityTime: $lastActivityTime, startRequested: $startRequested, createdFromFg: $createdFromFg, rawServiceRecord: $rawServiceRecord, uid: $uid, connections: $connections)';
+  return 'RunningServiceInfo(user: $user, pid: $pid, processName: $processName, serviceName: $serviceName, packageName: $packageName, isSystemApp: $isSystemApp, serviceClass: $serviceClass, appName: $appName, ramUsage: $ramUsage, ramInKb: $ramInKb, icon: $icon, intent: $intent, baseDir: $baseDir, dataDir: $dataDir, isForeground: $isForeground, foregroundId: $foregroundId, createTime: $createTime, lastActivityTime: $lastActivityTime, startRequested: $startRequested, createdFromFg: $createdFromFg, rawServiceRecord: $rawServiceRecord, uid: $uid, recentCallingUid: $recentCallingUid, connections: $connections)';
 }
 
 
@@ -291,7 +293,7 @@ abstract mixin class _$RunningServiceInfoCopyWith<$Res> implements $RunningServi
   factory _$RunningServiceInfoCopyWith(_RunningServiceInfo value, $Res Function(_RunningServiceInfo) _then) = __$RunningServiceInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String user, int pid, String processName, String serviceName, String packageName, bool isSystemApp, String? serviceClass, String? appName, String? ramUsage, double? ramInKb, Uint8List? icon, String? intent, String? baseDir, String? dataDir, bool? isForeground, int? foregroundId, String? createTime, String? lastActivityTime, bool? startRequested, bool? createdFromFg, String? rawServiceRecord, int? uid, List<ConnectionRecord> connections
+ String user, int? pid, String processName, String serviceName, String packageName, bool isSystemApp, String? serviceClass, String? appName, String? ramUsage, double? ramInKb, Uint8List? icon, String? intent, String? baseDir, String? dataDir, bool? isForeground, int? foregroundId, String? createTime, String? lastActivityTime, bool? startRequested, bool? createdFromFg, String? rawServiceRecord, int? uid, int? recentCallingUid, List<ConnectionRecord> connections
 });
 
 
@@ -308,11 +310,11 @@ class __$RunningServiceInfoCopyWithImpl<$Res>
 
 /// Create a copy of RunningServiceInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? user = null,Object? pid = null,Object? processName = null,Object? serviceName = null,Object? packageName = null,Object? isSystemApp = null,Object? serviceClass = freezed,Object? appName = freezed,Object? ramUsage = freezed,Object? ramInKb = freezed,Object? icon = freezed,Object? intent = freezed,Object? baseDir = freezed,Object? dataDir = freezed,Object? isForeground = freezed,Object? foregroundId = freezed,Object? createTime = freezed,Object? lastActivityTime = freezed,Object? startRequested = freezed,Object? createdFromFg = freezed,Object? rawServiceRecord = freezed,Object? uid = freezed,Object? connections = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? user = null,Object? pid = freezed,Object? processName = null,Object? serviceName = null,Object? packageName = null,Object? isSystemApp = null,Object? serviceClass = freezed,Object? appName = freezed,Object? ramUsage = freezed,Object? ramInKb = freezed,Object? icon = freezed,Object? intent = freezed,Object? baseDir = freezed,Object? dataDir = freezed,Object? isForeground = freezed,Object? foregroundId = freezed,Object? createTime = freezed,Object? lastActivityTime = freezed,Object? startRequested = freezed,Object? createdFromFg = freezed,Object? rawServiceRecord = freezed,Object? uid = freezed,Object? recentCallingUid = freezed,Object? connections = null,}) {
   return _then(_RunningServiceInfo(
 user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as String,pid: null == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
-as int,processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
+as String,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int?,processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
 as String,serviceName: null == serviceName ? _self.serviceName : serviceName // ignore: cast_nullable_to_non_nullable
 as String,packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
@@ -332,6 +334,7 @@ as String?,startRequested: freezed == startRequested ? _self.startRequested : st
 as bool?,createdFromFg: freezed == createdFromFg ? _self.createdFromFg : createdFromFg // ignore: cast_nullable_to_non_nullable
 as bool?,rawServiceRecord: freezed == rawServiceRecord ? _self.rawServiceRecord : rawServiceRecord // ignore: cast_nullable_to_non_nullable
 as String?,uid: freezed == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as int?,recentCallingUid: freezed == recentCallingUid ? _self.recentCallingUid : recentCallingUid // ignore: cast_nullable_to_non_nullable
 as int?,connections: null == connections ? _self._connections : connections // ignore: cast_nullable_to_non_nullable
 as List<ConnectionRecord>,
   ));

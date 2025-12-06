@@ -13,6 +13,7 @@ class StopServiceBloc extends Bloc<StopServiceEvent, StopServiceState> {
 
   StopServiceBloc(this._processService) : super(const StopServiceState.initial()) {
     on<_StopAllServices>(_onStopAllServices);
+    on<_StopSingleService>(_onStopSingleService);
     on<_Reset>(_onReset);
   }
 
@@ -20,13 +21,50 @@ class StopServiceBloc extends Bloc<StopServiceEvent, StopServiceState> {
     emit(StopServiceState.stopping(packageName: event.packageName));
 
     try {
-
       final success = await _processService.stopService(event.packageName);
 
       if (success) {
         emit(StopServiceState.success(packageName: event.packageName));
       } else {
         emit(const StopServiceState.error(message: 'Failed to stop all services'));
+      }
+    } catch (e) {
+      emit(StopServiceState.error(message: 'Error: $e'));
+    }
+  }
+
+  Future<void> _onStopSingleService(_StopSingleService event, Emitter<StopServiceState> emit) async {
+    emit(StopServiceState.stopping(packageName: event.packageName, serviceName: event.serviceName));
+
+    try {
+      final success = await _processService.stopServiceByComponent(
+        packageName: event.packageName,
+        serviceName: event.serviceName,
+      );
+
+      if (success) {
+        emit(
+          StopServiceState.success(
+            packageName: event.packageName,
+            serviceName: event.serviceName,
+            servicePid: event.pid,
+          ),
+        );
+      } else {
+        if (event.pid != null) {
+          final killSuccess = await _processService.stopServiceByPid(event.pid!);
+          if (killSuccess) {
+            emit(
+              StopServiceState.success(
+                packageName: event.packageName,
+                serviceName: event.serviceName,
+                servicePid: event.pid,
+              ),
+            );
+            return;
+          }
+        }
+        emit(StopServiceState.error(message: 'Failed to stop service ${event.serviceName}'));
       }
     } catch (e) {
       emit(StopServiceState.error(message: 'Error: $e'));

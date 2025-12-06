@@ -118,7 +118,10 @@ class ProcessService {
               if (groupedApps.containsKey(currentPackage)) {
                 final existingApp = groupedApps[currentPackage]!;
                 final mergedServices = [...existingApp.services, ...services];
-                final Set<int> mergedPids = {...existingApp.pids, ...services.map((s) => s.pid)};
+                final Set<int> mergedPids = {
+                  ...existingApp.pids,
+                  ...services.where((s) => s.pid != null).map((s) => s.pid!),
+                };
 
                 double totalRamKb = 0;
                 for (var s in mergedServices) {
@@ -185,7 +188,10 @@ class ProcessService {
           if (groupedApps.containsKey(currentPackage)) {
             final existingApp = groupedApps[currentPackage]!;
             final mergedServices = [...existingApp.services, ...services];
-            final Set<int> mergedPids = {...existingApp.pids, ...services.map((s) => s.pid)};
+            final Set<int> mergedPids = {
+              ...existingApp.pids,
+              ...services.where((s) => s.pid != null).map((s) => s.pid!),
+            };
 
             double totalRamKb = 0;
             for (var s in mergedServices) {
@@ -249,6 +255,7 @@ class ProcessService {
     String? lastActivityTime;
     bool? startRequested;
     bool? createdFromFg;
+    int? recentCallingUid;
     final connections = <ConnectionRecord>[];
 
     final rawBlock = lines.join('\n');
@@ -313,11 +320,9 @@ class ProcessService {
         startRequested = trimmedLine.substring('startRequested='.length) == 'true';
       } else if (trimmedLine.startsWith('createdFromFg=')) {
         createdFromFg = trimmedLine.substring('createdFromFg='.length) == 'true';
+      } else if (trimmedLine.startsWith('recentCallingUid=')) {
+        recentCallingUid = int.tryParse(trimmedLine.substring('recentCallingUid='.length));
       } else if (trimmedLine.startsWith('app=ProcessRecord{')) {
-        if (trimmedLine == 'app=null') {
-          return [];
-        }
-
         final pidMatch = RegExp(r'(\d+):([^/]+)/u(\d+)a(\d+)').firstMatch(trimmedLine);
         if (pidMatch != null) {
           pid = int.tryParse(pidMatch.group(1) ?? '');
@@ -328,7 +333,7 @@ class ProcessService {
       }
     }
 
-    if (packageName != null && serviceName != null && pid != null) {
+    if (packageName != null && serviceName != null) {
       final isSystem =
           (uid != null && uid < 10000) ||
           (baseDir != null &&
@@ -356,6 +361,7 @@ class ProcessService {
           createdFromFg: createdFromFg,
           rawServiceRecord: rawBlock,
           uid: uid,
+          recentCallingUid: recentCallingUid,
           connections: connections,
         ),
       );
@@ -391,7 +397,9 @@ class ProcessService {
 
     final enrichedServices = <RunningServiceInfo>[];
     for (var service in services) {
-      pids.add(service.pid);
+      if (service.pid != null) {
+        pids.add(service.pid!);
+      }
       if (service.isSystemApp) isSystem = true;
 
       var enrichedService = service;
@@ -455,10 +463,24 @@ class ProcessService {
     }
   }
 
+  Future<bool> stopServiceByComponent({required String packageName, required String serviceName}) async {
+    try {
+      final serviceComponent = serviceName.startsWith('.')
+          ? '$packageName/$packageName$serviceName'
+          : '$packageName/$serviceName';
+      final result = await _shizukuService.executeCommand('am stop-service $serviceComponent');
+      if (result == null || result.isEmpty || !result.toLowerCase().contains('error')) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> stopServiceByPid(int pid) async {
     try {
       final result = await _shizukuService.executeCommand('kill -9 $pid');
-
       if (result == null ||
           result.isEmpty ||
           !result.toLowerCase().contains('error') && !result.toLowerCase().contains('permission denied')) {
@@ -571,7 +593,9 @@ class ProcessService {
 
       for (var service in serviceList) {
         totalRamKb += service.ramInKb ?? 0;
-        pids.add(service.pid);
+        if (service.pid != null) {
+          pids.add(service.pid!);
+        }
         if (service.isSystemApp) isSystem = true;
       }
 
@@ -650,7 +674,7 @@ class ProcessService {
         }
       }
 
-      if (currentPackage != null && currentPid != null && currentService != null) {
+      if (currentPackage != null && currentService != null) {
         final isSystem =
             (currentUid != null && currentUid < 10000) ||
             currentPackage.startsWith('com.android') ||

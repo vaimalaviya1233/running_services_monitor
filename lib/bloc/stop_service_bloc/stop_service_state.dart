@@ -4,9 +4,9 @@ part of 'stop_service_bloc.dart';
 class StopServiceState with _$StopServiceState {
   const factory StopServiceState.initial() = _Initial;
 
-  const factory StopServiceState.stopping({required String packageName}) = _Stopping;
+  const factory StopServiceState.stopping({required String packageName, String? serviceName}) = _Stopping;
 
-  const factory StopServiceState.success({String? packageName, int? servicePid}) = _Success;
+  const factory StopServiceState.success({String? packageName, String? serviceName, int? servicePid}) = _Success;
 
   const factory StopServiceState.error({required String message}) = _Error;
 }

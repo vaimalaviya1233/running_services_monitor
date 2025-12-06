@@ -17,14 +17,19 @@ class AppListItem extends StatelessWidget {
 
     return ListTile(
       leading: AppIcon(appInfo: appInfo, size: 40.sp),
-      title: Text(appInfo.appName, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16.sp)),
+      title: Text(
+        appInfo.appName,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 16.sp),
+      ),
       subtitle: Text(
         '$processCount ${AppLocalizations.of(context)!.processAnd} $serviceCount ${AppLocalizations.of(context)!.services}',
         style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: Text(appInfo.totalRam, style: TextStyle(fontSize: 14.sp)),
       onTap: () {
-        context.push('/app-details', extra: appInfo);
+        context.push('/app-details', extra: appInfo.packageName);
       },
     );
   }

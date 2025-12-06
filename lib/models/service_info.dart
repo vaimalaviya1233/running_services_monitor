@@ -8,7 +8,7 @@ part 'service_info.freezed.dart';
 abstract class RunningServiceInfo with _$RunningServiceInfo {
   const factory RunningServiceInfo({
     required String user,
-    required int pid,
+    int? pid,
     required String processName,
     required String serviceName,
     required String packageName,
@@ -29,6 +29,7 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     bool? createdFromFg,
     String? rawServiceRecord,
     int? uid,
+    int? recentCallingUid,
     @Default([]) List<ConnectionRecord> connections,
   }) = _RunningServiceInfo;
 }

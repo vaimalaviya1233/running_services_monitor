@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'service_detail_row.dart';
@@ -24,11 +26,17 @@ class ServiceDetailsDialog extends StatelessWidget {
             ServiceDetailRow(label: context.loc.service, value: service.serviceName),
             SizedBox(height: 8.h),
             ServiceDetailRow(label: context.loc.process, value: service.processName),
-            SizedBox(height: 8.h),
-            ServiceDetailRow(label: context.loc.pid, value: service.pid.toString()),
+            if (service.pid != null) ...[
+              SizedBox(height: 8.h),
+              ServiceDetailRow(label: context.loc.pid, value: service.pid.toString()),
+            ],
             if (service.uid != null) ...[
               SizedBox(height: 8.h),
               ServiceDetailRow(label: context.loc.uid, value: service.uid.toString()),
+            ],
+            if (service.recentCallingUid != null) ...[
+              SizedBox(height: 8.h),
+              ServiceDetailRow(label: 'Recent Calling UID', value: service.recentCallingUid.toString()),
             ],
             if (service.ramUsage != null) ...[
               SizedBox(height: 8.h),
@@ -161,6 +169,20 @@ class ServiceDetailsDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(context.loc.close, style: TextStyle(fontSize: 14.sp)),
+        ),
+        FilledButton(
+          onPressed: () {
+            context.read<StopServiceBloc>().add(
+              StopServiceEvent.stopSingleService(
+                packageName: service.packageName,
+                serviceName: service.serviceName,
+                pid: service.pid,
+              ),
+            );
+            Navigator.of(context).pop();
+          },
+          style: FilledButton.styleFrom(backgroundColor: Colors.red),
+          child: Text(context.loc.stop, style: TextStyle(fontSize: 14.sp)),
         ),
       ],
     );
