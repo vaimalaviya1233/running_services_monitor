@@ -223,7 +223,7 @@ class ProcessService {
 
     final systemRamFuture = meminfoCompleter.future.then((data) async {
       if (data == null) return null;
-      return await compute(_parseSystemRamInfo, data);
+      return _parseSystemRamInfo(data);
     });
 
     return (apps: appStream(), systemRamInfo: systemRamFuture);

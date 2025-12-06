@@ -143,6 +143,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get apps => 'অ্যাপস';
 
   @override
+  String get used => 'Used';
+
+  @override
   String get free => 'ফাঁকা';
 
   @override

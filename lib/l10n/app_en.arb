@@ -45,6 +45,7 @@
   "processAnd": "process and",
   "services": "services",
   "apps": "Apps",
+  "used": "Used",
   "free": "Free",
   "stopService": "Stop Service",
   "stopAllServices": "Stop All Services",

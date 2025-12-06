@@ -356,6 +356,12 @@ abstract class AppLocalizations {
   /// **'Apps'**
   String get apps;
 
+  /// No description provided for @used.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get used;
+
   /// No description provided for @free.
   ///
   /// In en, this message translates to:

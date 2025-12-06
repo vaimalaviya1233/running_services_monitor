@@ -94,6 +94,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeState.loading(state.value, 'Loading apps...'));
     try {
       final Map<String, AppProcessInfo> appsMap = {};
+      var currentModel = state.value;
 
       final streamResult = _processService.streamAppProcessInfosWithRamInfo();
       final systemRamFuture = !event.silent ? streamResult.systemRamInfo : null;
@@ -113,24 +114,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           appsRam += appInfo.totalRamInKb;
         }
 
-        emit(
-          HomeState.loading(
-            state.value.copyWith(allApps: allApps, userApps: userApps, systemApps: systemApps, appsRamKb: appsRam),
-          ),
+        currentModel = currentModel.copyWith(
+          allApps: allApps,
+          userApps: userApps,
+          systemApps: systemApps,
+          appsRamKb: appsRam,
         );
+        emit(HomeState.loading(currentModel));
       }
 
       if (systemRamFuture != null) {
         final ramInfo = await systemRamFuture;
         if (ramInfo != null) {
-          emit(
-            HomeState.loading(
-              state.value.copyWith(totalRamKb: ramInfo[0], freeRamKb: ramInfo[1], usedRamKb: ramInfo[2]),
-            ),
-          );
+          currentModel = currentModel.copyWith(totalRamKb: ramInfo[0], freeRamKb: ramInfo[1], usedRamKb: ramInfo[2]);
+          emit(HomeState.loading(currentModel));
         }
       }
-      emit(HomeState.success(state.value, 'Refreshed successfully', event.updateAppInfoIcons));
+      emit(HomeState.success(currentModel, 'Refreshed successfully', event.updateAppInfoIcons));
     } catch (e) {
       if (!event.silent) {
         emit(HomeState.failure(state.value, 'Error loading data: $e'));

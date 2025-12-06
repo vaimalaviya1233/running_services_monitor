@@ -141,6 +141,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apps => 'Apps';
 
   @override
+  String get used => 'Used';
+
+  @override
   String get free => 'Free';
 
   @override
