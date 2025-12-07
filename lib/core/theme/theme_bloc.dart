@@ -6,8 +6,12 @@ import 'package:injectable/injectable.dart';
 class ThemeBloc extends HydratedCubit<ThemeMode> {
   ThemeBloc() : super(ThemeMode.system);
 
-  void toggleTheme() {
-    state == ThemeMode.dark ? emit(ThemeMode.light) : emit(ThemeMode.dark);
+  void toggleTheme(Brightness brightness) {
+    if (state == ThemeMode.system) {
+      brightness == Brightness.dark ? emit(ThemeMode.light) : emit(ThemeMode.dark);
+    } else {
+      state == ThemeMode.dark ? emit(ThemeMode.light) : emit(ThemeMode.dark);
+    }
   }
 
   void setTheme(ThemeMode mode) {

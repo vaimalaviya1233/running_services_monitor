@@ -235,63 +235,16 @@ class ProcessService {
 
       final lruProcesses = await _fetchLruProcesses();
 
-      final freshMeminfo = await meminfo();
-      Map<String, double> processNameRamMap = {};
-      if (freshMeminfo != null) {
-        final maps = _parseRamMaps(freshMeminfo);
-        ramMap = maps.pidMap;
-        processNameRamMap = maps.processNameMap;
-      }
-
       for (final entry in groupedApps.entries) {
         final packageName = entry.key;
         var app = entry.value;
 
-        double totalRamKb = 0;
-        final Set<int> countedPids = {};
-        final List<RamSourceInfo> ramSources = [];
-
-        for (var pid in app.pids) {
-          if (!countedPids.contains(pid) && ramMap.containsKey(pid)) {
-            countedPids.add(pid);
-            final ramKb = ramMap[pid]!;
-            totalRamKb += ramKb;
-            ramSources.add(RamSourceInfo(source: 'pid', ramKb: ramKb, pid: pid));
-          }
-        }
-
-        if (totalRamKb == 0) {
-          if (processNameRamMap.containsKey(packageName)) {
-            final ramKb = processNameRamMap[packageName]!;
-            totalRamKb = ramKb;
-            ramSources.add(RamSourceInfo(source: 'process_name', ramKb: ramKb, processName: packageName));
-          } else {
-            for (final processName in processNameRamMap.keys) {
-              if (processName == packageName ||
-                  processName.startsWith('$packageName:') ||
-                  processName.startsWith('$packageName.') ||
-                  processName.startsWith('${packageName}_')) {
-                final ramKb = processNameRamMap[processName]!;
-                totalRamKb += ramKb;
-                ramSources.add(RamSourceInfo(source: 'process_name', ramKb: ramKb, processName: processName));
-              }
-            }
-          }
-        }
-
-        if (totalRamKb > 0 && app.totalRamInKb != totalRamKb) {
-          app = app.copyWith(totalRam: _formatRam(totalRamKb), totalRamInKb: totalRamKb, ramSources: ramSources);
-        } else if (ramSources.isNotEmpty) {
-          app = app.copyWith(ramSources: ramSources);
-        }
-
         if (lruProcesses.containsKey(packageName)) {
           final lruInfo = lruProcesses[packageName]!;
           app = app.copyWith(processState: lruInfo.state, adjLevel: lruInfo.adj);
+          groupedApps[packageName] = app;
+          yield app;
         }
-
-        groupedApps[packageName] = app;
-        yield app;
       }
 
       for (final entry in lruProcesses.entries) {
