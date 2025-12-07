@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:running_services_monitor/core/constants.dart';
 import 'package:running_services_monitor/models/service_info.dart';
@@ -13,7 +12,26 @@ class ProcessService {
   final ShizukuService _shizukuService;
   final AppInfoService _appInfoService;
 
+  static final _serviceRecordRegex = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.]+)');
+  static final _processRecordRegex = RegExp(r'(\d+):([^/]+)/u(\d+)a(\d+)');
+  static final _lruLineRegex = RegExp(r'#\s*\d+:\s*(\S+)\s+(\S+)\s+\S+\s+(\d+):([^/]+)/u(\d+)a(\d+)');
+  static final _ramLineRegex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)');
+  static final _connectionRegex = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
+
   ProcessService(this._shizukuService, this._appInfoService);
+
+  String _getAppName(String packageName, Map<String, dynamic> appMap) {
+    final appInfo = appMap[packageName];
+    if (appInfo != null) return appInfo.name;
+    final parts = packageName.split('.');
+    if (parts.isNotEmpty) {
+      String name = parts.last;
+      if (name.isNotEmpty) {
+        return name[0].toUpperCase() + name.substring(1);
+      }
+    }
+    return packageName;
+  }
 
   Future<ProcessedAppsResult> getAppProcessInfosWithRamInfo() async {
     try {
@@ -29,7 +47,7 @@ class ProcessService {
         processNameRamMap = ramMaps.processNameMap;
       }
 
-      final systemRamInfo = data != null ? await compute(_parseSystemRamInfo, data) : null;
+      final systemRamInfo = data != null ? _parseSystemRamInfo(data) : null;
 
       final servicesOutput = await _shizukuService.executeCommand(AppConstants.cmdDumpsysActivityServices);
       if (servicesOutput == null || servicesOutput.isEmpty) {
@@ -59,7 +77,7 @@ class ProcessService {
             currentPackage = null;
           }
         } else if (trimmedLine.contains('* ServiceRecord{')) {
-          final serviceMatch = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.]+)').firstMatch(trimmedLine);
+          final serviceMatch = _serviceRecordRegex.firstMatch(trimmedLine);
           if (serviceMatch != null) {
             currentPackage = serviceMatch.group(1);
             currentBlock.add(line);
@@ -137,21 +155,8 @@ class ProcessService {
     required Map<String, double> processNameRamMap,
   }) {
     final isSystem = lruInfo.uid < 10000;
-
-    String appName = packageName;
+    final appName = _getAppName(packageName, appMap);
     final appInfo = appMap[packageName];
-    if (appInfo != null) {
-      appName = appInfo.name;
-    } else {
-      final parts = packageName.split('.');
-      if (parts.isNotEmpty) {
-        String name = parts.last;
-        if (name.isNotEmpty) {
-          name = name[0].toUpperCase() + name.substring(1);
-        }
-        appName = name;
-      }
-    }
 
     double ramKb = 0;
     final List<RamSourceInfo> ramSources = [];
@@ -205,174 +210,7 @@ class ProcessService {
     );
   }
 
-  void _processServiceBlock({
-    required List<String> currentBlock,
-    required String currentPackage,
-    required Map<String, AppProcessInfo> groupedApps,
-    required Map<String, dynamic> appMap,
-    required Map<int, double> pidRamMap,
-    required Map<String, double> processNameRamMap,
-  }) {
-    final services = _parseServiceBlock(currentBlock);
-
-    if (services.isEmpty) return;
-
-    if (groupedApps.containsKey(currentPackage)) {
-      final existingApp = groupedApps[currentPackage]!;
-      final mergedServices = [...existingApp.services, ...services];
-      final Set<int> mergedPids = {...existingApp.pids, ...services.where((s) => s.pid != null).map((s) => s.pid!)};
-
-      double totalRamKb = 0;
-      final Set<int> countedPids = {};
-      bool usedProcessNameFallback = false;
-      for (var s in mergedServices) {
-        if (s.pid != null && !countedPids.contains(s.pid)) {
-          countedPids.add(s.pid!);
-          if (pidRamMap.containsKey(s.pid)) {
-            totalRamKb += pidRamMap[s.pid]!;
-          } else if (s.ramInKb != null) {
-            totalRamKb += s.ramInKb!;
-          }
-        }
-      }
-      if (totalRamKb <= 0 && !usedProcessNameFallback && processNameRamMap.containsKey(currentPackage)) {
-        totalRamKb = processNameRamMap[currentPackage]!;
-      }
-
-      final enrichedServices = <RunningServiceInfo>[];
-      for (var s in mergedServices) {
-        var enriched = s;
-        if (pidRamMap.containsKey(s.pid) && s.ramInKb == null) {
-          final ramKb = pidRamMap[s.pid]!;
-          enriched = enriched.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb));
-        }
-        if (existingApp.appInfo?.icon != null && s.icon == null) {
-          enriched = enriched.copyWith(icon: existingApp.appInfo!.icon);
-        }
-        enrichedServices.add(enriched);
-      }
-
-      final updatedApp = existingApp.copyWith(
-        services: enrichedServices,
-        pids: mergedPids.toList(),
-        totalRam: formatRam(totalRamKb),
-        totalRamInKb: totalRamKb,
-      );
-      groupedApps[currentPackage] = updatedApp;
-    } else {
-      final appProcessInfo = _createAppProcessInfo(
-        packageName: currentPackage,
-        services: services,
-        appMap: appMap,
-        pidRamMap: pidRamMap,
-        processNameRamMap: processNameRamMap,
-      );
-      groupedApps[currentPackage] = appProcessInfo;
-    }
-  }
-
-  ({Stream<AppProcessInfo> apps, Future<List<double>?> systemRamInfo}) streamAppProcessInfosWithRamInfo() {
-    final meminfoCompleter = Completer<String?>();
-
-    Stream<AppProcessInfo> appStream() async* {
-      final appMap = _appInfoService.cachedAppsMap ?? {};
-
-      Map<int, double> pidRamMap = {};
-      Map<String, double> processNameRamMap = {};
-
-      final data = await meminfo();
-      meminfoCompleter.complete(data);
-      if (data != null) {
-        final ramMaps = _parseRamMaps(data);
-        pidRamMap = ramMaps.pidMap;
-        processNameRamMap = ramMaps.processNameMap;
-      }
-
-      final Map<String, AppProcessInfo> groupedApps = {};
-
-      List<String> currentBlock = [];
-      String? currentPackage;
-
-      await for (final line in _shizukuService.executeCommandStream(AppConstants.cmdDumpsysActivityServices)) {
-        final trimmedLine = line.trim();
-
-        if (trimmedLine.isEmpty) {
-          if (currentBlock.isNotEmpty && currentPackage != null) {
-            final app = _processServiceBlockForStream(
-              currentBlock: currentBlock,
-              currentPackage: currentPackage,
-              groupedApps: groupedApps,
-              appMap: appMap,
-              pidRamMap: pidRamMap,
-              processNameRamMap: processNameRamMap,
-            );
-            if (app != null) yield app;
-            currentBlock.clear();
-            currentPackage = null;
-          }
-        } else if (trimmedLine.contains('* ServiceRecord{')) {
-          final serviceMatch = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.]+)').firstMatch(trimmedLine);
-          if (serviceMatch != null) {
-            currentPackage = serviceMatch.group(1);
-            currentBlock.add(line);
-          }
-        } else if (currentPackage != null) {
-          currentBlock.add(line);
-        }
-      }
-
-      if (currentBlock.isNotEmpty && currentPackage != null) {
-        final app = _processServiceBlockForStream(
-          currentBlock: currentBlock,
-          currentPackage: currentPackage,
-          groupedApps: groupedApps,
-          appMap: appMap,
-          pidRamMap: pidRamMap,
-          processNameRamMap: processNameRamMap,
-        );
-        if (app != null) yield app;
-      }
-
-      final lruProcesses = await _fetchLruProcesses();
-
-      for (final entry in groupedApps.entries) {
-        final packageName = entry.key;
-        var app = entry.value;
-
-        if (lruProcesses.containsKey(packageName)) {
-          final lruInfo = lruProcesses[packageName]!;
-          app = app.copyWith(processState: lruInfo.state, adjLevel: lruInfo.adj);
-          groupedApps[packageName] = app;
-          yield app;
-        }
-      }
-
-      for (final entry in lruProcesses.entries) {
-        final packageName = entry.key;
-        if (!groupedApps.containsKey(packageName)) {
-          final lruInfo = entry.value;
-          final processOnlyApp = _createLruAppInfo(
-            packageName: packageName,
-            lruInfo: lruInfo,
-            appMap: appMap,
-            pidRamMap: pidRamMap,
-            processNameRamMap: processNameRamMap,
-          );
-          groupedApps[packageName] = processOnlyApp;
-          yield processOnlyApp;
-        }
-      }
-    }
-
-    final systemRamFuture = meminfoCompleter.future.then((data) async {
-      if (data == null) return null;
-      return _parseSystemRamInfo(data);
-    });
-
-    return (apps: appStream(), systemRamInfo: systemRamFuture);
-  }
-
-  AppProcessInfo? _processServiceBlockForStream({
+  AppProcessInfo? _processServiceBlock({
     required List<String> currentBlock,
     required String currentPackage,
     required Map<String, AppProcessInfo> groupedApps,
@@ -439,6 +277,107 @@ class ProcessService {
     }
   }
 
+  ({Stream<AppProcessInfo> apps, Future<List<double>?> systemRamInfo}) streamAppProcessInfosWithRamInfo() {
+    final meminfoCompleter = Completer<String?>();
+
+    Stream<AppProcessInfo> appStream() async* {
+      final appMap = _appInfoService.cachedAppsMap ?? {};
+
+      Map<int, double> pidRamMap = {};
+      Map<String, double> processNameRamMap = {};
+
+      final data = await meminfo();
+      meminfoCompleter.complete(data);
+      if (data != null) {
+        final ramMaps = _parseRamMaps(data);
+        pidRamMap = ramMaps.pidMap;
+        processNameRamMap = ramMaps.processNameMap;
+      }
+
+      final Map<String, AppProcessInfo> groupedApps = {};
+
+      List<String> currentBlock = [];
+      String? currentPackage;
+
+      await for (final line in _shizukuService.executeCommandStream(AppConstants.cmdDumpsysActivityServices)) {
+        final trimmedLine = line.trim();
+
+        if (trimmedLine.isEmpty) {
+          if (currentBlock.isNotEmpty && currentPackage != null) {
+            final app = _processServiceBlock(
+              currentBlock: currentBlock,
+              currentPackage: currentPackage,
+              groupedApps: groupedApps,
+              appMap: appMap,
+              pidRamMap: pidRamMap,
+              processNameRamMap: processNameRamMap,
+            );
+            if (app != null) yield app;
+            currentBlock.clear();
+            currentPackage = null;
+          }
+        } else if (trimmedLine.contains('* ServiceRecord{')) {
+          final serviceMatch = _serviceRecordRegex.firstMatch(trimmedLine);
+          if (serviceMatch != null) {
+            currentPackage = serviceMatch.group(1);
+            currentBlock.add(line);
+          }
+        } else if (currentPackage != null) {
+          currentBlock.add(line);
+        }
+      }
+
+      if (currentBlock.isNotEmpty && currentPackage != null) {
+        final app = _processServiceBlock(
+          currentBlock: currentBlock,
+          currentPackage: currentPackage,
+          groupedApps: groupedApps,
+          appMap: appMap,
+          pidRamMap: pidRamMap,
+          processNameRamMap: processNameRamMap,
+        );
+        if (app != null) yield app;
+      }
+
+      final lruProcesses = await _fetchLruProcesses();
+
+      for (final entry in groupedApps.entries) {
+        final packageName = entry.key;
+        var app = entry.value;
+
+        if (lruProcesses.containsKey(packageName)) {
+          final lruInfo = lruProcesses[packageName]!;
+          app = app.copyWith(processState: lruInfo.state, adjLevel: lruInfo.adj);
+          groupedApps[packageName] = app;
+          yield app;
+        }
+      }
+
+      for (final entry in lruProcesses.entries) {
+        final packageName = entry.key;
+        if (!groupedApps.containsKey(packageName)) {
+          final lruInfo = entry.value;
+          final processOnlyApp = _createLruAppInfo(
+            packageName: packageName,
+            lruInfo: lruInfo,
+            appMap: appMap,
+            pidRamMap: pidRamMap,
+            processNameRamMap: processNameRamMap,
+          );
+          groupedApps[packageName] = processOnlyApp;
+          yield processOnlyApp;
+        }
+      }
+    }
+
+    final systemRamFuture = meminfoCompleter.future.then((data) async {
+      if (data == null) return null;
+      return _parseSystemRamInfo(data);
+    });
+
+    return (apps: appStream(), systemRamInfo: systemRamFuture);
+  }
+
   Future<Map<String, ({String state, String adj, int pid, int uid})>> _fetchLruProcesses() async {
     final Map<String, ({String state, String adj, int pid, int uid})> processes = {};
 
@@ -462,9 +401,7 @@ class ProcessService {
     final trimmed = line.trim();
     if (!trimmed.startsWith('#')) return null;
 
-    final regex = RegExp(r'#\s*\d+:\s*(\S+)\s+(\S+)\s+\S+\s+(\d+):([^/]+)/u(\d+)a(\d+)');
-
-    final match = regex.firstMatch(trimmed);
+    final match = _lruLineRegex.firstMatch(trimmed);
     if (match == null) return null;
 
     final state = match.group(1) ?? '';
@@ -509,9 +446,7 @@ class ProcessService {
       final trimmedLine = line.trim();
 
       if (trimmedLine.startsWith('* ConnectionRecord{') || trimmedLine.startsWith('ConnectionRecord{')) {
-        final connMatch = RegExp(
-          r'([a-z0-9.]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)',
-        ).firstMatch(trimmedLine);
+        final connMatch = _connectionRegex.firstMatch(trimmedLine);
         if (connMatch != null) {
           final connPackageName = connMatch.group(1) ?? '';
           final connServiceName = connMatch.group(2) ?? '';
@@ -539,7 +474,7 @@ class ProcessService {
       }
 
       if (trimmedLine.startsWith('* ServiceRecord{')) {
-        final serviceMatch = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.]+)').firstMatch(trimmedLine);
+        final serviceMatch = _serviceRecordRegex.firstMatch(trimmedLine);
         if (serviceMatch != null) {
           serviceName = serviceMatch.group(2);
         }
@@ -568,7 +503,7 @@ class ProcessService {
       } else if (trimmedLine.startsWith('recentCallingUid=')) {
         recentCallingUid = int.tryParse(trimmedLine.substring('recentCallingUid='.length));
       } else if (trimmedLine.startsWith('app=ProcessRecord{')) {
-        final pidMatch = RegExp(r'(\d+):([^/]+)/u(\d+)a(\d+)').firstMatch(trimmedLine);
+        final pidMatch = _processRecordRegex.firstMatch(trimmedLine);
         if (pidMatch != null) {
           pid = int.tryParse(pidMatch.group(1) ?? '');
           final userId = int.tryParse(pidMatch.group(3) ?? '0') ?? 0;
@@ -622,22 +557,9 @@ class ProcessService {
     double totalRamKb = 0;
     final Set<int> pids = {};
     bool isSystem = false;
-    String appName = packageName;
+    final appName = _getAppName(packageName, appMap);
     final List<RamSourceInfo> ramSources = [];
-
     final appInfo = appMap[packageName];
-    if (appInfo != null) {
-      appName = appInfo.name;
-    } else {
-      final parts = packageName.split('.');
-      if (parts.isNotEmpty) {
-        String name = parts.last;
-        if (name.isNotEmpty) {
-          name = name[0].toUpperCase() + name.substring(1);
-        }
-        appName = name;
-      }
-    }
 
     final enrichedServices = <RunningServiceInfo>[];
     for (var service in services) {
@@ -765,10 +687,9 @@ class ProcessService {
     if (meminfoOutput.isEmpty) return (pidMap: pidMap, processNameMap: processNameMap);
 
     final lines = meminfoOutput.split('\n');
-    final regex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)');
 
     for (var line in lines) {
-      final match = regex.firstMatch(line);
+      final match = _ramLineRegex.firstMatch(line);
       if (match != null) {
         final ramStr = match.group(1)?.replaceAll(',', '') ?? '0';
         final processName = match.group(2) ?? '';
