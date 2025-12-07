@@ -86,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         SnackBar(
           content: Text(context.loc.enjoyingApp, style: TextStyle(fontSize: 14.sp)),
           action: SnackBarAction(label: context.loc.donate, onPressed: () => context.push('/about')),
+          behavior: SnackBarBehavior.fixed,
         ),
       );
     }
@@ -112,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   SnackBar(
                     content: Text(toast, style: TextStyle(fontSize: 14.sp)),
                     duration: const Duration(seconds: 1),
-                    behavior: SnackBarBehavior.floating,
+                    behavior: SnackBarBehavior.fixed,
                   ),
                 );
                 _checkReviewRequest();

@@ -94,12 +94,15 @@ class ProcessService {
     Stream<AppProcessInfo> appStream() async* {
       final appMap = _appInfoService.cachedAppsMap ?? {};
 
-      Map<int, double> ramMap = {};
+      Map<int, double> pidRamMap = {};
+      Map<String, double> processNameRamMap = {};
 
       final data = await meminfo();
       meminfoCompleter.complete(data);
       if (data != null) {
-        ramMap = _parseRamMap(data);
+        final ramMaps = _parseRamMaps(data);
+        pidRamMap = ramMaps.pidMap;
+        processNameRamMap = ramMaps.processNameMap;
       }
 
       final Map<String, AppProcessInfo> groupedApps = {};
@@ -125,22 +128,27 @@ class ProcessService {
 
                 double totalRamKb = 0;
                 final Set<int> countedPids = {};
+                bool usedProcessNameFallback = false;
                 for (var s in mergedServices) {
                   if (s.pid != null && !countedPids.contains(s.pid)) {
                     countedPids.add(s.pid!);
-                    if (ramMap.containsKey(s.pid)) {
-                      totalRamKb += ramMap[s.pid]!;
+                    if (pidRamMap.containsKey(s.pid)) {
+                      totalRamKb += pidRamMap[s.pid]!;
                     } else if (s.ramInKb != null) {
                       totalRamKb += s.ramInKb!;
                     }
                   }
                 }
+                if (totalRamKb <= 0 && !usedProcessNameFallback && processNameRamMap.containsKey(currentPackage)) {
+                  totalRamKb = processNameRamMap[currentPackage]!;
+                  usedProcessNameFallback = true;
+                }
 
                 final enrichedServices = <RunningServiceInfo>[];
                 for (var s in mergedServices) {
                   var enriched = s;
-                  if (ramMap.containsKey(s.pid) && s.ramInKb == null) {
-                    final ramKb = ramMap[s.pid]!;
+                  if (pidRamMap.containsKey(s.pid) && s.ramInKb == null) {
+                    final ramKb = pidRamMap[s.pid]!;
                     enriched = enriched.copyWith(ramInKb: ramKb, ramUsage: _formatRam(ramKb));
                   }
                   if (existingApp.appInfo?.icon != null && s.icon == null) {
@@ -163,7 +171,8 @@ class ProcessService {
                   packageName: currentPackage,
                   services: services,
                   appMap: appMap,
-                  ramMap: ramMap,
+                  pidRamMap: pidRamMap,
+                  processNameRamMap: processNameRamMap,
                 );
                 groupedApps[currentPackage] = appProcessInfo;
 
@@ -202,12 +211,15 @@ class ProcessService {
             for (var s in mergedServices) {
               if (s.pid != null && !countedPids.contains(s.pid)) {
                 countedPids.add(s.pid!);
-                if (ramMap.containsKey(s.pid)) {
-                  totalRamKb += ramMap[s.pid]!;
+                if (pidRamMap.containsKey(s.pid)) {
+                  totalRamKb += pidRamMap[s.pid]!;
                 } else if (s.ramInKb != null) {
                   totalRamKb += s.ramInKb!;
                 }
               }
+            }
+            if (totalRamKb <= 0 && processNameRamMap.containsKey(currentPackage)) {
+              totalRamKb = processNameRamMap[currentPackage]!;
             }
 
             final updatedApp = existingApp.copyWith(
@@ -224,7 +236,8 @@ class ProcessService {
               packageName: currentPackage,
               services: services,
               appMap: appMap,
-              ramMap: ramMap,
+              pidRamMap: pidRamMap,
+              processNameRamMap: processNameRamMap,
             );
             groupedApps[currentPackage] = appProcessInfo;
 
@@ -271,9 +284,12 @@ class ProcessService {
 
           double ramKb = 0;
           final List<RamSourceInfo> ramSources = [];
-          if (ramMap.containsKey(lruInfo.pid)) {
-            ramKb = ramMap[lruInfo.pid]!;
+          if (pidRamMap.containsKey(lruInfo.pid)) {
+            ramKb = pidRamMap[lruInfo.pid]!;
             ramSources.add(RamSourceInfo(source: 'lru', ramKb: ramKb, pid: lruInfo.pid));
+          } else if (processNameRamMap.containsKey(packageName)) {
+            ramKb = processNameRamMap[packageName]!;
+            ramSources.add(RamSourceInfo(source: 'process_name', ramKb: ramKb, processName: packageName));
           }
 
           final processOnlyApp = AppProcessInfo(
@@ -487,12 +503,14 @@ class ProcessService {
     required String packageName,
     required List<RunningServiceInfo> services,
     required Map<String, dynamic> appMap,
-    required Map<int, double> ramMap,
+    required Map<int, double> pidRamMap,
+    required Map<String, double> processNameRamMap,
   }) {
     double totalRamKb = 0;
     final Set<int> pids = {};
     bool isSystem = false;
     String appName = packageName;
+    final List<RamSourceInfo> ramSources = [];
 
     final appInfo = appMap[packageName];
     if (appInfo != null) {
@@ -512,16 +530,18 @@ class ProcessService {
     for (var service in services) {
       if (service.pid != null) {
         final isNewPid = pids.add(service.pid!);
-        if (isNewPid && ramMap.containsKey(service.pid)) {
-          totalRamKb += ramMap[service.pid]!;
+        if (isNewPid && pidRamMap.containsKey(service.pid)) {
+          final ramKb = pidRamMap[service.pid]!;
+          totalRamKb += ramKb;
+          ramSources.add(RamSourceInfo(source: 'pid', ramKb: ramKb, pid: service.pid));
         }
       }
       if (service.isSystemApp) isSystem = true;
 
       var enrichedService = service;
 
-      if (ramMap.containsKey(service.pid)) {
-        final ramKb = ramMap[service.pid]!;
+      if (pidRamMap.containsKey(service.pid)) {
+        final ramKb = pidRamMap[service.pid]!;
         enrichedService = enrichedService.copyWith(ramInKb: ramKb, ramUsage: _formatRam(ramKb));
       }
 
@@ -533,6 +553,11 @@ class ProcessService {
       enrichedServices.add(enrichedService);
     }
 
+    if (totalRamKb <= 0 && processNameRamMap.containsKey(packageName)) {
+      totalRamKb = processNameRamMap[packageName]!;
+      ramSources.add(RamSourceInfo(source: 'process_name', ramKb: totalRamKb, processName: packageName));
+    }
+
     return AppProcessInfo(
       packageName: packageName,
       appName: appName,
@@ -542,6 +567,7 @@ class ProcessService {
       totalRamInKb: totalRamKb,
       isSystemApp: isSystem,
       appInfo: appInfo,
+      ramSources: ramSources,
     );
   }
 
@@ -858,8 +884,16 @@ class ProcessService {
         if (pid > 0 && !pidMap.containsKey(pid)) {
           pidMap[pid] = ramKb;
         }
-        if (processName.isNotEmpty && !processNameMap.containsKey(processName)) {
-          processNameMap[processName] = ramKb;
+        if (processName.isNotEmpty) {
+          if (!processNameMap.containsKey(processName)) {
+            processNameMap[processName] = ramKb;
+          }
+          if (processName.contains(':')) {
+            final basePackageName = processName.split(':').first;
+            if (!processNameMap.containsKey(basePackageName)) {
+              processNameMap[basePackageName] = ramKb;
+            }
+          }
         }
       }
     }
