@@ -32,16 +32,6 @@ class ServiceIcon extends StatelessWidget {
           );
         }
 
-        if (service.icon != null) {
-          return Image.memory(
-            service.icon!,
-            width: size,
-            height: size,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => DefaultServiceIcon(service: service, size: size),
-          );
-        }
-
         return DefaultServiceIcon(service: service, size: size);
       },
     );

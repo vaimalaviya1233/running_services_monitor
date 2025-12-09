@@ -19,16 +19,16 @@ class RamInfoDialog extends StatelessWidget {
     return '${formatted}K';
   }
 
-  String _getSourceLabel(String source) {
+  String _getSourceLabel(RamSourceType source) {
     switch (source) {
-      case 'pid':
+      case RamSourceType.pid:
         return 'PID';
-      case 'process_name':
+      case RamSourceType.processName:
         return 'Process';
-      case 'lru':
+      case RamSourceType.lru:
         return 'LRU Process';
-      default:
-        return source;
+      case RamSourceType.meminfoPss:
+        return 'Meminfo PSS';
     }
   }
 

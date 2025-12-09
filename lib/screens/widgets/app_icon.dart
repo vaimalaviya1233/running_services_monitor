@@ -24,16 +24,6 @@ class AppIcon extends StatelessWidget {
           return Image.memory(icon, width: size, height: size);
         }
 
-        if (appInfo.appInfo != null && appInfo.appInfo!.icon != null) {
-          return Image.memory(appInfo.appInfo!.icon!, width: size, height: size);
-        }
-
-        for (var service in appInfo.services) {
-          if (service.icon != null) {
-            return Image.memory(service.icon!, width: size, height: size);
-          }
-        }
-
         return Icon(Icons.android, size: size);
       },
     );

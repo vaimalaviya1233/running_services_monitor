@@ -16,8 +16,8 @@ class ProcessFilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeCount = apps.where((a) => isActiveState(a.processState, hasServices: a.hasServices)).length;
-    final cachedCount = apps.where((a) => isCachedState(a.processState) || a.isCached).length;
+    final activeCount = apps.where((a) => a.isActive).length;
+    final cachedCount = apps.where((a) => a.isCachedProcess).length;
     final servicesCount = apps.where((a) => a.hasServices).length;
 
     return SingleChildScrollView(

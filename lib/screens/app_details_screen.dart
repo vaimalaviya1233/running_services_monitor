@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:installed_apps/installed_apps.dart';
 import '../models/service_info.dart';
-import '../models/process_state_filter.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'widgets/app_header.dart';
 import 'widgets/service_list.dart';
@@ -266,15 +265,13 @@ class _StateBadges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = context.loc;
-    final isActive = isActiveState(appInfo.processState, hasServices: appInfo.hasServices);
-    final isCached = isCachedState(appInfo.processState);
 
     return Wrap(
       spacing: 8.w,
       runSpacing: 4.h,
       children: [
-        if (isActive) _Badge(label: loc.active, color: Colors.green),
-        if (isCached) _Badge(label: loc.cached, color: Colors.grey),
+        if (appInfo.isActive) _Badge(label: loc.active, color: Colors.green),
+        if (appInfo.isCachedProcess) _Badge(label: loc.cached, color: Colors.grey),
         if (appInfo.hasServices) _Badge(label: loc.services, color: Colors.blue),
       ],
     );

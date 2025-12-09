@@ -1,6 +1,5 @@
-import 'dart:typed_data';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:installed_apps/app_info.dart';
+import 'package:running_services_monitor/models/process_state_filter.dart';
 
 part 'service_info.freezed.dart';
 
@@ -17,7 +16,6 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     String? appName,
     String? ramUsage,
     double? ramInKb,
-    Uint8List? icon,
     String? intent,
     String? baseDir,
     String? dataDir,
@@ -36,6 +34,7 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
 
 @freezed
 abstract class AppProcessInfo with _$AppProcessInfo {
+  const AppProcessInfo._();
   const factory AppProcessInfo({
     required String packageName,
     required String appName,
@@ -44,7 +43,6 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     required String totalRam,
     required double totalRamInKb,
     required bool isSystemApp,
-    AppInfo? appInfo,
     @Default([]) List<ConnectionRecord> connections,
     String? processState,
     String? adjLevel,
@@ -53,11 +51,16 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     @Default(false) bool isCached,
     @Default(0) double cachedMemoryKb,
   }) = _AppProcessInfo;
+
+  bool get isActive => isActiveState(processState, hasServices: hasServices);
+  bool get isCachedProcess => isCachedState(processState) || isCached;
 }
+
+enum RamSourceType { pid, lru, processName, meminfoPss }
 
 @freezed
 abstract class RamSourceInfo with _$RamSourceInfo {
-  const factory RamSourceInfo({required String source, required double ramKb, int? pid, String? processName}) =
+  const factory RamSourceInfo({required RamSourceType source, required double ramKb, int? pid, String? processName}) =
       _RamSourceInfo;
 }
 

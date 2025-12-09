@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/models/service_info.dart';
-import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/l10n/app_localizations.dart';
 import 'app_icon.dart';
 
@@ -20,15 +19,12 @@ class AppListItem extends StatelessWidget {
     final serviceCount = appInfo.services.length;
     final loc = AppLocalizations.of(context)!;
 
-    final isActive = isActiveState(appInfo.processState, hasServices: appInfo.hasServices);
-    final isCached = isCachedState(appInfo.processState);
-
     return ListTile(
       leading: AppIcon(appInfo: appInfo, size: 40.sp),
       title: BlocSelector<AppInfoBloc, AppInfoState, String?>(
         bloc: getIt<AppInfoBloc>(),
         selector: (state) {
-          return state.value.cachedApps[appInfo.packageName]?.appName;  
+          return state.value.cachedApps[appInfo.packageName]?.appName;
         },
         builder: (context, appName) {
           return Text(
@@ -51,8 +47,8 @@ class AppListItem extends StatelessWidget {
             spacing: 4.w,
             runSpacing: 2.h,
             children: [
-              if (isActive) _StateBadge(label: loc.active, color: Colors.green),
-              if (isCached) _StateBadge(label: loc.cached, color: Colors.grey),
+              if (appInfo.isActive) _StateBadge(label: loc.active, color: Colors.green),
+              if (appInfo.isCachedProcess) _StateBadge(label: loc.cached, color: Colors.grey),
               if (appInfo.hasServices) _StateBadge(label: loc.services, color: Colors.blue),
             ],
           ),

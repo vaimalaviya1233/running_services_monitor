@@ -113,7 +113,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _loadDataSimple(Emitter<HomeState> emit, _LoadData event) async {
     emit(HomeState.loading(state.value));
     try {
-      final result = await _processService.getAppProcessInfosWithRamInfo();
+      final Map<String, AppProcessInfo> appsMap = {};
+      final streamResult = _processService.streamAppProcessInfosWithRamInfo();
+
+      await for (final app in streamResult.apps) {
+        appsMap[app.packageName] = app;
+      }
+
+      final result = _processService.categorizeApps(appsMap.values.toList());
+      final ramInfo = await streamResult.systemRamInfo;
 
       emit(
         HomeState.success(
@@ -122,9 +130,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             userApps: result.userApps,
             systemApps: result.systemApps,
             appsRamKb: result.appsRam,
-            totalRamKb: result.ramInfo?[0] ?? state.value.totalRamKb,
-            freeRamKb: result.ramInfo?[1] ?? state.value.freeRamKb,
-            usedRamKb: result.ramInfo?[2] ?? state.value.usedRamKb,
+            totalRamKb: ramInfo?[0] ?? state.value.totalRamKb,
+            freeRamKb: ramInfo?[1] ?? state.value.freeRamKb,
+            usedRamKb: ramInfo?[2] ?? state.value.usedRamKb,
           ),
         ),
       );
