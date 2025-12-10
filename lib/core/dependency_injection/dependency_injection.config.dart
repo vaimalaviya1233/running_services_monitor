@@ -28,8 +28,8 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i663.LanguageBloc>(() => _i663.LanguageBloc());
-    gh.singleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
+    gh.lazySingleton<_i663.LanguageBloc>(() => _i663.LanguageBloc());
+    gh.lazySingleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());
     gh.lazySingleton<_i842.ShizukuService>(() => _i842.ShizukuService());
     gh.lazySingleton<_i340.AppInfoBloc>(

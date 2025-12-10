@@ -7,7 +7,7 @@ part 'theme_event.dart';
 
 enum AppThemeMode { system, light, dark }
 
-@singleton
+@lazySingleton
 class ThemeBloc extends HydratedBloc<ThemeEvent, AppThemeMode> {
   ThemeBloc() : super(AppThemeMode.system) {
     on<_ToggleTheme>(_onToggleTheme);

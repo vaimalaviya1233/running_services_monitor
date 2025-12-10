@@ -7,7 +7,7 @@ part 'language_event.dart';
 part 'language_state.dart';
 part 'language_bloc.freezed.dart';
 
-@injectable
+@lazySingleton
 class LanguageBloc extends HydratedBloc<LanguageEvent, LanguageState> {
   LanguageBloc() : super(LanguageState.initial()) {
     on<_ChangeLanguage>((event, emit) {

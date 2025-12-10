@@ -25,7 +25,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get all => 'সব';
 
   @override
-  String get user => 'ব্যবহারকারী';
+  String get user => 'ইউজার';
 
   @override
   String get system => 'সিস্টেম';
