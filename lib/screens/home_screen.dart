@@ -8,6 +8,7 @@ import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/core/utils/android_settings_helper.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
+import 'package:running_services_monitor/models/app_info_state_model.dart';
 import 'widgets/shizuku_permission_dialog.dart';
 import 'widgets/home_body.dart';
 import 'widgets/language_selector.dart';
@@ -129,18 +130,46 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                 ),
                 Tab(
-                  child: BlocSelector<HomeBloc, HomeState, int>(
-                    selector: (state) => state.value.userApps.length,
-                    builder: (context, count) {
-                      return Text('${context.loc.user} ($count)', style: TextStyle(fontSize: 14.sp));
+                  child: BlocSelector<AppInfoBloc, AppInfoState, Map<String, CachedAppInfo>>(
+                    bloc: getIt<AppInfoBloc>(),
+                    selector: (state) => state.value.cachedApps,
+                    builder: (context, cachedApps) {
+                      return BlocSelector<HomeBloc, HomeState, int>(
+                        selector: (state) {
+                          return state.value.allApps.where((app) {
+                            final cached = cachedApps[app.packageName];
+                            if (cached != null) {
+                              return !cached.isSystemApp;
+                            }
+                            return app.isSystemApp == false;
+                          }).length;
+                        },
+                        builder: (context, count) {
+                          return Text('${context.loc.user} ($count)', style: TextStyle(fontSize: 14.sp));
+                        },
+                      );
                     },
                   ),
                 ),
                 Tab(
-                  child: BlocSelector<HomeBloc, HomeState, int>(
-                    selector: (state) => state.value.systemApps.length,
-                    builder: (context, count) {
-                      return Text('${context.loc.system} ($count)', style: TextStyle(fontSize: 14.sp));
+                  child: BlocSelector<AppInfoBloc, AppInfoState, Map<String, CachedAppInfo>>(
+                    bloc: getIt<AppInfoBloc>(),
+                    selector: (state) => state.value.cachedApps,
+                    builder: (context, cachedApps) {
+                      return BlocSelector<HomeBloc, HomeState, int>(
+                        selector: (state) {
+                          return state.value.allApps.where((app) {
+                            final cached = cachedApps[app.packageName];
+                            if (cached != null) {
+                              return cached.isSystemApp;
+                            }
+                            return app.isSystemApp == true;
+                          }).length;
+                        },
+                        builder: (context, count) {
+                          return Text('${context.loc.system} ($count)', style: TextStyle(fontSize: 14.sp));
+                        },
+                      );
                     },
                   ),
                 ),
@@ -187,10 +216,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   return (
                     shizukuReady: state.value.shizukuReady,
                     isLoading: isLoading,
-                    hasApps:
-                        state.value.systemApps.isNotEmpty &&
-                        state.value.userApps.isNotEmpty &&
-                        state.value.allApps.isNotEmpty,
+                    hasApps: state.value.allApps.isNotEmpty,
                   );
                 },
                 builder: (context, data) {

@@ -65,24 +65,6 @@ class ServiceListItem extends StatelessWidget {
                   '${context.loc.pid}: ${service.pid?.toString() ?? 'N/A'}',
                   style: TextStyle(fontSize: 11.sp, color: Theme.of(context).colorScheme.primary),
                 ),
-                SizedBox(width: 12.w),
-                Icon(
-                  service.isSystemApp ? Icons.android : Icons.person,
-                  size: 12.w,
-                  color: service.isSystemApp
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.tertiary,
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  service.isSystemApp ? context.loc.system : context.loc.user,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: service.isSystemApp
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
               ],
             ),
           ],

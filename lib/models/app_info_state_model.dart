@@ -19,6 +19,7 @@ abstract class CachedAppInfo with _$CachedAppInfo {
   const factory CachedAppInfo({
     required String appName,
     @Uint8ListConverter() Uint8List? icon,
+    @Default(false) bool isSystemApp,
   }) = _CachedAppInfo;
 
   factory CachedAppInfo.fromJson(Map<String, dynamic> json) => _$CachedAppInfoFromJson(json);

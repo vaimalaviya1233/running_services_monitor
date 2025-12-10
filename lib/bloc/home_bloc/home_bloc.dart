@@ -120,20 +120,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         appsMap[app.packageName] = app;
       }
 
-      final result = _processService.categorizeApps(appsMap.values.toList());
+      final allApps = appsMap.values.toList();
       final ramInfo = await streamResult.systemRamInfo;
 
       emit(
         HomeState.success(
           state.value.copyWith(
-            allApps: result.allApps,
-            userApps: result.userApps,
-            systemApps: result.systemApps,
-            appsRamKb: result.appsRam,
+            allApps: allApps,
             totalRamKb: ramInfo?[0] ?? state.value.totalRamKb,
             freeRamKb: ramInfo?[1] ?? state.value.freeRamKb,
             usedRamKb: ramInfo?[2] ?? state.value.usedRamKb,
           ),
+          event.notify ? 'Refreshed successfully' : null,
         ),
       );
     } catch (e) {
@@ -156,24 +154,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           HomeState.loading(
             state.value.copyWith(
               allApps: allApps,
-              userApps: allApps.where((a) => !a.isSystemApp).toList(),
-              systemApps: allApps.where((a) => a.isSystemApp).toList(),
-              appsRamKb: allApps.fold(0.0, (sum, a) => sum + a.totalRamInKb),
             ),
           ),
         );
       }
 
-      final result = _processService.categorizeApps(appsMap.values.toList());
-
+      final allApps = appsMap.values.toList();
       final ramInfo = await streamResult.systemRamInfo;
       emit(
         HomeState.success(
           state.value.copyWith(
-            allApps: result.allApps,
-            userApps: result.userApps,
-            systemApps: result.systemApps,
-            appsRamKb: result.appsRam,
+            allApps: allApps,
             totalRamKb: ramInfo?[0] ?? state.value.totalRamKb,
             freeRamKb: ramInfo?[1] ?? state.value.freeRamKb,
             usedRamKb: ramInfo?[2] ?? state.value.usedRamKb,
@@ -218,21 +209,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _onRemoveApp(_RemoveApp event, Emitter<HomeState> emit) async {
     final currentState = state.value;
     final updatedAllApps = currentState.allApps.where((app) => app.packageName != event.packageName).toList();
-    final updatedUserApps = currentState.userApps.where((app) => app.packageName != event.packageName).toList();
-    final updatedSystemApps = currentState.systemApps.where((app) => app.packageName != event.packageName).toList();
-
-    double appsRam = 0;
-    for (var app in updatedAllApps) {
-      appsRam += app.totalRamInKb;
-    }
 
     emit(
       HomeState.success(
         currentState.copyWith(
           allApps: updatedAllApps,
-          userApps: updatedUserApps,
-          systemApps: updatedSystemApps,
-          appsRamKb: appsRam,
         ),
       ),
     );
@@ -268,21 +249,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     final updatedAllApps = currentState.allApps.map(updateApp).whereType<AppProcessInfo>().toList();
-    final updatedUserApps = currentState.userApps.map(updateApp).whereType<AppProcessInfo>().toList();
-    final updatedSystemApps = currentState.systemApps.map(updateApp).whereType<AppProcessInfo>().toList();
-
-    double appsRam = 0;
-    for (var app in updatedAllApps) {
-      appsRam += app.totalRamInKb;
-    }
 
     emit(
       HomeState.success(
         currentState.copyWith(
           allApps: updatedAllApps,
-          userApps: updatedUserApps,
-          systemApps: updatedSystemApps,
-          appsRamKb: appsRam,
         ),
       ),
     );

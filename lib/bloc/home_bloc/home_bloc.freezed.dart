@@ -143,11 +143,11 @@ return toggleSortOrder(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initializeShizuku,TResult Function( bool silent)?  loadData,TResult Function()?  toggleAutoUpdate,TResult Function()?  toggleSearch,TResult Function( String query)?  updateSearchQuery,TResult Function( String packageName)?  removeApp,TResult Function( String packageName,  String serviceName)?  removeService,TResult Function( ProcessStateFilter filter)?  setProcessFilter,TResult Function()?  toggleSortOrder,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initializeShizuku,TResult Function( bool silent,  bool notify)?  loadData,TResult Function()?  toggleAutoUpdate,TResult Function()?  toggleSearch,TResult Function( String query)?  updateSearchQuery,TResult Function( String packageName)?  removeApp,TResult Function( String packageName,  String serviceName)?  removeService,TResult Function( ProcessStateFilter filter)?  setProcessFilter,TResult Function()?  toggleSortOrder,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
 return initializeShizuku();case _LoadData() when loadData != null:
-return loadData(_that.silent);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
+return loadData(_that.silent,_that.notify);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate();case _ToggleSearch() when toggleSearch != null:
 return toggleSearch();case _UpdateSearchQuery() when updateSearchQuery != null:
 return updateSearchQuery(_that.query);case _RemoveApp() when removeApp != null:
@@ -172,11 +172,11 @@ return toggleSortOrder();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initializeShizuku,required TResult Function( bool silent)  loadData,required TResult Function()  toggleAutoUpdate,required TResult Function()  toggleSearch,required TResult Function( String query)  updateSearchQuery,required TResult Function( String packageName)  removeApp,required TResult Function( String packageName,  String serviceName)  removeService,required TResult Function( ProcessStateFilter filter)  setProcessFilter,required TResult Function()  toggleSortOrder,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initializeShizuku,required TResult Function( bool silent,  bool notify)  loadData,required TResult Function()  toggleAutoUpdate,required TResult Function()  toggleSearch,required TResult Function( String query)  updateSearchQuery,required TResult Function( String packageName)  removeApp,required TResult Function( String packageName,  String serviceName)  removeService,required TResult Function( ProcessStateFilter filter)  setProcessFilter,required TResult Function()  toggleSortOrder,}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku():
 return initializeShizuku();case _LoadData():
-return loadData(_that.silent);case _ToggleAutoUpdate():
+return loadData(_that.silent,_that.notify);case _ToggleAutoUpdate():
 return toggleAutoUpdate();case _ToggleSearch():
 return toggleSearch();case _UpdateSearchQuery():
 return updateSearchQuery(_that.query);case _RemoveApp():
@@ -200,11 +200,11 @@ return toggleSortOrder();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initializeShizuku,TResult? Function( bool silent)?  loadData,TResult? Function()?  toggleAutoUpdate,TResult? Function()?  toggleSearch,TResult? Function( String query)?  updateSearchQuery,TResult? Function( String packageName)?  removeApp,TResult? Function( String packageName,  String serviceName)?  removeService,TResult? Function( ProcessStateFilter filter)?  setProcessFilter,TResult? Function()?  toggleSortOrder,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initializeShizuku,TResult? Function( bool silent,  bool notify)?  loadData,TResult? Function()?  toggleAutoUpdate,TResult? Function()?  toggleSearch,TResult? Function( String query)?  updateSearchQuery,TResult? Function( String packageName)?  removeApp,TResult? Function( String packageName,  String serviceName)?  removeService,TResult? Function( ProcessStateFilter filter)?  setProcessFilter,TResult? Function()?  toggleSortOrder,}) {final _that = this;
 switch (_that) {
 case _InitializeShizuku() when initializeShizuku != null:
 return initializeShizuku();case _LoadData() when loadData != null:
-return loadData(_that.silent);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
+return loadData(_that.silent,_that.notify);case _ToggleAutoUpdate() when toggleAutoUpdate != null:
 return toggleAutoUpdate();case _ToggleSearch() when toggleSearch != null:
 return toggleSearch();case _UpdateSearchQuery() when updateSearchQuery != null:
 return updateSearchQuery(_that.query);case _RemoveApp() when removeApp != null:
@@ -255,10 +255,11 @@ String toString() {
 
 
 class _LoadData implements HomeEvent {
-  const _LoadData({this.silent = false});
+  const _LoadData({this.silent = false, this.notify = false});
   
 
 @JsonKey() final  bool silent;
+@JsonKey() final  bool notify;
 
 /// Create a copy of HomeEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -270,16 +271,16 @@ _$LoadDataCopyWith<_LoadData> get copyWith => __$LoadDataCopyWithImpl<_LoadData>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadData&&(identical(other.silent, silent) || other.silent == silent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadData&&(identical(other.silent, silent) || other.silent == silent)&&(identical(other.notify, notify) || other.notify == notify));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,silent);
+int get hashCode => Object.hash(runtimeType,silent,notify);
 
 @override
 String toString() {
-  return 'HomeEvent.loadData(silent: $silent)';
+  return 'HomeEvent.loadData(silent: $silent, notify: $notify)';
 }
 
 
@@ -290,7 +291,7 @@ abstract mixin class _$LoadDataCopyWith<$Res> implements $HomeEventCopyWith<$Res
   factory _$LoadDataCopyWith(_LoadData value, $Res Function(_LoadData) _then) = __$LoadDataCopyWithImpl;
 @useResult
 $Res call({
- bool silent
+ bool silent, bool notify
 });
 
 
@@ -307,9 +308,10 @@ class __$LoadDataCopyWithImpl<$Res>
 
 /// Create a copy of HomeEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? silent = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? silent = null,Object? notify = null,}) {
   return _then(_LoadData(
 silent: null == silent ? _self.silent : silent // ignore: cast_nullable_to_non_nullable
+as bool,notify: null == notify ? _self.notify : notify // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

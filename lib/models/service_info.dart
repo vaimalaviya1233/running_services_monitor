@@ -42,7 +42,7 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     required List<int> pids,
     required String totalRam,
     required double totalRamInKb,
-    required bool isSystemApp,
+    bool? isSystemApp,
     @Default([]) List<ConnectionRecord> connections,
     String? processState,
     String? adjLevel,

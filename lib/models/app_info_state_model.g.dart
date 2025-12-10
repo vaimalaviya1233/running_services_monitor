@@ -23,10 +23,12 @@ _CachedAppInfo _$CachedAppInfoFromJson(Map<String, dynamic> json) =>
     _CachedAppInfo(
       appName: json['appName'] as String,
       icon: const Uint8ListConverter().fromJson(json['icon'] as String?),
+      isSystemApp: json['isSystemApp'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$CachedAppInfoToJson(_CachedAppInfo instance) =>
     <String, dynamic>{
       'appName': instance.appName,
       'icon': const Uint8ListConverter().toJson(instance.icon),
+      'isSystemApp': instance.isSystemApp,
     };

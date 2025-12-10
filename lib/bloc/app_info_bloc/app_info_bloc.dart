@@ -33,6 +33,7 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
         newCachedApps[entry.key] = CachedAppInfo(
           appName: entry.value.name,
           icon: entry.value.icon,
+          isSystemApp: entry.value.isSystemApp,
         );
       }
 
@@ -51,6 +52,7 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
       updatedCachedApps[event.packageName] = CachedAppInfo(
         appName: appInfo.name,
         icon: appInfo.icon,
+        isSystemApp: appInfo.isSystemApp,
       );
 
       emit(AppInfoState.success(state.value.copyWith(cachedApps: updatedCachedApps)));
@@ -72,6 +74,7 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
           updatedCachedApps[packageName] = CachedAppInfo(
             appName: appInfo.name,
             icon: appInfo.icon,
+            isSystemApp: appInfo.isSystemApp,
           );
         }
       }

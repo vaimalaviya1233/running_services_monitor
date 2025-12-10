@@ -36,7 +36,6 @@ class ProcessService {
     required Map<int, double> pidRamMap,
     required Map<String, double> processNameRamMap,
   }) {
-    final isSystem = lruInfo.uid < 10000;
     final appName = _getAppName(packageName);
 
     double ramKb = 0;
@@ -58,38 +57,11 @@ class ProcessService {
       pids: [lruInfo.pid],
       totalRam: formatRam(ramKb),
       totalRamInKb: ramKb,
-      isSystemApp: isSystem,
       processState: lruInfo.state,
       adjLevel: lruInfo.adj,
       hasServices: false,
       ramSources: ramSources,
       isCached: isCached,
-    );
-  }
-
-  ProcessedAppsResult categorizeApps(List<AppProcessInfo> allApps, [List<double>? ramInfo]) {
-    List<AppProcessInfo> userApps = [];
-    List<AppProcessInfo> systemApps = [];
-    double appsRam = 0;
-
-    for (var app in allApps) {
-      if (app.isSystemApp) {
-        systemApps.add(app);
-      } else {
-        userApps.add(app);
-      }
-      appsRam += app.totalRamInKb;
-    }
-
-    userApps.sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
-    systemApps.sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
-
-    return ProcessedAppsResult(
-      allApps: allApps,
-      userApps: userApps,
-      systemApps: systemApps,
-      appsRam: appsRam,
-      ramInfo: ramInfo,
     );
   }
 
@@ -415,7 +387,7 @@ class ProcessService {
     }
 
     if (packageName != null && serviceName != null) {
-      final isSystem =
+      final isSystem = !packageName.contains('.') ||
           (uid != null && uid < 10000) ||
           (baseDir != null &&
               (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext')));
@@ -456,7 +428,7 @@ class ProcessService {
   }) {
     double totalRamKb = 0;
     final Set<int> pids = {};
-    bool isSystem = false;
+    bool? isSystem;
     final appName = _getAppName(packageName);
     final List<RamSourceInfo> ramSources = [];
 

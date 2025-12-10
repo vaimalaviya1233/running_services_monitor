@@ -24,6 +24,7 @@ class ProcessFilterChips extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       child: Row(
+        spacing: 8.w,
         children: [
           FilterChipWidget(
             label: context.loc.all,
@@ -31,7 +32,6 @@ class ProcessFilterChips extends StatelessWidget {
             onSelected: () => context.read<HomeBloc>().add(const HomeEvent.setProcessFilter(ProcessStateFilter.all)),
             sortAscending: selectedFilter == ProcessStateFilter.all ? sortAscending : null,
           ),
-          SizedBox(width: 8.w),
           FilterChipWidget(
             label: '${context.loc.active} ($activeCount)',
             isSelected: selectedFilter == ProcessStateFilter.active,
@@ -39,22 +39,19 @@ class ProcessFilterChips extends StatelessWidget {
             color: Colors.green,
             sortAscending: selectedFilter == ProcessStateFilter.active ? sortAscending : null,
           ),
-          SizedBox(width: 8.w),
+          FilterChipWidget(
+            label: '${context.loc.services} ($servicesCount)',
+            isSelected: selectedFilter == ProcessStateFilter.withServices,
+            onSelected: () => context.read<HomeBloc>().add(const HomeEvent.setProcessFilter(ProcessStateFilter.withServices)),
+            color: Colors.blue,
+            sortAscending: selectedFilter == ProcessStateFilter.withServices ? sortAscending : null,
+          ),
           FilterChipWidget(
             label: '${context.loc.cached} ($cachedCount)',
             isSelected: selectedFilter == ProcessStateFilter.cached,
             onSelected: () => context.read<HomeBloc>().add(const HomeEvent.setProcessFilter(ProcessStateFilter.cached)),
             color: Colors.grey,
             sortAscending: selectedFilter == ProcessStateFilter.cached ? sortAscending : null,
-          ),
-          SizedBox(width: 8.w),
-          FilterChipWidget(
-            label: '${context.loc.services} ($servicesCount)',
-            isSelected: selectedFilter == ProcessStateFilter.withServices,
-            onSelected: () =>
-                context.read<HomeBloc>().add(const HomeEvent.setProcessFilter(ProcessStateFilter.withServices)),
-            color: Colors.blue,
-            sortAscending: selectedFilter == ProcessStateFilter.withServices ? sortAscending : null,
           ),
         ],
       ),

@@ -343,7 +343,7 @@ as List<ConnectionRecord>,
 /// @nodoc
 mixin _$AppProcessInfo {
 
- String get packageName; String get appName; List<RunningServiceInfo> get services; List<int> get pids; String get totalRam; double get totalRamInKb; bool get isSystemApp; List<ConnectionRecord> get connections; String? get processState; String? get adjLevel; bool get hasServices; List<RamSourceInfo> get ramSources; bool get isCached; double get cachedMemoryKb;
+ String get packageName; String get appName; List<RunningServiceInfo> get services; List<int> get pids; String get totalRam; double get totalRamInKb; bool? get isSystemApp; List<ConnectionRecord> get connections; String? get processState; String? get adjLevel; bool get hasServices; List<RamSourceInfo> get ramSources; bool get isCached; double get cachedMemoryKb;
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -374,7 +374,7 @@ abstract mixin class $AppProcessInfoCopyWith<$Res>  {
   factory $AppProcessInfoCopyWith(AppProcessInfo value, $Res Function(AppProcessInfo) _then) = _$AppProcessInfoCopyWithImpl;
 @useResult
 $Res call({
- String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, bool isCached, double cachedMemoryKb
+ String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, bool isCached, double cachedMemoryKb
 });
 
 
@@ -391,7 +391,7 @@ class _$AppProcessInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = null,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? isCached = null,Object? cachedMemoryKb = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? isCached = null,Object? cachedMemoryKb = null,}) {
   return _then(_self.copyWith(
 packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
@@ -399,8 +399,8 @@ as String,services: null == services ? _self.services : services // ignore: cast
 as List<RunningServiceInfo>,pids: null == pids ? _self.pids : pids // ignore: cast_nullable_to_non_nullable
 as List<int>,totalRam: null == totalRam ? _self.totalRam : totalRam // ignore: cast_nullable_to_non_nullable
 as String,totalRamInKb: null == totalRamInKb ? _self.totalRamInKb : totalRamInKb // ignore: cast_nullable_to_non_nullable
-as double,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
-as bool,connections: null == connections ? _self.connections : connections // ignore: cast_nullable_to_non_nullable
+as double,isSystemApp: freezed == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
+as bool?,connections: null == connections ? _self.connections : connections // ignore: cast_nullable_to_non_nullable
 as List<ConnectionRecord>,processState: freezed == processState ? _self.processState : processState // ignore: cast_nullable_to_non_nullable
 as String?,adjLevel: freezed == adjLevel ? _self.adjLevel : adjLevel // ignore: cast_nullable_to_non_nullable
 as String?,hasServices: null == hasServices ? _self.hasServices : hasServices // ignore: cast_nullable_to_non_nullable
@@ -492,7 +492,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppProcessInfo() when $default != null:
 return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.isCached,_that.cachedMemoryKb);case _:
@@ -513,7 +513,7 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)  $default,) {final _that = this;
 switch (_that) {
 case _AppProcessInfo():
 return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.isCached,_that.cachedMemoryKb);case _:
@@ -533,7 +533,7 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  bool isCached,  double cachedMemoryKb)?  $default,) {final _that = this;
 switch (_that) {
 case _AppProcessInfo() when $default != null:
 return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.isCached,_that.cachedMemoryKb);case _:
@@ -548,7 +548,7 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 
 
 class _AppProcessInfo extends AppProcessInfo {
-  const _AppProcessInfo({required this.packageName, required this.appName, required final  List<RunningServiceInfo> services, required final  List<int> pids, required this.totalRam, required this.totalRamInKb, required this.isSystemApp, final  List<ConnectionRecord> connections = const [], this.processState, this.adjLevel, this.hasServices = true, final  List<RamSourceInfo> ramSources = const [], this.isCached = false, this.cachedMemoryKb = 0}): _services = services,_pids = pids,_connections = connections,_ramSources = ramSources,super._();
+  const _AppProcessInfo({required this.packageName, required this.appName, required final  List<RunningServiceInfo> services, required final  List<int> pids, required this.totalRam, required this.totalRamInKb, this.isSystemApp, final  List<ConnectionRecord> connections = const [], this.processState, this.adjLevel, this.hasServices = true, final  List<RamSourceInfo> ramSources = const [], this.isCached = false, this.cachedMemoryKb = 0}): _services = services,_pids = pids,_connections = connections,_ramSources = ramSources,super._();
   
 
 @override final  String packageName;
@@ -569,7 +569,7 @@ class _AppProcessInfo extends AppProcessInfo {
 
 @override final  String totalRam;
 @override final  double totalRamInKb;
-@override final  bool isSystemApp;
+@override final  bool? isSystemApp;
  final  List<ConnectionRecord> _connections;
 @override@JsonKey() List<ConnectionRecord> get connections {
   if (_connections is EqualUnmodifiableListView) return _connections;
@@ -620,7 +620,7 @@ abstract mixin class _$AppProcessInfoCopyWith<$Res> implements $AppProcessInfoCo
   factory _$AppProcessInfoCopyWith(_AppProcessInfo value, $Res Function(_AppProcessInfo) _then) = __$AppProcessInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, bool isCached, double cachedMemoryKb
+ String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, bool isCached, double cachedMemoryKb
 });
 
 
@@ -637,7 +637,7 @@ class __$AppProcessInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = null,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? isCached = null,Object? cachedMemoryKb = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? isCached = null,Object? cachedMemoryKb = null,}) {
   return _then(_AppProcessInfo(
 packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
@@ -645,8 +645,8 @@ as String,services: null == services ? _self._services : services // ignore: cas
 as List<RunningServiceInfo>,pids: null == pids ? _self._pids : pids // ignore: cast_nullable_to_non_nullable
 as List<int>,totalRam: null == totalRam ? _self.totalRam : totalRam // ignore: cast_nullable_to_non_nullable
 as String,totalRamInKb: null == totalRamInKb ? _self.totalRamInKb : totalRamInKb // ignore: cast_nullable_to_non_nullable
-as double,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
-as bool,connections: null == connections ? _self._connections : connections // ignore: cast_nullable_to_non_nullable
+as double,isSystemApp: freezed == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
+as bool?,connections: null == connections ? _self._connections : connections // ignore: cast_nullable_to_non_nullable
 as List<ConnectionRecord>,processState: freezed == processState ? _self.processState : processState // ignore: cast_nullable_to_non_nullable
 as String?,adjLevel: freezed == adjLevel ? _self.adjLevel : adjLevel // ignore: cast_nullable_to_non_nullable
 as String?,hasServices: null == hasServices ? _self.hasServices : hasServices // ignore: cast_nullable_to_non_nullable

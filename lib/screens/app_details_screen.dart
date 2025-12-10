@@ -13,6 +13,7 @@ import 'widgets/app_details_section_title.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
+import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 
 class AppDetailsScreen extends StatelessWidget {
@@ -198,7 +199,7 @@ class AppDetailsScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 8.h),
                                   Text(context.loc.stopServiceWarning, style: TextStyle(fontSize: 14.sp)),
-                                  if (currentAppInfo.isSystemApp) ...[
+                                  if (currentAppInfo.isSystemApp ?? false) ...[
                                     SizedBox(height: 12.h),
                                     Container(
                                       padding: EdgeInsets.all(12.w),
@@ -266,14 +267,30 @@ class _StateBadges extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = context.loc;
 
-    return Wrap(
-      spacing: 8.w,
-      runSpacing: 4.h,
-      children: [
-        if (appInfo.isActive) _Badge(label: loc.active, color: Colors.green),
-        if (appInfo.isCachedProcess) _Badge(label: loc.cached, color: Colors.grey),
-        if (appInfo.hasServices) _Badge(label: loc.services, color: Colors.blue),
-      ],
+    return BlocSelector<AppInfoBloc, AppInfoState, bool?>(
+      bloc: getIt<AppInfoBloc>(),
+      selector: (state) {
+        final cached = state.value.cachedApps[appInfo.packageName];
+        if (cached != null) {
+          return cached.isSystemApp;
+        }
+        return appInfo.isSystemApp;
+      },
+      builder: (context, isSystemApp) {
+        return Wrap(
+          spacing: 8.w,
+          runSpacing: 4.h,
+          children: [
+            if (isSystemApp == true) _Badge(label: loc.system, color: Colors.orange),
+            if (isSystemApp == false) _Badge(label: loc.user, color: Colors.teal),
+            if (appInfo.isActive) _Badge(label: loc.active, color: Colors.green),
+            if (appInfo.isCachedProcess) _Badge(label: loc.cached, color: Colors.grey),
+            if (appInfo.hasServices) _Badge(label: loc.services, color: Colors.blue),
+            for (final uid in appInfo.services.map((s) => s.uid).whereType<int>().toSet())
+              _Badge(label: 'UID: $uid', color: Colors.indigo),
+          ],
+        );
+      },
     );
   }
 }

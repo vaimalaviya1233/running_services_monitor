@@ -284,7 +284,7 @@ as Map<String, CachedAppInfo>,
 /// @nodoc
 mixin _$CachedAppInfo {
 
- String get appName;@Uint8ListConverter() Uint8List? get icon;
+ String get appName;@Uint8ListConverter() Uint8List? get icon; bool get isSystemApp;
 /// Create a copy of CachedAppInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +297,16 @@ $CachedAppInfoCopyWith<CachedAppInfo> get copyWith => _$CachedAppInfoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CachedAppInfo&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CachedAppInfo&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,appName,const DeepCollectionEquality().hash(icon));
+int get hashCode => Object.hash(runtimeType,appName,const DeepCollectionEquality().hash(icon),isSystemApp);
 
 @override
 String toString() {
-  return 'CachedAppInfo(appName: $appName, icon: $icon)';
+  return 'CachedAppInfo(appName: $appName, icon: $icon, isSystemApp: $isSystemApp)';
 }
 
 
@@ -317,7 +317,7 @@ abstract mixin class $CachedAppInfoCopyWith<$Res>  {
   factory $CachedAppInfoCopyWith(CachedAppInfo value, $Res Function(CachedAppInfo) _then) = _$CachedAppInfoCopyWithImpl;
 @useResult
 $Res call({
- String appName,@Uint8ListConverter() Uint8List? icon
+ String appName,@Uint8ListConverter() Uint8List? icon, bool isSystemApp
 });
 
 
@@ -334,11 +334,12 @@ class _$CachedAppInfoCopyWithImpl<$Res>
 
 /// Create a copy of CachedAppInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? appName = null,Object? icon = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? appName = null,Object? icon = freezed,Object? isSystemApp = null,}) {
   return _then(_self.copyWith(
 appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as Uint8List?,
+as Uint8List?,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -423,10 +424,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String appName, @Uint8ListConverter()  Uint8List? icon)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String appName, @Uint8ListConverter()  Uint8List? icon,  bool isSystemApp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CachedAppInfo() when $default != null:
-return $default(_that.appName,_that.icon);case _:
+return $default(_that.appName,_that.icon,_that.isSystemApp);case _:
   return orElse();
 
 }
@@ -444,10 +445,10 @@ return $default(_that.appName,_that.icon);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String appName, @Uint8ListConverter()  Uint8List? icon)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String appName, @Uint8ListConverter()  Uint8List? icon,  bool isSystemApp)  $default,) {final _that = this;
 switch (_that) {
 case _CachedAppInfo():
-return $default(_that.appName,_that.icon);case _:
+return $default(_that.appName,_that.icon,_that.isSystemApp);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -464,10 +465,10 @@ return $default(_that.appName,_that.icon);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String appName, @Uint8ListConverter()  Uint8List? icon)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String appName, @Uint8ListConverter()  Uint8List? icon,  bool isSystemApp)?  $default,) {final _that = this;
 switch (_that) {
 case _CachedAppInfo() when $default != null:
-return $default(_that.appName,_that.icon);case _:
+return $default(_that.appName,_that.icon,_that.isSystemApp);case _:
   return null;
 
 }
@@ -479,11 +480,12 @@ return $default(_that.appName,_that.icon);case _:
 @JsonSerializable()
 
 class _CachedAppInfo implements CachedAppInfo {
-  const _CachedAppInfo({required this.appName, @Uint8ListConverter() this.icon});
+  const _CachedAppInfo({required this.appName, @Uint8ListConverter() this.icon, this.isSystemApp = false});
   factory _CachedAppInfo.fromJson(Map<String, dynamic> json) => _$CachedAppInfoFromJson(json);
 
 @override final  String appName;
 @override@Uint8ListConverter() final  Uint8List? icon;
+@override@JsonKey() final  bool isSystemApp;
 
 /// Create a copy of CachedAppInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -498,16 +500,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CachedAppInfo&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CachedAppInfo&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,appName,const DeepCollectionEquality().hash(icon));
+int get hashCode => Object.hash(runtimeType,appName,const DeepCollectionEquality().hash(icon),isSystemApp);
 
 @override
 String toString() {
-  return 'CachedAppInfo(appName: $appName, icon: $icon)';
+  return 'CachedAppInfo(appName: $appName, icon: $icon, isSystemApp: $isSystemApp)';
 }
 
 
@@ -518,7 +520,7 @@ abstract mixin class _$CachedAppInfoCopyWith<$Res> implements $CachedAppInfoCopy
   factory _$CachedAppInfoCopyWith(_CachedAppInfo value, $Res Function(_CachedAppInfo) _then) = __$CachedAppInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String appName,@Uint8ListConverter() Uint8List? icon
+ String appName,@Uint8ListConverter() Uint8List? icon, bool isSystemApp
 });
 
 
@@ -535,11 +537,12 @@ class __$CachedAppInfoCopyWithImpl<$Res>
 
 /// Create a copy of CachedAppInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? appName = null,Object? icon = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? appName = null,Object? icon = freezed,Object? isSystemApp = null,}) {
   return _then(_CachedAppInfo(
 appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as Uint8List?,
+as Uint8List?,isSystemApp: null == isSystemApp ? _self.isSystemApp : isSystemApp // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

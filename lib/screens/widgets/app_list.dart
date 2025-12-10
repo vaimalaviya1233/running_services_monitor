@@ -76,7 +76,7 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
           onRefresh: () async {
             final homeBloc = context.read<HomeBloc>();
             final future = homeBloc.stream.first;
-            homeBloc.add(const HomeEvent.loadData());
+            homeBloc.add(const HomeEvent.loadData(silent: true, notify: true));
             await future;
           },
           child: content,
