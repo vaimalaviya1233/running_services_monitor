@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_bn.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('bn'),
     Locale('en'),
+    Locale('zh'),
   ];
 
   /// The title of the application
@@ -739,6 +741,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'and'**
   String get and;
+
+  /// No description provided for @service_string.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {1 service} other {{count} services}}'**
+  String service_string(int count);
+
+  /// No description provided for @process_string.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {1 process} other {{count} processes}}'**
+  String process_string(int count);
+
+  /// No description provided for @service_process_string.
+  ///
+  /// In en, this message translates to:
+  /// **'{processCount, plural, one {1 process} other {{processCount} processes}} and {serviceCount, plural, one {1 service} other {{serviceCount} services}}'**
+  String service_process_string(int serviceCount, int processCount);
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
 }
 
 class _AppLocalizationsDelegate
@@ -752,7 +778,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['bn', 'en'].contains(locale.languageCode);
+      <String>['bn', 'en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -765,6 +791,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsBn();
     case 'en':
       return AppLocalizationsEn();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

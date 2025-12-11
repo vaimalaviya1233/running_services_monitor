@@ -17,6 +17,7 @@ class LanguageSelector extends StatelessWidget {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<Locale>>[
         PopupMenuItem<Locale>(value: const Locale('en'), child: Text('English', style: TextStyle(fontSize: 14.sp))),
         PopupMenuItem<Locale>(value: const Locale('bn'), child: Text('বাংলা', style: TextStyle(fontSize: 14.sp))),
+        PopupMenuItem<Locale>(value: const Locale('zh'), child: Text('简体中文', style: TextStyle(fontSize: 14.sp))),
       ],
     );
   }
