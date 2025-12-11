@@ -111,5 +111,6 @@
   "process_string": "{count}个进程",
   "service_process_string": "{processCount}个进程和{serviceCount}个服务",
   "info": "信息",
-  "followSystem": "跟随系统"
+  "followSystem": "跟随系统",
+  "contributors": "贡献者"
 }

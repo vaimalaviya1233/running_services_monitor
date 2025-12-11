@@ -771,6 +771,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Follow System'**
   String get followSystem;
+
+  /// No description provided for @contributors.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributors'**
+  String get contributors;
 }
 
 class _AppLocalizationsDelegate

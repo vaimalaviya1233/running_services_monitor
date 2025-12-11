@@ -386,4 +386,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get followSystem => 'Follow System';
+
+  @override
+  String get contributors => 'Contributors';
 }

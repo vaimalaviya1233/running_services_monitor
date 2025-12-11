@@ -1,0 +1,111 @@
+name: Update Contributors
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-contributors:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    name: 📊 Update Contributors Data
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔄 Fetch Contributors Data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching contributors..."
+          contributors=$(gh api repos/${{ github.repository }}/contributors --paginate)
+          
+          echo "Fetching merged pull requests..."
+          prs=$(gh api repos/${{ github.repository }}/pulls?state=closed\&per_page=100 --paginate)
+          
+          echo "Processing data..."
+          python3 << 'EOF'
+          import json
+          import os
+          
+          contributors_raw = json.loads('''$contributors'''.replace("'", '"') if '''$contributors''' else '[]')
+          prs_raw = json.loads('''$prs'''.replace("'", '"') if '''$prs''' else '[]')
+          
+          with open('contributors_raw.json', 'w') as f:
+              pass
+          with open('prs_raw.json', 'w') as f:
+              pass
+          EOF
+          
+          echo "$contributors" > contributors_raw.json
+          echo "$prs" > prs_raw.json
+
+      - name: 📝 Process and Generate JSON
+        run: |
+          python3 << 'EOF'
+          import json
+          
+          with open('contributors_raw.json', 'r') as f:
+              contributors_data = json.load(f)
+          
+          with open('prs_raw.json', 'r') as f:
+              prs_data = json.load(f)
+          
+          pr_by_user = {}
+          for pr in prs_data:
+              if pr.get('merged_at') and pr.get('user'):
+                  username = pr['user']['login']
+                  if username not in pr_by_user:
+                      pr_by_user[username] = []
+                  pr_by_user[username].append({
+                      'number': pr['number'],
+                      'title': pr['title'],
+                      'htmlUrl': pr['html_url']
+                  })
+          
+          result = []
+          for contributor in contributors_data:
+              if contributor.get('type') == 'Bot':
+                  continue
+              
+              username = contributor['login']
+              result.append({
+                  'login': username,
+                  'htmlUrl': contributor['html_url'],
+                  'contributions': contributor['contributions'],
+                  'pullRequests': pr_by_user.get(username, [])
+              })
+          
+          result.sort(key=lambda x: x['contributions'], reverse=True)
+          
+          with open('assets/contributors.json', 'w') as f:
+              json.dump(result, f, indent=2)
+          
+          print(f"Generated contributors.json with {len(result)} contributors")
+          EOF
+
+      - name: 🧹 Cleanup
+        run: |
+          rm -f contributors_raw.json prs_raw.json
+
+      - name: 📤 Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add assets/contributors.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update contributors data"
+            git push
+          fi

@@ -134,6 +134,14 @@ If you find this app useful, consider buying me a coffee:
 - **Shizuku** by RikkaApps - https://github.com/RikkaApps/Shizuku
 - **Flutter** - https://flutter.dev
 
+## Contributors
+
+Thanks to all the amazing people who have contributed to this project!
+
+<a href="https://github.com/biplobsd/running_services_monitor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=biplobsd/running_services_monitor" />
+</a>
+
 ## Disclaimer
 
 This app is for informational purposes only. It displays running services but does not modify system behavior. Use responsibly and respect user privacy.

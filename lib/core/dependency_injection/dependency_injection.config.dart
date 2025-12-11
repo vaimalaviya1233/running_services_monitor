@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../bloc/about_bloc/about_bloc.dart' as _i204;
 import '../../bloc/app_info_bloc/app_info_bloc.dart' as _i340;
 import '../../bloc/home_bloc/home_bloc.dart' as _i98;
 import '../../bloc/language_bloc/language_bloc.dart' as _i663;
@@ -28,6 +29,7 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.lazySingleton<_i204.AboutBloc>(() => _i204.AboutBloc());
     gh.lazySingleton<_i663.LanguageBloc>(() => _i663.LanguageBloc());
     gh.lazySingleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());

@@ -1,43 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:running_services_monitor/bloc/about_bloc/about_bloc.dart';
 import 'package:running_services_monitor/core/constants.dart';
 import 'package:running_services_monitor/core/extensions.dart';
+import 'package:running_services_monitor/models/contributor_info.dart';
 import 'widgets/about_info_tile.dart';
 import 'widgets/about_header.dart';
+import 'widgets/contributor_list_tile.dart';
 
-class AboutScreen extends StatefulWidget {
+class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
-
-  @override
-  State<AboutScreen> createState() => _AboutScreenState();
-}
-
-class _AboutScreenState extends State<AboutScreen> {
-  String version = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadPackageInfo();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (version.isEmpty) {
-      version = context.loc.loading;
-    }
-  }
-
-  Future<void> _loadPackageInfo() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      version = 'v${packageInfo.version}';
-    });
-  }
 
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
@@ -46,57 +20,99 @@ class _AboutScreenState extends State<AboutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.loc.about, style: TextStyle(fontSize: 20.sp)),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: EdgeInsets.all(16.0.w),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                AboutHeader(version: version),
-                SizedBox(height: 32.h),
-                AboutInfoTile(icon: Icons.person, title: context.loc.developer, subtitle: AppConstants.developerName),
-                AboutInfoTile(
-                  icon: Icons.email,
-                  title: context.loc.email,
-                  subtitle: AppConstants.developerEmail,
-                  onTap: () => _launchUrl('mailto:${AppConstants.developerEmail}'),
-                ),
-                AboutInfoTile(
-                  icon: Icons.code,
-                  title: context.loc.sourceCode,
-                  subtitle: AppConstants.sourceCodeUrl,
-                  onTap: () => _launchUrl(AppConstants.sourceCodeUrl),
-                ),
-                AboutInfoTile(
-                  icon: Icons.web,
-                  title: context.loc.blogs,
-                  subtitle: AppConstants.blogsUrl,
-                  onTap: () => _launchUrl(AppConstants.blogsUrl),
-                ),
-                SizedBox(height: 24.h),
-                Center(
-                  child: FilledButton.icon(
-                    onPressed: () => _launchUrl(AppConstants.buyMeCoffeeUrl),
-                    icon: const Icon(Icons.coffee),
-                    label: Text(context.loc.buyMeCoffee, style: TextStyle(fontSize: 14.sp)),
-                    style: FilledButton.styleFrom(backgroundColor: Colors.amber[800], foregroundColor: Colors.white),
+    return BlocProvider(
+      create: (context) => AboutBloc()..add(const AboutEvent.started()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(context.loc.about, style: TextStyle(fontSize: 20.sp)),
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.all(16.0.w),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  BlocSelector<AboutBloc, AboutState, String>(
+                    selector: (state) => state.version,
+                    builder: (context, version) {
+                      return AboutHeader(
+                        version: version.isEmpty ? context.loc.loading : version,
+                      );
+                    },
                   ),
-                ),
-                SizedBox(height: 24.h),
-                Center(
-                  child: Text(
-                    context.loc.madeInBangladesh,
-                    style: TextStyle(fontSize: 14.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  SizedBox(height: 32.h),
+                  AboutInfoTile(
+                    icon: Icons.person,
+                    title: context.loc.developer,
+                    subtitle: AppConstants.developerName,
                   ),
-                ),
-              ]),
+                  AboutInfoTile(
+                    icon: Icons.email,
+                    title: context.loc.email,
+                    subtitle: AppConstants.developerEmail,
+                    onTap: () => _launchUrl('mailto:${AppConstants.developerEmail}'),
+                  ),
+                  AboutInfoTile(
+                    icon: Icons.code,
+                    title: context.loc.sourceCode,
+                    subtitle: AppConstants.sourceCodeUrl,
+                    onTap: () => _launchUrl(AppConstants.sourceCodeUrl),
+                  ),
+                  AboutInfoTile(
+                    icon: Icons.web,
+                    title: context.loc.blogs,
+                    subtitle: AppConstants.blogsUrl,
+                    onTap: () => _launchUrl(AppConstants.blogsUrl),
+                  ),
+                  SizedBox(height: 24.h),
+                  Center(
+                    child: FilledButton.icon(
+                      onPressed: () => _launchUrl(AppConstants.buyMeCoffeeUrl),
+                      icon: const Icon(Icons.coffee),
+                      label: Text(context.loc.buyMeCoffee, style: TextStyle(fontSize: 14.sp)),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.amber[800],
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  BlocSelector<AboutBloc, AboutState, List<ContributorInfo>>(
+                    selector: (state) => state.contributors,
+                    builder: (context, contributors) {
+                      if (contributors.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 32.h),
+                          Text(
+                            context.loc.contributors,
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8.h),
+                          ...contributors.map(
+                            (contributor) => ContributorListTile(contributor: contributor),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+                  Center(
+                    child: Text(
+                      context.loc.madeInBangladesh,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
