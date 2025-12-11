@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'Running Services Monitor';
+  String get appTitle => '运行服务监控器';
 
   @override
   String get enjoyingApp => '喜欢这款应用吗？考虑给我买杯咖啡吧！';
@@ -127,7 +127,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noAppsFound => '未找到应用';
 
   @override
-  String get ofRam => '';
+  String get ofRam => '内存';
 
   @override
   String get processAnd => '进程和';
@@ -136,7 +136,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get services => '服务';
 
   @override
-  String get apps => '所有应用';
+  String get apps => '应用';
 
   @override
   String get used => '已用';
