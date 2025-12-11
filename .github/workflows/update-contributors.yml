@@ -32,9 +32,12 @@ jobs:
           gh api repos/${{ github.repository }}/pulls?state=closed\&per_page=100 --paginate > prs_raw.json
 
       - name: 📝 Process and Generate JSON
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 << 'EOF'
           import json
+          import subprocess
           
           with open('contributors_raw.json', 'r') as f:
               contributors_data = json.load(f)
@@ -50,9 +53,19 @@ jobs:
                       pr_by_user[username] = []
                   pr_by_user[username].append({
                       'number': pr['number'],
-                      'title': pr['title'],
-                      'htmlUrl': pr['html_url']
+                      'title': pr['title']
                   })
+          
+          def get_user_name(username):
+              try:
+                  result = subprocess.run(
+                      ['gh', 'api', f'users/{username}', '--jq', '.name'],
+                      capture_output=True, text=True, timeout=10
+                  )
+                  name = result.stdout.strip()
+                  return name if name and name != 'null' else None
+              except:
+                  return None
           
           result = []
           for contributor in contributors_data:
@@ -60,9 +73,11 @@ jobs:
                   continue
               
               username = contributor['login']
+              name = get_user_name(username)
+              
               result.append({
                   'login': username,
-                  'htmlUrl': contributor['html_url'],
+                  'name': name,
                   'contributions': contributor['contributions'],
                   'pullRequests': pr_by_user.get(username, [])
               })

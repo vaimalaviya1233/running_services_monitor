@@ -25,18 +25,30 @@ class ContributorListTile extends StatelessWidget {
       child: ExpansionTile(
         leading: Icon(Icons.person, size: 24.w, color: colorScheme.primary),
         title: Text(
-          contributor.login,
+          contributor.name ?? contributor.login,
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: Text(
-          context.loc.contributionsCount(contributor.contributions),
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: colorScheme.onSurfaceVariant,
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '@${contributor.login}',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: colorScheme.primary,
+              ),
+            ),
+            Text(
+              context.loc.contributionsCount(contributor.contributions),
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -59,7 +71,7 @@ class ContributorListTile extends StatelessWidget {
             SizedBox(width: 8.w),
             IconButton(
               icon: Icon(Icons.open_in_new, size: 18.w),
-              onPressed: () => _launchUrl(contributor.htmlUrl),
+              onPressed: () => _launchUrl(contributor.profileUrl),
               tooltip: 'Open GitHub Profile',
               visualDensity: VisualDensity.compact,
             ),
@@ -89,7 +101,7 @@ class ContributorListTile extends StatelessWidget {
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    onTap: () => _launchUrl(pr.htmlUrl),
+                    onTap: () => _launchUrl(pr.prUrl),
                   );
                 }).toList(),
               ),
