@@ -4,6 +4,7 @@
         android:label="Running Services Monitor"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:localeConfig="@xml/locales_config"
         android:extractNativeLibs="true"
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -35,7 +36,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        
+
         <!-- Shizuku Provider -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
@@ -45,11 +46,11 @@
             android:exported="true"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
     </application>
-    
+
     <!-- Permission to query all packages -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-    
+
     <!-- Internet permission for potential future features -->
     <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
     <!-- Required to query activities that can process text, see:

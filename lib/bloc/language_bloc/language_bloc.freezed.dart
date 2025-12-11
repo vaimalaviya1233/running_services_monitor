@@ -122,7 +122,7 @@ return started(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( Locale locale)?  changeLanguage,TResult Function()?  started,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( Locale? locale)?  changeLanguage,TResult Function()?  started,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChangeLanguage() when changeLanguage != null:
 return changeLanguage(_that.locale);case _Started() when started != null:
@@ -144,7 +144,7 @@ return started();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( Locale locale)  changeLanguage,required TResult Function()  started,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( Locale? locale)  changeLanguage,required TResult Function()  started,}) {final _that = this;
 switch (_that) {
 case _ChangeLanguage():
 return changeLanguage(_that.locale);case _Started():
@@ -165,7 +165,7 @@ return started();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( Locale locale)?  changeLanguage,TResult? Function()?  started,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( Locale? locale)?  changeLanguage,TResult? Function()?  started,}) {final _that = this;
 switch (_that) {
 case _ChangeLanguage() when changeLanguage != null:
 return changeLanguage(_that.locale);case _Started() when started != null:
@@ -184,7 +184,7 @@ class _ChangeLanguage implements LanguageEvent {
   const _ChangeLanguage(this.locale);
   
 
- final  Locale locale;
+ final  Locale? locale;
 
 /// Create a copy of LanguageEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -216,7 +216,7 @@ abstract mixin class _$ChangeLanguageCopyWith<$Res> implements $LanguageEventCop
   factory _$ChangeLanguageCopyWith(_ChangeLanguage value, $Res Function(_ChangeLanguage) _then) = __$ChangeLanguageCopyWithImpl;
 @useResult
 $Res call({
- Locale locale
+ Locale? locale
 });
 
 
@@ -233,10 +233,10 @@ class __$ChangeLanguageCopyWithImpl<$Res>
 
 /// Create a copy of LanguageEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? locale = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? locale = freezed,}) {
   return _then(_ChangeLanguage(
-null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as Locale,
+freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as Locale?,
   ));
 }
 
@@ -278,7 +278,7 @@ String toString() {
 /// @nodoc
 mixin _$LanguageState {
 
- Locale get locale;
+ Locale? get locale;
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -309,7 +309,7 @@ abstract mixin class $LanguageStateCopyWith<$Res>  {
   factory $LanguageStateCopyWith(LanguageState value, $Res Function(LanguageState) _then) = _$LanguageStateCopyWithImpl;
 @useResult
 $Res call({
- Locale locale
+ Locale? locale
 });
 
 
@@ -326,10 +326,10 @@ class _$LanguageStateCopyWithImpl<$Res>
 
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? locale = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? locale = freezed,}) {
   return _then(_self.copyWith(
-locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as Locale,
+locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as Locale?,
   ));
 }
 
@@ -414,7 +414,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Locale locale)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Locale? locale)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LanguageState() when $default != null:
 return $default(_that.locale);case _:
@@ -435,7 +435,7 @@ return $default(_that.locale);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Locale locale)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Locale? locale)  $default,) {final _that = this;
 switch (_that) {
 case _LanguageState():
 return $default(_that.locale);case _:
@@ -455,7 +455,7 @@ return $default(_that.locale);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Locale locale)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Locale? locale)?  $default,) {final _that = this;
 switch (_that) {
 case _LanguageState() when $default != null:
 return $default(_that.locale);case _:
@@ -473,7 +473,7 @@ class _LanguageState extends LanguageState {
   const _LanguageState({required this.locale}): super._();
   
 
-@override final  Locale locale;
+@override final  Locale? locale;
 
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
@@ -505,7 +505,7 @@ abstract mixin class _$LanguageStateCopyWith<$Res> implements $LanguageStateCopy
   factory _$LanguageStateCopyWith(_LanguageState value, $Res Function(_LanguageState) _then) = __$LanguageStateCopyWithImpl;
 @override @useResult
 $Res call({
- Locale locale
+ Locale? locale
 });
 
 
@@ -522,10 +522,10 @@ class __$LanguageStateCopyWithImpl<$Res>
 
 /// Create a copy of LanguageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? locale = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? locale = freezed,}) {
   return _then(_LanguageState(
-locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as Locale,
+locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as Locale?,
   ));
 }
 

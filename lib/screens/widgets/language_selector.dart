@@ -8,16 +8,35 @@ class LanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final crtLocale = getIt<LanguageBloc>().state.locale;
     return PopupMenuButton<Locale>(
       icon: const Icon(Icons.language),
       tooltip: 'Language',
-      onSelected: (Locale locale) {
+      onSelected: (Locale? locale) {
+        if (locale?.languageCode == '_') locale = null;
         getIt<LanguageBloc>().add(LanguageEvent.changeLanguage(locale));
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<Locale>>[
-        PopupMenuItem<Locale>(value: const Locale('en'), child: Text('English', style: TextStyle(fontSize: 14.sp))),
-        PopupMenuItem<Locale>(value: const Locale('bn'), child: Text('বাংলা', style: TextStyle(fontSize: 14.sp))),
-        PopupMenuItem<Locale>(value: const Locale('zh'), child: Text('简体中文', style: TextStyle(fontSize: 14.sp))),
+        CheckedPopupMenuItem (
+          checked: crtLocale == null,
+          value: Locale('_'),
+          child: Text('System', style: TextStyle(fontSize: 14.sp)),
+        ),
+        CheckedPopupMenuItem (
+          checked: crtLocale == const Locale('en'),
+          value: const Locale('en'),
+          child: Text('English', style: TextStyle(fontSize: 14.sp)),
+        ),
+        CheckedPopupMenuItem (
+          checked: crtLocale == const Locale('bn'),
+          value: const Locale('bn'),
+          child: Text('বাংলা', style: TextStyle(fontSize: 14.sp)),
+        ),
+        CheckedPopupMenuItem (
+          checked: crtLocale == const Locale('zh'),
+          value: const Locale('zh'),
+          child: Text('简体中文', style: TextStyle(fontSize: 14.sp)),
+        ),
       ],
     );
   }
