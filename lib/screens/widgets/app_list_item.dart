@@ -63,7 +63,7 @@ class AppListItem extends StatelessWidget {
             runSpacing: 2.h,
             children: [
               if (appInfo.isActive) StatusBadge(label: loc.active, color: Colors.green),
-              if (appInfo.isCachedProcess) StatusBadge(label: loc.cached, color: Colors.grey),
+              if (appInfo.isCached) StatusBadge(label: loc.cached, color: Colors.grey),
               if (appInfo.hasServices) StatusBadge(label: loc.services, color: Colors.blue),
             ],
           ),

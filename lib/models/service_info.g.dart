@@ -90,7 +90,6 @@ _AppProcessInfo _$AppProcessInfoFromJson(Map<String, dynamic> json) =>
               ?.map((e) => RamSourceInfo.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      isCached: json['isCached'] as bool? ?? false,
       cachedMemoryKb: (json['cachedMemoryKb'] as num?)?.toDouble() ?? 0,
     );
 
@@ -108,7 +107,6 @@ Map<String, dynamic> _$AppProcessInfoToJson(_AppProcessInfo instance) =>
       'adjLevel': instance.adjLevel,
       'hasServices': instance.hasServices,
       'ramSources': instance.ramSources,
-      'isCached': instance.isCached,
       'cachedMemoryKb': instance.cachedMemoryKb,
     };
 

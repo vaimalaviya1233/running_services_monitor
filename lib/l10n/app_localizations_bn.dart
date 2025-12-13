@@ -459,4 +459,81 @@ class AppLocalizationsBn extends AppLocalizations {
   String uidLabel(int uid) {
     return 'UID: $uid';
   }
+
+  @override
+  String get processStateTitle => 'প্রসেস স্টেট';
+
+  @override
+  String get processStateFg =>
+      'ফোরগ্রাউন্ড - অ্যাপটি বর্তমানে ফোরগ্রাউন্ডে আছে';
+
+  @override
+  String get processStateVis =>
+      'ভিজিবল - অ্যাপের একটি দৃশ্যমান অ্যাক্টিভিটি আছে কিন্তু ফোরগ্রাউন্ডে নয়';
+
+  @override
+  String get processStatePrev =>
+      'পূর্ববর্তী - পূর্বে ব্যবহৃত ফোরগ্রাউন্ড অ্যাপ';
+
+  @override
+  String get processStatePrcp =>
+      'পার্সেপটিবল - অ্যাপ এমন কিছু করছে যা ব্যবহারকারী জানে';
+
+  @override
+  String get processStateSvcb => 'সার্ভিস B - অ্যাপের একটি বাউন্ড সার্ভিস আছে';
+
+  @override
+  String get processStateHome => 'হোম - হোম/লঞ্চার অ্যাপ';
+
+  @override
+  String get processStateHvy => 'হেভি ওয়েট - ভারী ওজনের অ্যাপ প্রসেস';
+
+  @override
+  String get processStatePsvc =>
+      'পার্সিস্ট্যান্ট সার্ভিস - অ্যাপের একটি স্থায়ী সার্ভিস আছে';
+
+  @override
+  String get processStatePers => 'পার্সিস্ট্যান্ট - সিস্টেম স্থায়ী প্রসেস';
+
+  @override
+  String get processStateCchEmpty =>
+      'ক্যাশড এম্পটি - কোনো অ্যাক্টিভিটি ছাড়া ক্যাশড প্রসেস';
+
+  @override
+  String get processStateCchAct =>
+      'ক্যাশড অ্যাক্টিভিটি - অ্যাক্টিভিটি সহ ক্যাশড প্রসেস';
+
+  @override
+  String get processStateCchClient =>
+      'ক্যাশড ক্লায়েন্ট - সার্ভিস ক্লায়েন্ট হিসেবে ক্যাশড প্রসেস';
+
+  @override
+  String get processStateCch => 'ক্যাশড - প্রসেস মেমোরিতে ক্যাশড';
+
+  @override
+  String get processStateBfgs =>
+      'বাউন্ড ফোরগ্রাউন্ড সার্ভিস - একটি ফোরগ্রাউন্ড সার্ভিসে বাউন্ড';
+
+  @override
+  String get processStateRcvr =>
+      'রিসিভার - অ্যাপ একটি ব্রডকাস্ট রিসিভার চালাচ্ছে';
+
+  @override
+  String get processStateTop => 'টপ - অ্যাপ অ্যাক্টিভিটি স্ট্যাকের শীর্ষে আছে';
+
+  @override
+  String get processStateBtop => 'বাউন্ড টপ - একটি টপ অ্যাপে বাউন্ড';
+
+  @override
+  String get processStateImpf =>
+      'ইম্পর্ট্যান্ট ফোরগ্রাউন্ড - গুরুত্বপূর্ণ ফোরগ্রাউন্ড প্রসেস';
+
+  @override
+  String get processStateImpb =>
+      'ইম্পর্ট্যান্ট ব্যাকগ্রাউন্ড - গুরুত্বপূর্ণ ব্যাকগ্রাউন্ড প্রসেস';
+
+  @override
+  String processStateUnknown(String state) {
+    return 'প্রসেস স্টেট: $state';
+  }
 }

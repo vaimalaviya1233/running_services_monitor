@@ -457,4 +457,80 @@ class AppLocalizationsEn extends AppLocalizations {
   String uidLabel(int uid) {
     return 'UID: $uid';
   }
+
+  @override
+  String get processStateTitle => 'Process State';
+
+  @override
+  String get processStateFg =>
+      'Foreground - App is currently in the foreground';
+
+  @override
+  String get processStateVis =>
+      'Visible - App has a visible activity but not in foreground';
+
+  @override
+  String get processStatePrev => 'Previous - Previously used foreground app';
+
+  @override
+  String get processStatePrcp =>
+      'Perceptible - App is doing something the user is aware of';
+
+  @override
+  String get processStateSvcb => 'Service B - App has a bound service';
+
+  @override
+  String get processStateHome => 'Home - Home/Launcher app';
+
+  @override
+  String get processStateHvy => 'Heavy Weight - Heavy weight app process';
+
+  @override
+  String get processStatePsvc =>
+      'Persistent Service - App has a persistent service';
+
+  @override
+  String get processStatePers => 'Persistent - System persistent process';
+
+  @override
+  String get processStateCchEmpty =>
+      'Cached Empty - Cached process with no activities';
+
+  @override
+  String get processStateCchAct =>
+      'Cached Activity - Cached process with activities';
+
+  @override
+  String get processStateCchClient =>
+      'Cached Client - Cached process as service client';
+
+  @override
+  String get processStateCch => 'Cached - Process is cached in memory';
+
+  @override
+  String get processStateBfgs =>
+      'Bound Foreground Service - Bound to a foreground service';
+
+  @override
+  String get processStateRcvr =>
+      'Receiver - App is running a broadcast receiver';
+
+  @override
+  String get processStateTop => 'Top - App is at the top of the activity stack';
+
+  @override
+  String get processStateBtop => 'Bound Top - Bound to a top app';
+
+  @override
+  String get processStateImpf =>
+      'Important Foreground - Important foreground process';
+
+  @override
+  String get processStateImpb =>
+      'Important Background - Important background process';
+
+  @override
+  String processStateUnknown(String state) {
+    return 'Process state: $state';
+  }
 }

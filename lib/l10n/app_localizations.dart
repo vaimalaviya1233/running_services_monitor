@@ -891,6 +891,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'UID: {uid}'**
   String uidLabel(int uid);
+
+  /// No description provided for @processStateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Process State'**
+  String get processStateTitle;
+
+  /// No description provided for @processStateFg.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreground - App is currently in the foreground'**
+  String get processStateFg;
+
+  /// No description provided for @processStateVis.
+  ///
+  /// In en, this message translates to:
+  /// **'Visible - App has a visible activity but not in foreground'**
+  String get processStateVis;
+
+  /// No description provided for @processStatePrev.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous - Previously used foreground app'**
+  String get processStatePrev;
+
+  /// No description provided for @processStatePrcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Perceptible - App is doing something the user is aware of'**
+  String get processStatePrcp;
+
+  /// No description provided for @processStateSvcb.
+  ///
+  /// In en, this message translates to:
+  /// **'Service B - App has a bound service'**
+  String get processStateSvcb;
+
+  /// No description provided for @processStateHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home - Home/Launcher app'**
+  String get processStateHome;
+
+  /// No description provided for @processStateHvy.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy Weight - Heavy weight app process'**
+  String get processStateHvy;
+
+  /// No description provided for @processStatePsvc.
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent Service - App has a persistent service'**
+  String get processStatePsvc;
+
+  /// No description provided for @processStatePers.
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent - System persistent process'**
+  String get processStatePers;
+
+  /// No description provided for @processStateCchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached Empty - Cached process with no activities'**
+  String get processStateCchEmpty;
+
+  /// No description provided for @processStateCchAct.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached Activity - Cached process with activities'**
+  String get processStateCchAct;
+
+  /// No description provided for @processStateCchClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached Client - Cached process as service client'**
+  String get processStateCchClient;
+
+  /// No description provided for @processStateCch.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached - Process is cached in memory'**
+  String get processStateCch;
+
+  /// No description provided for @processStateBfgs.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound Foreground Service - Bound to a foreground service'**
+  String get processStateBfgs;
+
+  /// No description provided for @processStateRcvr.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver - App is running a broadcast receiver'**
+  String get processStateRcvr;
+
+  /// No description provided for @processStateTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top - App is at the top of the activity stack'**
+  String get processStateTop;
+
+  /// No description provided for @processStateBtop.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound Top - Bound to a top app'**
+  String get processStateBtop;
+
+  /// No description provided for @processStateImpf.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Foreground - Important foreground process'**
+  String get processStateImpf;
+
+  /// No description provided for @processStateImpb.
+  ///
+  /// In en, this message translates to:
+  /// **'Important Background - Important background process'**
+  String get processStateImpb;
+
+  /// No description provided for @processStateUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Process state: {state}'**
+  String processStateUnknown(String state);
 }
 
 class _AppLocalizationsDelegate

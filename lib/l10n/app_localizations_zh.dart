@@ -422,4 +422,69 @@ class AppLocalizationsZh extends AppLocalizations {
   String uidLabel(int uid) {
     return 'UID: $uid';
   }
+
+  @override
+  String get processStateTitle => '进程状态';
+
+  @override
+  String get processStateFg => '前台 - 应用当前在前台运行';
+
+  @override
+  String get processStateVis => '可见 - 应用有可见的活动但不在前台';
+
+  @override
+  String get processStatePrev => '上一个 - 之前使用的前台应用';
+
+  @override
+  String get processStatePrcp => '可感知 - 应用正在执行用户可感知的操作';
+
+  @override
+  String get processStateSvcb => '绑定服务 - 应用有绑定服务';
+
+  @override
+  String get processStateHome => '主页 - 主屏幕/启动器应用';
+
+  @override
+  String get processStateHvy => '重量级 - 重量级应用进程';
+
+  @override
+  String get processStatePsvc => '持久服务 - 应用有持久服务';
+
+  @override
+  String get processStatePers => '持久 - 系统持久进程';
+
+  @override
+  String get processStateCchEmpty => '空缓存 - 没有活动的缓存进程';
+
+  @override
+  String get processStateCchAct => '活动缓存 - 有活动的缓存进程';
+
+  @override
+  String get processStateCchClient => '客户端缓存 - 作为服务客户端的缓存进程';
+
+  @override
+  String get processStateCch => '缓存 - 进程已缓存在内存中';
+
+  @override
+  String get processStateBfgs => '绑定前台服务 - 绑定到前台服务';
+
+  @override
+  String get processStateRcvr => '接收器 - 应用正在运行广播接收器';
+
+  @override
+  String get processStateTop => '顶部 - 应用在活动栈顶部';
+
+  @override
+  String get processStateBtop => '绑定顶部 - 绑定到顶部应用';
+
+  @override
+  String get processStateImpf => '重要前台 - 重要的前台进程';
+
+  @override
+  String get processStateImpb => '重要后台 - 重要的后台进程';
+
+  @override
+  String processStateUnknown(String state) {
+    return '进程状态: $state';
+  }
 }

@@ -13,18 +13,13 @@ abstract class HomeStateModel with _$HomeStateModel {
 
     @Default([]) List<AppProcessInfo> allApps,
 
-    @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(0.0) double totalRamKb,
-    @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(0.0) double freeRamKb,
-    @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(0.0) double usedRamKb,
 
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(false) bool isAutoUpdateEnabled,
-    @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(false) bool isSearching,
-    @JsonKey(includeFromJson: false, includeToJson: false)
     @Default('') String searchQuery,
     @Default(ProcessStateFilter.all) ProcessStateFilter selectedProcessFilter,
     @Default(false) bool sortAscending,

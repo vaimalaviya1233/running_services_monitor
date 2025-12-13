@@ -188,5 +188,33 @@
         "type": "int"
       }
     }
+  },
+  "processStateTitle": "Process State",
+  "processStateFg": "Foreground - App is currently in the foreground",
+  "processStateVis": "Visible - App has a visible activity but not in foreground",
+  "processStatePrev": "Previous - Previously used foreground app",
+  "processStatePrcp": "Perceptible - App is doing something the user is aware of",
+  "processStateSvcb": "Service B - App has a bound service",
+  "processStateHome": "Home - Home/Launcher app",
+  "processStateHvy": "Heavy Weight - Heavy weight app process",
+  "processStatePsvc": "Persistent Service - App has a persistent service",
+  "processStatePers": "Persistent - System persistent process",
+  "processStateCchEmpty": "Cached Empty - Cached process with no activities",
+  "processStateCchAct": "Cached Activity - Cached process with activities",
+  "processStateCchClient": "Cached Client - Cached process as service client",
+  "processStateCch": "Cached - Process is cached in memory",
+  "processStateBfgs": "Bound Foreground Service - Bound to a foreground service",
+  "processStateRcvr": "Receiver - App is running a broadcast receiver",
+  "processStateTop": "Top - App is at the top of the activity stack",
+  "processStateBtop": "Bound Top - Bound to a top app",
+  "processStateImpf": "Important Foreground - Important foreground process",
+  "processStateImpb": "Important Background - Important background process",
+  "processStateUnknown": "Process state: {state}",
+  "@processStateUnknown": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
   }
 }

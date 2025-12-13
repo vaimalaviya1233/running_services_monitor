@@ -35,7 +35,7 @@ class AboutScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 32.h),
-                  AboutInfoTile(icon: Icons.person, title: context.loc.developer, subtitle: AppConstants.developerName),
+                  // AboutInfoTile(icon: Icons.person, title: context.loc.developer, subtitle: AppConstants.developerName),
                   AboutInfoTile(
                     icon: Icons.email,
                     title: context.loc.email,
@@ -48,6 +48,7 @@ class AboutScreen extends StatelessWidget {
                     subtitle: AppConstants.sourceCodeUrl,
                     onTap: () => UrlLauncherHelper.launchExternalUrl(AppConstants.sourceCodeUrl),
                   ),
+                  SizedBox(height: 16.h),
                   BlocSelector<AboutBloc, AboutState, List<ContributorInfo>>(
                     selector: (state) => state.contributors,
                     builder: (context, contributors) {

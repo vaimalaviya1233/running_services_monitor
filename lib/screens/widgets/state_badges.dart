@@ -7,6 +7,32 @@ import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'status_badge.dart';
 
+import 'package:running_services_monitor/l10n/app_localizations.dart';
+
+String getProcessStateDescription(String state, AppLocalizations loc) {
+  final lower = state.toLowerCase();
+  if (lower.startsWith('fg')) return loc.processStateFg;
+  if (lower.startsWith('vis')) return loc.processStateVis;
+  if (lower.startsWith('prev')) return loc.processStatePrev;
+  if (lower.startsWith('prcp')) return loc.processStatePrcp;
+  if (lower.startsWith('svcb')) return loc.processStateSvcb;
+  if (lower.startsWith('home')) return loc.processStateHome;
+  if (lower.startsWith('hvy')) return loc.processStateHvy;
+  if (lower.startsWith('psvc')) return loc.processStatePsvc;
+  if (lower.startsWith('pers')) return loc.processStatePers;
+  if (lower.startsWith('cch-empty')) return loc.processStateCchEmpty;
+  if (lower.startsWith('cch-act')) return loc.processStateCchAct;
+  if (lower.startsWith('cch-client')) return loc.processStateCchClient;
+  if (lower.startsWith('cch')) return loc.processStateCch;
+  if (lower.startsWith('bfgs')) return loc.processStateBfgs;
+  if (lower.startsWith('rcvr')) return loc.processStateRcvr;
+  if (lower.startsWith('top')) return loc.processStateTop;
+  if (lower.startsWith('btop')) return loc.processStateBtop;
+  if (lower.startsWith('impf')) return loc.processStateImpf;
+  if (lower.startsWith('impb')) return loc.processStateImpb;
+  return loc.processStateUnknown(state);
+}
+
 class StateBadges extends StatelessWidget {
   final AppProcessInfo appInfo;
 
@@ -51,7 +77,7 @@ class StateBadges extends StatelessWidget {
                 fontSize: 12.sp,
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               ),
-            if (appInfo.isCachedProcess)
+            if (appInfo.isCached)
               StatusBadge(
                 label: loc.cached,
                 color: Colors.grey,
@@ -71,6 +97,31 @@ class StateBadges extends StatelessWidget {
                 color: Colors.indigo,
                 fontSize: 12.sp,
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              ),
+            if (appInfo.processState != null)
+              StatusBadge(
+                label: appInfo.processState!,
+                color: Colors.deepPurple,
+                fontSize: 12.sp,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(loc.processStateTitle, style: TextStyle(fontSize: 18.sp)),
+                      content: Text(
+                        getProcessStateDescription(appInfo.processState!, loc),
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          child: Text(loc.ok, style: TextStyle(fontSize: 14.sp)),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
           ],
         );

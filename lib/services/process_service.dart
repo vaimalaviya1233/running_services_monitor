@@ -48,8 +48,6 @@ class ProcessService {
       ramSources.add(RamSourceInfo(source: RamSourceType.processName, ramKb: ramKb, processName: packageName));
     }
 
-    final isCached = lruInfo.state.startsWith('cch');
-
     return AppProcessInfo(
       packageName: packageName,
       appName: appName,
@@ -61,7 +59,6 @@ class ProcessService {
       adjLevel: lruInfo.adj,
       hasServices: false,
       ramSources: ramSources,
-      isCached: isCached,
     );
   }
 
@@ -197,8 +194,7 @@ class ProcessService {
 
         if (lruProcesses.containsKey(packageName)) {
           final lruInfo = lruProcesses[packageName]!;
-          final isCached = lruInfo.state.startsWith('cch');
-          app = app.copyWith(processState: lruInfo.state, adjLevel: lruInfo.adj, isCached: isCached);
+          app = app.copyWith(processState: lruInfo.state, adjLevel: lruInfo.adj);
           groupedApps[packageName] = app;
           yield app;
         }
@@ -230,12 +226,7 @@ class ProcessService {
               ...app.ramSources,
               RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: pssMemory, processName: packageName),
             ];
-            app = app.copyWith(
-              totalRam: formatRam(pssMemory),
-              totalRamInKb: pssMemory,
-              ramSources: updatedRamSources,
-              isCached: true,
-            );
+            app = app.copyWith(totalRam: formatRam(pssMemory), totalRamInKb: pssMemory, ramSources: updatedRamSources);
             groupedApps[packageName] = app;
             yield app;
           }
@@ -387,7 +378,8 @@ class ProcessService {
     }
 
     if (packageName != null && serviceName != null) {
-      final isSystem = !packageName.contains('.') ||
+      final isSystem =
+          !packageName.contains('.') ||
           (uid != null && uid < 10000) ||
           (baseDir != null &&
               (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext')));

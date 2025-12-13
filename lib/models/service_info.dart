@@ -51,14 +51,13 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     String? adjLevel,
     @Default(true) bool hasServices,
     @Default([]) List<RamSourceInfo> ramSources,
-    @Default(false) bool isCached,
     @Default(0) double cachedMemoryKb,
   }) = _AppProcessInfo;
 
   factory AppProcessInfo.fromJson(Map<String, dynamic> json) => _$AppProcessInfoFromJson(json);
 
   bool get isActive => isActiveState(processState, hasServices: hasServices);
-  bool get isCachedProcess => isCachedState(processState) || isCached;
+  bool get isCached => isCachedState(processState);
 }
 
 enum RamSourceType { pid, lru, processName, meminfoPss }
