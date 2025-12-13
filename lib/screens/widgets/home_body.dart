@@ -115,7 +115,12 @@ class HomeBody extends StatelessWidget {
                     SliverPersistentHeader(
                       pinned: false,
                       delegate: RamBarDelegate(
-                        ramBar: RamBar(totalRamKb: ram.total, usedRamKb: ram.used, freeRamKb: ram.free),
+                        ramBar: RamBar(
+                          totalRamKb: ram.total,
+                          usedRamKb: ram.used,
+                          freeRamKb: ram.free,
+                          isLoading: data.isLoading,
+                        ),
                       ),
                     ),
                   SliverToBoxAdapter(child: Divider(height: 1.h)),

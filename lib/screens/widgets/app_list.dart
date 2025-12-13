@@ -1,6 +1,9 @@
+import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
+import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'app_list_item.dart';
@@ -72,12 +75,13 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
           );
         }
 
-        return RefreshIndicator(
+        return ExpressiveRefreshIndicator.contained(
+          edgeOffset: 15.h,
           onRefresh: () async {
-            final homeBloc = context.read<HomeBloc>();
-            final future = homeBloc.stream.first;
+            final homeBloc = getIt<HomeBloc>();
             homeBloc.add(const HomeEvent.loadData(silent: true, notify: true));
-            await future;
+            await Future.delayed(const Duration(milliseconds: 100));
+            await homeBloc.stream.first;
           },
           child: content,
         );

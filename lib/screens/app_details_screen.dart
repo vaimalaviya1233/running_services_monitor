@@ -1,11 +1,12 @@
 import 'package:collection/collection.dart';
+import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:installed_apps/installed_apps.dart';
-import '../models/service_info.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/l10n/l10n_keys.dart';
+import 'package:running_services_monitor/models/service_info.dart';
 import 'widgets/app_header.dart';
 import 'widgets/service_list.dart';
 import 'widgets/app_details_description.dart';
@@ -144,43 +145,51 @@ class AppDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                body: CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: EdgeInsets.only(left: 24.0.w, right: 24.0.w, top: 24.0.w, bottom: 5.0.w),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          AppHeader(appInfo: currentAppInfo),
-                          SizedBox(height: 16.h),
+                body: ExpressiveRefreshIndicator.contained(
+                  onRefresh: () async {
+                    final homeBloc = getIt<HomeBloc>();
+                    homeBloc.add(const HomeEvent.loadData(silent: true, notify: true));
+                    await Future.delayed(const Duration(milliseconds: 100));
+                    await homeBloc.stream.first;
+                  },
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.only(left: 24.0.w, right: 24.0.w, top: 24.0.w, bottom: 5.0.w),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            AppHeader(appInfo: currentAppInfo),
+                            SizedBox(height: 16.h),
 
-                          _StateBadges(appInfo: currentAppInfo),
-                          SizedBox(height: 16.h),
+                            _StateBadges(appInfo: currentAppInfo),
+                            SizedBox(height: 16.h),
 
-                          const AppDetailsDescription(),
+                            const AppDetailsDescription(),
 
-                          SizedBox(height: 32.h),
-                          const Divider(),
-                          SizedBox(height: 16.h),
+                            SizedBox(height: 32.h),
+                            const Divider(),
+                            SizedBox(height: 16.h),
 
-                          AppDetailsSectionTitle(title: context.loc.activeServices),
-                          SizedBox(height: 5.h),
-                          if (currentAppInfo.services.isEmpty)
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 24.h),
-                              child: Center(
-                                child: Text(
-                                  context.loc.noServicesFound,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            AppDetailsSectionTitle(title: context.loc.activeServices),
+                            SizedBox(height: 5.h),
+                            if (currentAppInfo.services.isEmpty)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24.h),
+                                child: Center(
+                                  child: Text(
+                                    context.loc.noServicesFound,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                        ]),
+                          ]),
+                        ),
                       ),
-                    ),
-                    if (currentAppInfo.services.isNotEmpty) ServiceList(services: currentAppInfo.services),
-                  ],
+                      if (currentAppInfo.services.isNotEmpty) ServiceList(services: currentAppInfo.services),
+                    ],
+                  ),
                 ),
                 floatingActionButton: currentAppInfo.pids.isEmpty
                     ? null

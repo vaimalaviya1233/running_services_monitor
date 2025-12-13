@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
+import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'l10n/app_localizations.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,8 +38,25 @@ void main() async {
   } catch (_) {}
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    final homeBloc = getIt<HomeBloc>();
+    final hasData = homeBloc.state.value.allApps.isNotEmpty;
+    homeBloc.add(HomeEvent.initializeShizuku(silent: hasData, notify: hasData));
+    getIt<AppInfoBloc>().add(const AppInfoEvent.loadAllApps());
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {

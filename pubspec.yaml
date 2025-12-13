@@ -30,6 +30,8 @@ dependencies:
   flutter_scale_kit: ^1.5.2
   fluttertoast: ^9.0.0
   collection: ^1.19.1
+  expressive_refresh: ^0.1.2
+  m3e_collection: ^0.3.7
 
 dev_dependencies:
   flutter_test:

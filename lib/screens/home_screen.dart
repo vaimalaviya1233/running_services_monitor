@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:m3e_collection/m3e_collection.dart';
 
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
@@ -42,11 +43,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _searchController.addListener(() {
       homeBloc.add(HomeEvent.updateSearchQuery(_searchController.text.toLowerCase()));
     });
-
-    final hasData = homeBloc.state.value.allApps.isNotEmpty;
-    homeBloc.add(HomeEvent.initializeShizuku(silent: hasData, notify: hasData));
-
-    getIt<AppInfoBloc>().add(const AppInfoEvent.loadAllApps());
   }
 
   @override
@@ -225,11 +221,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   if (!data.shizukuReady) return const SizedBox.shrink();
                   return IconButton(
                     icon: data.isLoading
-                        ? SizedBox(
-                            width: 18.w,
-                            height: 24.h,
-                            child: const FittedBox(child: CircularProgressIndicator()),
-                          )
+                        ? SizedBox(width: 30.w, height: 30.h, child: LoadingIndicatorM3E())
                         : const Icon(Icons.refresh),
                     onPressed: data.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
                     tooltip: context.loc.refresh,
