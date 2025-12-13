@@ -45,15 +45,30 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     final homeBloc = getIt<HomeBloc>();
     final hasData = homeBloc.state.value.allApps.isNotEmpty;
     homeBloc.add(HomeEvent.initializeShizuku(silent: hasData, notify: hasData));
     getIt<AppInfoBloc>().add(const AppInfoEvent.loadAllApps());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final homeBloc = getIt<HomeBloc>();
+      homeBloc.add(const HomeEvent.loadData(silent: true, notify: true));
+    }
   }
 
   @override
