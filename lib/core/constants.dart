@@ -2,6 +2,8 @@
 class AppConstants {
   AppConstants._();
 
+  static const String appName = 'Running Services Monitor';
+
   // Shizuku related constants
   static const String shizukuPackageName = 'moe.shizuku.privileged.api';
   static const String shizukuPlayStoreUrl = 'https://play.google.com/store/apps/details?id=$shizukuPackageName';

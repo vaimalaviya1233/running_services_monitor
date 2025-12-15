@@ -20,52 +20,32 @@ class ShizukuService {
   bool get hasRootPermission => _hasRootPermission;
 
   Future<bool> isShizukuRunning() async {
-    try {
-      final bool isRunning = await _channel.invokeMethod('pingBinder');
-      return isRunning;
-    } catch (e) {
-      return false;
-    }
+    final bool isRunning = await _channel.invokeMethod('pingBinder');
+    return isRunning;
   }
 
   Future<bool> checkRootPermission() async {
-    try {
-      final bool granted = await _channel.invokeMethod('checkRootPermission');
-      _hasRootPermission = granted;
-      return _hasRootPermission;
-    } catch (e) {
-      return false;
-    }
+    final bool granted = await _channel.invokeMethod('checkRootPermission');
+    _hasRootPermission = granted;
+    return _hasRootPermission;
   }
 
   Future<bool> requestRootPermission() async {
-    try {
-      final bool granted = await _channel.invokeMethod('requestRootPermission');
-      _hasRootPermission = granted;
-      return _hasRootPermission;
-    } catch (e) {
-      return false;
-    }
+    final bool granted = await _channel.invokeMethod('requestRootPermission');
+    _hasRootPermission = granted;
+    return _hasRootPermission;
   }
 
   Future<bool> checkPermission() async {
-    try {
-      final bool granted = await _channel.invokeMethod('checkPermission');
-      _hasPermission = granted;
-      return _hasPermission;
-    } catch (e) {
-      return false;
-    }
+    final bool granted = await _channel.invokeMethod('checkPermission');
+    _hasPermission = granted;
+    return _hasPermission;
   }
 
   Future<bool> requestPermission() async {
-    try {
-      final bool granted = await _channel.invokeMethod('requestPermission');
-      _hasPermission = granted;
-      return _hasPermission;
-    } catch (e) {
-      return false;
-    }
+    final bool granted = await _channel.invokeMethod('requestPermission');
+    _hasPermission = granted;
+    return _hasPermission;
   }
 
   Future<bool> initialize() async {
@@ -86,14 +66,14 @@ class ShizukuService {
 
     final isRunning = await isShizukuRunning();
     if (!isRunning) {
-      return false;
+      throw Exception('Shizuku is not running');
     }
 
     final hasPermission = await checkPermission();
     if (!hasPermission) {
       final granted = await requestPermission();
       if (!granted) {
-        return false;
+        throw Exception('Shizuku permission denied');
       }
     }
 
@@ -104,15 +84,11 @@ class ShizukuService {
 
   Future<String?> executeCommand(String command) async {
     if (!_isInitialized || !_hasPermission) {
-      return null;
+      throw Exception('Shizuku not initialized or no permission');
     }
 
-    try {
-      final String? result = await _channel.invokeMethod(AppConstants.cmdMethodRunCommand, {'command': command});
-      return result;
-    } catch (e) {
-      return null;
-    }
+    final String? result = await _channel.invokeMethod(AppConstants.cmdMethodRunCommand, {'command': command});
+    return result;
   }
 
   Stream<String> executeCommandStream(String command) {
@@ -120,12 +96,8 @@ class ShizukuService {
       return Stream.error(Exception('Shizuku not initialized or no permission'));
     }
 
-    try {
-      return _streamChannel.receiveBroadcastStream(command).map((event) {
-        return event.toString();
-      });
-    } catch (e) {
-      return Stream.error(e);
-    }
+    return _streamChannel.receiveBroadcastStream(command).map((event) {
+      return event.toString();
+    });
   }
 }

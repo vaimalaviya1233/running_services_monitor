@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:running_services_monitor/core/utils/log_helper.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -83,7 +84,8 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
       emit(HomeState.success(state.value.copyWith(shizukuReady: true)));
 
       add(HomeEvent.loadData(silent: event.silent, notify: event.notify));
-    } catch (e) {
+    } catch (e, s) {
+      logError(e, s);
       emit(HomeState.failure(state.value.copyWith(shizukuReady: false), L10nKeys.errorInitializingShizuku));
     }
   }
@@ -120,7 +122,8 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
           event.notify ? L10nKeys.refreshedSuccessfully : null,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      logError(e, s);
       emit(HomeState.failure(state.value, L10nKeys.errorLoadingData));
     }
   }
@@ -152,7 +155,8 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
           L10nKeys.refreshedSuccessfully,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      logError(e, s);
       emit(HomeState.failure(state.value, L10nKeys.errorLoadingData));
     }
   }
@@ -175,11 +179,7 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   Future<void> _onToggleSearch(_ToggleSearch event, Emitter<HomeState> emit) async {
     final newSearchState = !state.value.isSearching;
 
-    emit(
-      HomeState.success(
-        state.value.copyWith(isSearching: newSearchState, searchQuery: newSearchState ? state.value.searchQuery : ''),
-      ),
-    );
+    emit(HomeState.success(state.value.copyWith(isSearching: newSearchState, searchQuery: newSearchState ? state.value.searchQuery : '')));
   }
 
   Future<void> _onUpdateSearchQuery(_UpdateSearchQuery event, Emitter<HomeState> emit) async {
@@ -214,12 +214,7 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         }
       }
 
-      return app.copyWith(
-        services: updatedServices,
-        pids: pids.toList(),
-        totalRamInKb: totalRamKb,
-        totalRam: formatRam(totalRamKb),
-      );
+      return app.copyWith(services: updatedServices, pids: pids.toList(), totalRamInKb: totalRamKb, totalRam: formatRam(totalRamKb));
     }
 
     final updatedAllApps = currentState.allApps.map(updateApp).whereType<AppProcessInfo>().toList();
@@ -240,7 +235,8 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
     try {
       final model = HomeStateModel.fromJson(json);
       return HomeState.success(model);
-    } catch (_) {
+    } catch (e, s) {
+      logError(e, s);
       return null;
     }
   }

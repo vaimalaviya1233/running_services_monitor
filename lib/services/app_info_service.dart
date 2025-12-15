@@ -43,20 +43,16 @@ class AppInfoService {
       return _cachedApps![packageName];
     }
 
-    try {
-      final token = RootIsolateToken.instance;
-      if (token == null) {
-        throw Exception('RootIsolateToken is null');
-      }
-
-      final app = await compute(_fetchAppInfo, _FetchAppInfoParams(token: token, packageName: packageName));
-      if (app != null) {
-        _cachedApps![app.packageName] = app;
-      }
-      return app;
-    } catch (e) {
-      return null;
+    final token = RootIsolateToken.instance;
+    if (token == null) {
+      throw Exception('RootIsolateToken is null');
     }
+
+    final app = await compute(_fetchAppInfo, _FetchAppInfoParams(token: token, packageName: packageName));
+    if (app != null) {
+      _cachedApps![app.packageName] = app;
+    }
+    return app;
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:running_services_monitor/core/utils/log_helper.dart';
 import 'package:running_services_monitor/models/contributor_info.dart';
 import 'package:running_services_monitor/services/contributors_service.dart';
 
@@ -27,7 +28,8 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
       final contributors = await _contributorsService.getContributors();
 
       emit(state.copyWith(isLoading: false, version: version, contributors: contributors));
-    } catch (e) {
+    } catch (e, s) {
+      logError(e, s);
       emit(state.copyWith(isLoading: false));
     }
   }

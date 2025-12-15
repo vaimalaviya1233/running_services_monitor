@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:running_services_monitor/core/utils/log_helper.dart';
 
 part 'language_event.dart';
 part 'language_state.dart';
@@ -23,7 +24,8 @@ class LanguageBloc extends HydratedBloc<LanguageEvent, LanguageState> {
         return const LanguageState(locale: null);
       }
       return LanguageState(locale: Locale(languageCode));
-    } catch (_) {
+    } catch (e, s) {
+      logError(e, s);
       return null;
     }
   }

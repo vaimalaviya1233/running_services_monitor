@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
+import 'package:running_services_monitor/core/extensions.dart';
 
 class FilterChipWidget extends StatelessWidget {
   final String label;
@@ -25,7 +26,7 @@ class FilterChipWidget extends StatelessWidget {
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label),
+          Text(label.capitalize()),
           if (isSelected && sortAscending != null) ...[
             SizedBox(width: 4.w),
             Icon(

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:running_services_monitor/core/utils/log_helper.dart';
 import 'package:running_services_monitor/l10n/l10n_keys.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
 import 'package:running_services_monitor/services/app_info_service.dart';
@@ -31,15 +32,12 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
 
       final Map<String, CachedAppInfo> newCachedApps = {};
       for (final entry in cachedAppsMap.entries) {
-        newCachedApps[entry.key] = CachedAppInfo(
-          appName: entry.value.name,
-          icon: entry.value.icon,
-          isSystemApp: entry.value.isSystemApp,
-        );
+        newCachedApps[entry.key] = CachedAppInfo(appName: entry.value.name, icon: entry.value.icon, isSystemApp: entry.value.isSystemApp);
       }
 
       emit(AppInfoState.success(state.value.copyWith(cachedApps: newCachedApps)));
-    } catch (e) {
+    } catch (e, s) {
+      logError(e, s);
       emit(AppInfoState.failure(state.value, L10nKeys.errorLoadingData));
     }
   }
@@ -50,14 +48,12 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
       if (appInfo == null) return;
 
       final updatedCachedApps = Map<String, CachedAppInfo>.from(state.value.cachedApps);
-      updatedCachedApps[event.packageName] = CachedAppInfo(
-        appName: appInfo.name,
-        icon: appInfo.icon,
-        isSystemApp: appInfo.isSystemApp,
-      );
+      updatedCachedApps[event.packageName] = CachedAppInfo(appName: appInfo.name, icon: appInfo.icon, isSystemApp: appInfo.isSystemApp);
 
       emit(AppInfoState.success(state.value.copyWith(cachedApps: updatedCachedApps)));
-    } catch (_) {}
+    } catch (e, s) {
+      logError(e, s);
+    }
   }
 
   Future<void> _onUpdateAppsInfo(_UpdateAppsInfo event, Emitter<AppInfoState> emit) async {
@@ -72,16 +68,14 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
 
         final appInfo = cachedAppsMap[packageName];
         if (appInfo != null) {
-          updatedCachedApps[packageName] = CachedAppInfo(
-            appName: appInfo.name,
-            icon: appInfo.icon,
-            isSystemApp: appInfo.isSystemApp,
-          );
+          updatedCachedApps[packageName] = CachedAppInfo(appName: appInfo.name, icon: appInfo.icon, isSystemApp: appInfo.isSystemApp);
         }
       }
 
       emit(AppInfoState.success(state.value.copyWith(cachedApps: updatedCachedApps)));
-    } catch (_) {}
+    } catch (e, s) {
+      logError(e, s);
+    }
   }
 
   @override
@@ -89,7 +83,8 @@ class AppInfoBloc extends HydratedBloc<AppInfoEvent, AppInfoState> {
     try {
       final model = AppInfoStateModel.fromJson(json);
       return AppInfoState.success(model);
-    } catch (_) {
+    } catch (e, s) {
+      logError(e, s);
       return null;
     }
   }
