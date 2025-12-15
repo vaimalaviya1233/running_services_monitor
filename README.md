@@ -131,8 +131,8 @@ Use the following prompt with an AI agent to automate the entire process:
 Add <language> localization to this project:
 1. Create app_<localeName>.arb in lib/l10n/ by translating all values from lib/l10n/app_en.arb. Keep the keys unchanged.
 2. Add the locale to android/app/src/main/res/xml/locales_config.xml
-3. Run flutter gen-l10n
-4. Create a PR
+3. Run "flutter gen-l10n" and "dart run build_runner build --delete-conflicting-outputs" commands
+4. how to create a PR for this change
 ```
 
 After completion, verify all translations are correct.
