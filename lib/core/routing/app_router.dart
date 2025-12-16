@@ -4,6 +4,8 @@ import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/screens/home_screen.dart';
 import 'package:running_services_monitor/screens/about_screen.dart';
 import 'package:running_services_monitor/screens/app_details_screen.dart';
+import 'package:running_services_monitor/screens/command_log_screen.dart';
+import 'package:running_services_monitor/screens/command_output_screen.dart';
 
 GoRouter createAppRouter() {
   return GoRouter(
@@ -11,6 +13,21 @@ GoRouter createAppRouter() {
     routes: [
       GoRoute(path: '/', name: 'home', builder: (context, state) => HomeScreen()),
       GoRoute(path: '/about', name: 'about', builder: (context, state) => const AboutScreen()),
+      GoRoute(path: '/command-logs', name: 'command-logs', builder: (context, state) => const CommandLogScreen()),
+      GoRoute(
+        path: '/command-output',
+        name: 'command-output',
+        builder: (context, state) {
+          final entryId = state.extra as String?;
+          if (entryId == null) {
+            return Scaffold(
+              appBar: AppBar(title: Text(context.loc.error)),
+              body: Center(child: Text(context.loc.error)),
+            );
+          }
+          return CommandOutputScreen(entryId: entryId);
+        },
+      ),
       GoRoute(
         path: '/app-details',
         name: 'app-details',

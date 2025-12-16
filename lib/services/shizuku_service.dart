@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:running_services_monitor/core/constants.dart';
+import 'package:running_services_monitor/models/working_mode.dart';
+import 'package:running_services_monitor/services/command_log_service.dart';
 
 @lazySingleton
 class ShizukuService {
-  ShizukuService();
+  final CommandLogService commandLogService;
+
+  ShizukuService(this.commandLogService);
 
   static const _channel = MethodChannel(AppConstants.shizukuChannelName);
   static const _streamChannel = EventChannel(AppConstants.shizukuStreamChannelName);
@@ -14,10 +18,15 @@ class ShizukuService {
   bool _isInitialized = false;
   bool _hasPermission = false;
   bool _hasRootPermission = false;
+  WorkingMode? _currentMode;
 
   bool get isInitialized => _isInitialized;
+
   bool get hasPermission => _hasPermission;
+
   bool get hasRootPermission => _hasRootPermission;
+
+  WorkingMode? get currentMode => _currentMode;
 
   Future<bool> isShizukuRunning() async {
     final bool isRunning = await _channel.invokeMethod('pingBinder');
@@ -48,6 +57,11 @@ class ShizukuService {
     return _hasPermission;
   }
 
+  void setWorkingMode(WorkingMode mode) {
+    _currentMode = mode;
+    _channel.invokeMethod('setWorkingMode', {'mode': mode.name});
+  }
+
   Future<bool> initialize() async {
     if (_isInitialized) {
       return true;
@@ -60,44 +74,79 @@ class ShizukuService {
         _isInitialized = true;
         _hasPermission = true;
         _hasRootPermission = true;
+        _currentMode ??= WorkingMode.root;
         return true;
       }
     }
 
-    final isRunning = await isShizukuRunning();
-    if (!isRunning) {
-      throw Exception('Shizuku is not running');
-    }
-
-    final hasPermission = await checkPermission();
-    if (!hasPermission) {
-      final granted = await requestPermission();
-      if (!granted) {
-        throw Exception('Shizuku permission denied');
+    final isShizukuRunning = await this.isShizukuRunning();
+    if (isShizukuRunning) {
+      final hasPermission = await checkPermission();
+      if (!hasPermission) {
+        final granted = await requestPermission();
+        if (granted) {
+          _isInitialized = true;
+          _hasPermission = true;
+          _currentMode ??= WorkingMode.shizuku;
+          return true;
+        }
+      } else {
+        _isInitialized = true;
+        _hasPermission = true;
+        _currentMode ??= WorkingMode.shizuku;
+        return true;
       }
     }
 
-    _isInitialized = true;
-    _hasPermission = true;
-    return true;
+    throw Exception('No permission mode available');
   }
 
-  Future<String?> executeCommand(String command) async {
-    if (!_isInitialized || !_hasPermission) {
-      throw Exception('Shizuku not initialized or no permission');
+  Future<String?> executeCommand(String command, {bool logCommand = true}) async {
+    if (!_isInitialized || !(_hasPermission || _hasRootPermission)) {
+      throw Exception('Not initialized or no permission');
     }
 
     final String? result = await _channel.invokeMethod(AppConstants.cmdMethodRunCommand, {'command': command});
+
+    if (logCommand) {
+      commandLogService.addEntry(command, result ?? '');
+    }
+
     return result;
   }
 
-  Stream<String> executeCommandStream(String command) {
-    if (!_isInitialized || !_hasPermission) {
-      return Stream.error(Exception('Shizuku not initialized or no permission'));
+  Stream<String> executeCommandStream(String command, {bool logCommand = true}) {
+    if (!_isInitialized || !(_hasPermission || _hasRootPermission)) {
+      return Stream.error(Exception('Not initialized or no permission'));
     }
 
-    return _streamChannel.receiveBroadcastStream(command).map((event) {
-      return event.toString();
-    });
+    final StringBuffer outputBuffer = StringBuffer();
+
+    return _streamChannel
+        .receiveBroadcastStream(command)
+        .map((event) {
+          final output = event.toString();
+          outputBuffer.write(output);
+          return output;
+        })
+        .transform(
+          StreamTransformer<String, String>.fromHandlers(
+            handleData: (data, sink) {
+              sink.add(data);
+            },
+            handleDone: (sink) {
+              if (logCommand) {
+                commandLogService.addEntry(command, outputBuffer.toString());
+              }
+              sink.close();
+            },
+            handleError: (error, stackTrace, sink) {
+              if (logCommand) {
+                commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
+              }
+              sink.addError(error, stackTrace);
+            },
+          ),
+        );
   }
 }

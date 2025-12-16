@@ -16,27 +16,41 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListener {
-    private val CHANNEL = "com.runningservices/shizuku"
-    private val STREAM_CHANNEL = "com.runningservices/shizuku_stream"
-    private val SHIZUKU_PERMISSION_REQUEST_CODE = 1001
-    private var pendingPermissionResult: MethodChannel.Result? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private var isRootAvailable: Boolean? = null
+    val channel = "com.runningservices/shizuku"
+    val streamChannel = "com.runningservices/shizuku_stream"
+    val shizukuPermissionRequestCode = 1001
+    var pendingPermissionResult: MethodChannel.Result? = null
+    val mainHandler = Handler(Looper.getMainLooper())
+    var isRootAvailable: Boolean? = null
+    var currentWorkingMode: String = "auto"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         Shizuku.addRequestPermissionResultListener(this)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channel).setMethodCallHandler { call, result ->
             when (call.method) {
                 "runCommand" -> {
                     val command = call.argument<String>("command")
+                    val mode = call.argument<String>("mode") ?: currentWorkingMode
                     if (command != null) {
-                        runCommandInBackground(command, result)
+                        runCommandInBackground(command, mode, result)
                     } else {
                         result.error("INVALID_ARGUMENT", "Command cannot be null", null)
                     }
+                }
+                "setWorkingMode" -> {
+                    val mode = call.argument<String>("mode")
+                    if (mode != null) {
+                        currentWorkingMode = mode
+                        result.success(true)
+                    } else {
+                        result.error("INVALID_ARGUMENT", "Mode cannot be null", null)
+                    }
+                }
+                "getWorkingMode" -> {
+                    result.success(currentWorkingMode)
                 }
                 "pingBinder" -> {
                     try {
@@ -78,10 +92,10 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
                             result.success(true)
                         } else if (Shizuku.shouldShowRequestPermissionRationale()) {
                             pendingPermissionResult = result
-                            Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
+                            Shizuku.requestPermission(shizukuPermissionRequestCode)
                         } else {
                             pendingPermissionResult = result
-                            Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
+                            Shizuku.requestPermission(shizukuPermissionRequestCode)
                         }
                     } catch (e: Exception) {
                         result.error("PERMISSION_ERROR", e.message, null)
@@ -91,7 +105,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
             }
         }
 
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM_CHANNEL).setStreamHandler(
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, streamChannel).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     if (events == null) return
@@ -105,7 +119,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
 
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            executeShizukuCommandWithStream(command, events)
+                            executeCommandWithStream(command, currentWorkingMode, events)
                             withContext(Dispatchers.Main) {
                                 events.endOfStream()
                             }
@@ -130,21 +144,29 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
     }
 
     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
-        if (requestCode == SHIZUKU_PERMISSION_REQUEST_CODE) {
+        if (requestCode == shizukuPermissionRequestCode) {
             val granted = grantResult == PackageManager.PERMISSION_GRANTED
             pendingPermissionResult?.success(granted)
             pendingPermissionResult = null
         }
     }
 
-    private fun runCommandInBackground(command: String, result: MethodChannel.Result) {
+
+
+    fun runCommandInBackground(command: String, mode: String, result: MethodChannel.Result) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val output = executeShizukuCommand(command)
+                val output = executeCommand(command, mode)
                 withContext(Dispatchers.Main) {
                     result.success(output)
                 }
             } catch (e: Exception) {
+                println("command: $command")
+                println("mode: $mode")
+                e.printStackTrace()
+                e.message?.let {
+                    println("Exception: $it")
+                }
                 withContext(Dispatchers.Main) {
                     result.error("EXECUTION_ERROR", e.message, null)
                 }
@@ -152,34 +174,51 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         }
     }
 
-    private fun executeShizukuCommand(command: String): String {
-        if (Shizuku.pingBinder()) {
-            try {
-                val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
-                val reader = BufferedReader(InputStreamReader(process.inputStream))
-                val output = StringBuilder()
-                var line: String?
-
-                while (reader.readLine().also { line = it } != null) {
-                    output.append(line).append("\n")
-                }
-
-                process.waitFor()
-                return output.toString()
-            } catch (e: Exception) {
+    fun executeCommand(command: String, mode: String): String {
+        return when (mode) {
+            "root" -> {
                 if (checkRootAvailable()) {
-                    return executeRootCommand(command)
+                    executeRootCommand(command)
+                } else {
+                    throw Exception("Root is not available")
                 }
-                throw e
             }
-        } else if (checkRootAvailable()) {
-            return executeRootCommand(command)
-        } else {
-            throw Exception("Shizuku is not running and root is not available")
+            "shizuku" -> {
+                if (Shizuku.pingBinder()) {
+                    executeShizukuCommand(command)
+                } else {
+                    throw Exception("Shizuku is not running")
+                }
+            }
+            else -> {
+                if (checkRootAvailable()) {
+                    executeRootCommand(command)
+                } else if (Shizuku.pingBinder()) {
+                    executeShizukuCommand(command)
+                } else {
+                    throw Exception("No execution mode available")
+                }
+            }
         }
     }
 
-    private fun checkRootAvailable(): Boolean {
+
+
+    fun executeShizukuCommand(command: String): String {
+        val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+        val output = StringBuilder()
+        var line: String?
+
+        while (reader.readLine().also { line = it } != null) {
+            output.append(line).append("\n")
+        }
+
+        process.waitFor()
+        return output.toString()
+    }
+
+    fun checkRootAvailable(): Boolean {
         if (isRootAvailable != null) {
             return isRootAvailable!!
         }
@@ -198,7 +237,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         return isRootAvailable!!
     }
 
-    private fun executeRootCommand(command: String): String {
+    fun executeRootCommand(command: String): String {
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         val output = StringBuilder()
@@ -213,15 +252,31 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         return output.toString()
     }
 
-    private fun executeShizukuCommandWithStream(command: String, events: EventChannel.EventSink) {
-        val process: Process
-        
-        if (Shizuku.pingBinder()) {
-            process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
-        } else if (checkRootAvailable()) {
-            process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
-        } else {
-            throw Exception("Shizuku is not running and root is not available")
+    fun executeCommandWithStream(command: String, mode: String, events: EventChannel.EventSink) {
+        val process: Process = when (mode) {
+            "root" -> {
+                if (checkRootAvailable()) {
+                    Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+                } else {
+                    throw Exception("Root is not available")
+                }
+            }
+            "shizuku" -> {
+                if (Shizuku.pingBinder()) {
+                    Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+                } else {
+                    throw Exception("Shizuku is not running")
+                }
+            }
+            else -> {
+                if (checkRootAvailable()) {
+                    Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+                } else if (Shizuku.pingBinder()) {
+                    Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+                } else {
+                    throw Exception("No execution mode available")
+                }
+            }
         }
 
         val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -251,4 +306,3 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         errorReader.close()
     }
 }
-

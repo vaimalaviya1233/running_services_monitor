@@ -533,4 +533,74 @@ class AppLocalizationsEn extends AppLocalizations {
   String processStateUnknown(String state) {
     return 'Process state: $state';
   }
+
+  @override
+  String get workingMode => 'Working Mode';
+
+  @override
+  String get directMode => 'Direct';
+
+  @override
+  String get rootMode => 'Root';
+
+  @override
+  String get shizukuMode => 'Shizuku';
+
+  @override
+  String get selectWorkingMode => 'Select Working Mode';
+
+  @override
+  String get available => 'Available';
+
+  @override
+  String get notAvailable => 'Not Available';
+
+  @override
+  String get modeNotAvailable => 'This mode is not available';
+
+  @override
+  String get noModeAvailable => 'No permission mode available';
+
+  @override
+  String get dumpPermission => 'DUMP Permission';
+
+  @override
+  String get dumpPermissionGranted => 'Permission granted';
+
+  @override
+  String get dumpPermissionNotGranted => 'Permission not granted';
+
+  @override
+  String get grantDumpPermissionHint => 'Required for dumpsys commands';
+
+  @override
+  String get grant => 'Grant';
+
+  @override
+  String get failedToGrantPermission => 'Failed to grant permission';
+
+  @override
+  String get commandLogs => 'Command Logs';
+
+  @override
+  String get commandOutput => 'Command Output';
+
+  @override
+  String get noCommandLogs => 'No commands executed yet';
+
+  @override
+  String get clearLogs => 'Clear Logs';
+
+  @override
+  String get clearLogsConfirm =>
+      'Are you sure you want to clear all command logs?';
+
+  @override
+  String get executedAt => 'Executed at';
+
+  @override
+  String get command => 'Command';
+
+  @override
+  String get noOutput => 'No output';
 }

@@ -1,0 +1,4 @@
+enum WorkingMode {
+  root,
+  shizuku;
+}

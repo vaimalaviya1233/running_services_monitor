@@ -17,6 +17,7 @@ abstract class L10nKeys {
   static const appTitle = 'appTitle';
   static const apps = 'apps';
   static const autoUpdate = 'autoUpdate';
+  static const available = 'available';
   static const baseDir = 'baseDir';
   static const blogs = 'blogs';
   static const buyMeCoffee = 'buyMeCoffee';
@@ -24,8 +25,13 @@ abstract class L10nKeys {
   static const cancel = 'cancel';
   static const capabilities = 'capabilities';
   static const checkingPermissions = 'checkingPermissions';
+  static const clearLogs = 'clearLogs';
+  static const clearLogsConfirm = 'clearLogsConfirm';
   static const close = 'close';
   static const closeSearch = 'closeSearch';
+  static const command = 'command';
+  static const commandLogs = 'commandLogs';
+  static const commandOutput = 'commandOutput';
   static const connections = 'connections';
   static const contributors = 'contributors';
   static const copiedToClipboard = 'copiedToClipboard';
@@ -41,6 +47,7 @@ abstract class L10nKeys {
   static const error = 'error';
   static const errorInitializingShizuku = 'errorInitializingShizuku';
   static const errorLoadingData = 'errorLoadingData';
+  static const executedAt = 'executedAt';
   static const exitApp = 'exitApp';
   static const failedToInitialize = 'failedToInitialize';
   static const failedToStopAllServices = 'failedToStopAllServices';
@@ -57,11 +64,16 @@ abstract class L10nKeys {
   static const loadingApps = 'loadingApps';
   static const loadingServices = 'loadingServices';
   static const madeInBangladesh = 'madeInBangladesh';
+  static const modeNotAvailable = 'modeNotAvailable';
   static const no = 'no';
   static const noAppsFound = 'noAppsFound';
+  static const noCommandLogs = 'noCommandLogs';
   static const noMatchingApps = 'noMatchingApps';
+  static const noModeAvailable = 'noModeAvailable';
+  static const noOutput = 'noOutput';
   static const noRamDataAvailable = 'noRamDataAvailable';
   static const noServicesFound = 'noServicesFound';
+  static const notAvailable = 'notAvailable';
   static const ofRam = 'ofRam';
   static const ok = 'ok';
   static const openGithubProfile = 'openGithubProfile';
@@ -110,14 +122,17 @@ abstract class L10nKeys {
   static const refresh = 'refresh';
   static const refreshedSuccessfully = 'refreshedSuccessfully';
   static const retry = 'retry';
+  static const rootMode = 'rootMode';
   static const runningApp = 'runningApp';
   static const runningServicesTitle = 'runningServicesTitle';
   static const search = 'search';
   static const searchApps = 'searchApps';
+  static const selectWorkingMode = 'selectWorkingMode';
   static const service = 'service';
   static const serviceStopped = 'serviceStopped';
   static const services = 'services';
   static const setupSteps = 'setupSteps';
+  static const shizukuMode = 'shizukuMode';
   static const shizukuNotRunning = 'shizukuNotRunning';
   static const shizukuRequired = 'shizukuRequired';
   static const shizukuRequiredMessage = 'shizukuRequiredMessage';
@@ -148,6 +163,7 @@ abstract class L10nKeys {
   static const userApp = 'userApp';
   static const verifyCommand = 'verifyCommand';
   static const visible = 'visible';
+  static const workingMode = 'workingMode';
   static const yes = 'yes';
 }
 
@@ -167,6 +183,7 @@ extension L10nResolver on AppLocalizations {
       'appTitle' => appTitle,
       'apps' => apps,
       'autoUpdate' => autoUpdate,
+      'available' => available,
       'baseDir' => baseDir,
       'blogs' => blogs,
       'buyMeCoffee' => buyMeCoffee,
@@ -174,8 +191,13 @@ extension L10nResolver on AppLocalizations {
       'cancel' => cancel,
       'capabilities' => capabilities,
       'checkingPermissions' => checkingPermissions,
+      'clearLogs' => clearLogs,
+      'clearLogsConfirm' => clearLogsConfirm,
       'close' => close,
       'closeSearch' => closeSearch,
+      'command' => command,
+      'commandLogs' => commandLogs,
+      'commandOutput' => commandOutput,
       'connections' => connections,
       'contributors' => contributors,
       'copiedToClipboard' => copiedToClipboard,
@@ -191,6 +213,7 @@ extension L10nResolver on AppLocalizations {
       'error' => error,
       'errorInitializingShizuku' => errorInitializingShizuku,
       'errorLoadingData' => errorLoadingData,
+      'executedAt' => executedAt,
       'exitApp' => exitApp,
       'failedToInitialize' => failedToInitialize,
       'failedToStopAllServices' => failedToStopAllServices,
@@ -207,11 +230,16 @@ extension L10nResolver on AppLocalizations {
       'loadingApps' => loadingApps,
       'loadingServices' => loadingServices,
       'madeInBangladesh' => madeInBangladesh,
+      'modeNotAvailable' => modeNotAvailable,
       'no' => no,
       'noAppsFound' => noAppsFound,
+      'noCommandLogs' => noCommandLogs,
       'noMatchingApps' => noMatchingApps,
+      'noModeAvailable' => noModeAvailable,
+      'noOutput' => noOutput,
       'noRamDataAvailable' => noRamDataAvailable,
       'noServicesFound' => noServicesFound,
+      'notAvailable' => notAvailable,
       'ofRam' => ofRam,
       'ok' => ok,
       'openGithubProfile' => openGithubProfile,
@@ -260,14 +288,17 @@ extension L10nResolver on AppLocalizations {
       'refresh' => refresh,
       'refreshedSuccessfully' => refreshedSuccessfully,
       'retry' => retry,
+      'rootMode' => rootMode,
       'runningApp' => runningApp,
       'runningServicesTitle' => runningServicesTitle,
       'search' => search,
       'searchApps' => searchApps,
+      'selectWorkingMode' => selectWorkingMode,
       'service' => service,
       'serviceStopped' => serviceStopped,
       'services' => services,
       'setupSteps' => setupSteps,
+      'shizukuMode' => shizukuMode,
       'shizukuNotRunning' => shizukuNotRunning,
       'shizukuRequired' => shizukuRequired,
       'shizukuRequiredMessage' => shizukuRequiredMessage,
@@ -298,6 +329,7 @@ extension L10nResolver on AppLocalizations {
       'userApp' => userApp,
       'verifyCommand' => verifyCommand,
       'visible' => visible,
+      'workingMode' => workingMode,
       'yes' => yes,
       _ => key,
     };

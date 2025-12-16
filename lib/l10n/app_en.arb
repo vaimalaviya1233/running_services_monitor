@@ -216,5 +216,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "workingMode": "Working Mode",
+  "rootMode": "Root",
+  "shizukuMode": "Shizuku",
+  "selectWorkingMode": "Select Working Mode",
+  "available": "Available",
+  "notAvailable": "Not Available",
+  "modeNotAvailable": "This mode is not available",
+  "noModeAvailable": "No permission mode available",
+  "commandLogs": "Command Logs",
+  "commandOutput": "Command Output",
+  "noCommandLogs": "No commands executed yet",
+  "clearLogs": "Clear Logs",
+  "clearLogsConfirm": "Are you sure you want to clear all command logs?",
+  "executedAt": "Executed at",
+  "command": "Command",
+  "noOutput": "No output"
 }

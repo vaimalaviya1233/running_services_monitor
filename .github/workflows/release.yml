@@ -185,7 +185,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p whatsnew
-          RELEASE_BODY=$(gh release view ${{ github.ref_name }} --json body --jq '.body' 2>/dev/null || echo "")
+          RELEASE_BODY=$(gh release view ${{ github.ref_name }} --json body --jq '.body' 2>/dev/null | tail -n +2 || echo "")
           if [ -z "$RELEASE_BODY" ]; then
             echo "Bug fixes and performance improvements." > whatsnew/whatsnew-en-US
           else

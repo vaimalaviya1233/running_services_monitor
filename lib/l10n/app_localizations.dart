@@ -1017,6 +1017,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Process state: {state}'**
   String processStateUnknown(String state);
+
+  /// No description provided for @workingMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Working Mode'**
+  String get workingMode;
+
+  /// No description provided for @directMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct'**
+  String get directMode;
+
+  /// No description provided for @rootMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Root'**
+  String get rootMode;
+
+  /// No description provided for @shizukuMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Shizuku'**
+  String get shizukuMode;
+
+  /// No description provided for @selectWorkingMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Working Mode'**
+  String get selectWorkingMode;
+
+  /// No description provided for @available.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get available;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Available'**
+  String get notAvailable;
+
+  /// No description provided for @modeNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This mode is not available'**
+  String get modeNotAvailable;
+
+  /// No description provided for @noModeAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No permission mode available'**
+  String get noModeAvailable;
+
+  /// No description provided for @dumpPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'DUMP Permission'**
+  String get dumpPermission;
+
+  /// No description provided for @dumpPermissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission granted'**
+  String get dumpPermissionGranted;
+
+  /// No description provided for @dumpPermissionNotGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission not granted'**
+  String get dumpPermissionNotGranted;
+
+  /// No description provided for @grantDumpPermissionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for dumpsys commands'**
+  String get grantDumpPermissionHint;
+
+  /// No description provided for @grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant'**
+  String get grant;
+
+  /// No description provided for @failedToGrantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to grant permission'**
+  String get failedToGrantPermission;
+
+  /// No description provided for @commandLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Command Logs'**
+  String get commandLogs;
+
+  /// No description provided for @commandOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Command Output'**
+  String get commandOutput;
+
+  /// No description provided for @noCommandLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'No commands executed yet'**
+  String get noCommandLogs;
+
+  /// No description provided for @clearLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Logs'**
+  String get clearLogs;
+
+  /// No description provided for @clearLogsConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all command logs?'**
+  String get clearLogsConfirm;
+
+  /// No description provided for @executedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Executed at'**
+  String get executedAt;
+
+  /// No description provided for @command.
+  ///
+  /// In en, this message translates to:
+  /// **'Command'**
+  String get command;
+
+  /// No description provided for @noOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'No output'**
+  String get noOutput;
 }
 
 class _AppLocalizationsDelegate
