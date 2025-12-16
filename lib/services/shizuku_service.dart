@@ -120,33 +120,38 @@ class ShizukuService {
       return Stream.error(Exception('Not initialized or no permission'));
     }
 
-    final StringBuffer outputBuffer = StringBuffer();
+    final controller = StreamController<String>();
+    final outputBuffer = StringBuffer();
+    StreamSubscription? subscription;
 
-    return _streamChannel
+    subscription = _streamChannel
         .receiveBroadcastStream(command)
-        .map((event) {
-          final output = event.toString();
-          outputBuffer.write(output);
-          return output;
-        })
-        .transform(
-          StreamTransformer<String, String>.fromHandlers(
-            handleData: (data, sink) {
-              sink.add(data);
-            },
-            handleDone: (sink) {
-              if (logCommand) {
-                commandLogService.addEntry(command, outputBuffer.toString());
-              }
-              sink.close();
-            },
-            handleError: (error, stackTrace, sink) {
-              if (logCommand) {
-                commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
-              }
-              sink.addError(error, stackTrace);
-            },
-          ),
+        .listen(
+          (event) {
+            final chunk = event as String;
+            outputBuffer.write(chunk);
+            controller.add(chunk);
+          },
+          onDone: () {
+            if (logCommand) {
+              commandLogService.addEntry(command, outputBuffer.toString());
+            }
+            controller.close();
+          },
+          onError: (error, stackTrace) {
+            if (logCommand) {
+              commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
+            }
+            controller.addError(error, stackTrace);
+            controller.close();
+          },
+          cancelOnError: true,
         );
+
+    controller.onCancel = () {
+      subscription?.cancel();
+    };
+
+    return controller.stream;
   }
 }
