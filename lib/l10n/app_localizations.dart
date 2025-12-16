@@ -1024,12 +1024,6 @@ abstract class AppLocalizations {
   /// **'Working Mode'**
   String get workingMode;
 
-  /// No description provided for @directMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Direct'**
-  String get directMode;
-
   /// No description provided for @rootMode.
   ///
   /// In en, this message translates to:
@@ -1071,42 +1065,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No permission mode available'**
   String get noModeAvailable;
-
-  /// No description provided for @dumpPermission.
-  ///
-  /// In en, this message translates to:
-  /// **'DUMP Permission'**
-  String get dumpPermission;
-
-  /// No description provided for @dumpPermissionGranted.
-  ///
-  /// In en, this message translates to:
-  /// **'Permission granted'**
-  String get dumpPermissionGranted;
-
-  /// No description provided for @dumpPermissionNotGranted.
-  ///
-  /// In en, this message translates to:
-  /// **'Permission not granted'**
-  String get dumpPermissionNotGranted;
-
-  /// No description provided for @grantDumpPermissionHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Required for dumpsys commands'**
-  String get grantDumpPermissionHint;
-
-  /// No description provided for @grant.
-  ///
-  /// In en, this message translates to:
-  /// **'Grant'**
-  String get grant;
-
-  /// No description provided for @failedToGrantPermission.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to grant permission'**
-  String get failedToGrantPermission;
 
   /// No description provided for @commandLogs.
   ///

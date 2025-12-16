@@ -102,13 +102,10 @@ class WorkingModeBloc extends HydratedBloc<WorkingModeEvent, WorkingModeState> {
           break;
       }
 
-      print("canUseMode: $canUseMode : mode: ${event.mode}");
       if (!canUseMode) {
         emit(WorkingModeState.error(state.value.copyWith(isDetecting: false), L10nKeys.modeNotAvailable));
         return;
       }
-
-      print(event.mode);
 
       _shizukuService.setWorkingMode(event.mode);
       emit(WorkingModeState.ready(state.value.copyWith(currentMode: event.mode, isDetecting: false)));

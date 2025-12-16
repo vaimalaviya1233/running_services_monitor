@@ -541,9 +541,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get workingMode => 'Working Mode';
 
   @override
-  String get directMode => 'Direct';
-
-  @override
   String get rootMode => 'Root';
 
   @override
@@ -563,24 +560,6 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get noModeAvailable => 'No permission mode available';
-
-  @override
-  String get dumpPermission => 'DUMP Permission';
-
-  @override
-  String get dumpPermissionGranted => 'Permission granted';
-
-  @override
-  String get dumpPermissionNotGranted => 'Permission not granted';
-
-  @override
-  String get grantDumpPermissionHint => 'Required for dumpsys commands';
-
-  @override
-  String get grant => 'Grant';
-
-  @override
-  String get failedToGrantPermission => 'Failed to grant permission';
 
   @override
   String get commandLogs => 'Command Logs';
