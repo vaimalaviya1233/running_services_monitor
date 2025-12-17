@@ -1,99 +1,72 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
-import 'package:running_services_monitor/core/constants.dart';
 import 'package:running_services_monitor/models/working_mode.dart';
 import 'package:running_services_monitor/services/command_log_service.dart';
+import 'package:running_services_monitor/services/shizuku_api.g.dart';
 
 @lazySingleton
 class ShizukuService {
   final CommandLogService commandLogService;
+  final ShizukuHostApi api = ShizukuHostApi();
 
   ShizukuService(this.commandLogService);
 
-  static const _channel = MethodChannel(AppConstants.shizukuChannelName);
-  static const _streamChannel = EventChannel(AppConstants.shizukuStreamChannelName);
+  bool isInitialized = false;
+  bool hasPermission = false;
+  bool hasRootPermission = false;
+  WorkingMode? currentMode;
 
-  bool _isInitialized = false;
-  bool _hasPermission = false;
-  bool _hasRootPermission = false;
-  WorkingMode? _currentMode;
-
-  bool get isInitialized => _isInitialized;
-
-  bool get hasPermission => _hasPermission;
-
-  bool get hasRootPermission => _hasRootPermission;
-
-  WorkingMode? get currentMode => _currentMode;
-
-  Future<bool> isShizukuRunning() async {
-    final bool isRunning = await _channel.invokeMethod('pingBinder');
-    return isRunning;
-  }
+  Future<bool> isShizukuRunning() async => api.pingBinder();
 
   Future<bool> checkRootPermission() async {
-    final bool granted = await _channel.invokeMethod('checkRootPermission');
-    _hasRootPermission = granted;
-    return _hasRootPermission;
+    hasRootPermission = await api.checkRootPermission();
+    return hasRootPermission;
   }
 
   Future<bool> requestRootPermission() async {
-    final bool granted = await _channel.invokeMethod('requestRootPermission');
-    _hasRootPermission = granted;
-    return _hasRootPermission;
+    hasRootPermission = await api.requestRootPermission();
+    return hasRootPermission;
   }
 
   Future<bool> checkPermission() async {
-    final bool granted = await _channel.invokeMethod('checkPermission');
-    _hasPermission = granted;
-    return _hasPermission;
+    hasPermission = await api.checkPermission();
+    return hasPermission;
   }
 
   Future<bool> requestPermission() async {
-    final bool granted = await _channel.invokeMethod('requestPermission');
-    _hasPermission = granted;
-    return _hasPermission;
+    hasPermission = await api.requestPermission();
+    return hasPermission;
   }
 
-  void setWorkingMode(WorkingMode mode) {
-    _currentMode = mode;
-    _channel.invokeMethod('setWorkingMode', {'mode': mode.name});
+  Future<void> setWorkingMode(WorkingMode mode) async {
+    currentMode = mode;
+    await api.setWorkingMode(mode.name);
   }
 
   Future<bool> initialize() async {
-    if (_isInitialized) {
+    if (isInitialized) return true;
+
+    if (await checkRootPermission() && await requestRootPermission()) {
+      isInitialized = true;
+      hasPermission = true;
+      hasRootPermission = true;
+      currentMode ??= WorkingMode.root;
       return true;
     }
 
-    final hasRoot = await checkRootPermission();
-    if (hasRoot) {
-      final rootGranted = await requestRootPermission();
-      if (rootGranted) {
-        _isInitialized = true;
-        _hasPermission = true;
-        _hasRootPermission = true;
-        _currentMode ??= WorkingMode.root;
-        return true;
-      }
-    }
-
-    final isShizukuRunning = await this.isShizukuRunning();
-    if (isShizukuRunning) {
-      final hasPermission = await checkPermission();
-      if (!hasPermission) {
-        final granted = await requestPermission();
-        if (granted) {
-          _isInitialized = true;
-          _hasPermission = true;
-          _currentMode ??= WorkingMode.shizuku;
+    if (await isShizukuRunning()) {
+      if (!await checkPermission()) {
+        if (await requestPermission()) {
+          isInitialized = true;
+          hasPermission = true;
+          currentMode ??= WorkingMode.shizuku;
           return true;
         }
       } else {
-        _isInitialized = true;
-        _hasPermission = true;
-        _currentMode ??= WorkingMode.shizuku;
+        isInitialized = true;
+        hasPermission = true;
+        currentMode ??= WorkingMode.shizuku;
         return true;
       }
     }
@@ -102,55 +75,54 @@ class ShizukuService {
   }
 
   Future<String?> executeCommand(String command, {bool logCommand = true}) async {
-    if (!_isInitialized || !(_hasPermission || _hasRootPermission)) {
+    if (!isInitialized || !(hasPermission || hasRootPermission)) {
       throw Exception('Not initialized or no permission');
     }
 
-    final String? result = await _channel.invokeMethod(AppConstants.cmdMethodRunCommand, {'command': command});
+    final result = await api.runCommand(CommandRequest(command: command));
 
-    if (logCommand) {
-      commandLogService.addEntry(command, result ?? '');
+    if (result.error != null) {
+      if (logCommand) commandLogService.addEntry(command, 'Error: ${result.error}', isSuccess: false);
+      throw Exception(result.error);
     }
 
-    return result;
+    if (logCommand) commandLogService.addEntry(command, result.output ?? '');
+    return result.output;
   }
 
   Stream<String> executeCommandStream(String command, {bool logCommand = true}) {
-    if (!_isInitialized || !(_hasPermission || _hasRootPermission)) {
+    if (!isInitialized || !(hasPermission || hasRootPermission)) {
       return Stream.error(Exception('Not initialized or no permission'));
     }
 
     final controller = StreamController<String>();
     final outputBuffer = StringBuffer();
-    StreamSubscription? subscription;
 
-    subscription = _streamChannel
-        .receiveBroadcastStream(command)
-        .listen(
-          (event) {
-            final chunk = event as String;
-            outputBuffer.write(chunk);
-            controller.add(chunk);
-          },
-          onDone: () {
-            if (logCommand) {
-              commandLogService.addEntry(command, outputBuffer.toString());
-            }
-            controller.close();
-          },
-          onError: (error, stackTrace) {
-            if (logCommand) {
-              commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
-            }
-            controller.addError(error, stackTrace);
-            controller.close();
-          },
-          cancelOnError: true,
-        );
-
-    controller.onCancel = () {
-      subscription?.cancel();
-    };
+    api
+        .setStreamCommand(command)
+        .then((_) {
+          streamOutput().listen(
+            (line) {
+              outputBuffer.writeln(line);
+              controller.add(line);
+            },
+            onDone: () {
+              if (logCommand) commandLogService.addEntry(command, outputBuffer.toString());
+              controller.close();
+            },
+            onError: (error, stackTrace) {
+              if (logCommand) commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
+              controller.addError(error, stackTrace);
+              controller.close();
+            },
+            cancelOnError: true,
+          );
+        })
+        .catchError((error, stackTrace) {
+          if (logCommand) commandLogService.addEntry(command, 'Error: $error', isSuccess: false);
+          controller.addError(error, stackTrace);
+          controller.close();
+        });
 
     return controller.stream;
   }

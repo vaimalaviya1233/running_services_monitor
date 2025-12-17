@@ -2,7 +2,16 @@ package me.biplobsd.rsm
 
 import android.content.Context
 import android.os.ParcelFileDescriptor
+import java.io.InputStream
+import java.io.OutputStream
 import kotlin.system.exitProcess
+
+fun InputStream.readToString(): String = bufferedReader().use { it.readText() }
+
+fun InputStream.pipeTo(output: OutputStream) {
+    copyTo(output)
+    close()
+}
 
 class ShellService : IShellService.Stub {
     constructor() : super()
@@ -11,24 +20,9 @@ class ShellService : IShellService.Stub {
 
     override fun executeCommand(command: String): String {
         val process = Runtime.getRuntime().exec(command)
-        val output = StringBuilder()
-
-        val inputReader = process.inputStream.bufferedReader()
-        var line: String?
-        while (inputReader.readLine().also { line = it } != null) {
-            output.appendLine(line)
-        }
-
-        val errorReader = process.errorStream.bufferedReader()
-        while (errorReader.readLine().also { line = it } != null) {
-            output.appendLine(line)
-        }
-
+        val output = process.inputStream.readToString() + process.errorStream.readToString()
         process.waitFor()
-        inputReader.close()
-        errorReader.close()
-
-        return output.toString()
+        return output
     }
 
     override fun executeCommandWithFd(command: String): ParcelFileDescriptor {
@@ -38,29 +32,12 @@ class ShellService : IShellService.Stub {
 
         Thread {
                     try {
-                        val writer =
-                                ParcelFileDescriptor.AutoCloseOutputStream(writeFd).bufferedWriter()
-                        val process = Runtime.getRuntime().exec(command)
-                        var line: String?
-
-                        val inputReader = process.inputStream.bufferedReader()
-                        while (inputReader.readLine().also { line = it } != null) {
-                            writer.write(line)
-                            writer.newLine()
-                            writer.flush()
+                        ParcelFileDescriptor.AutoCloseOutputStream(writeFd).use { output ->
+                            val process = Runtime.getRuntime().exec(command)
+                            process.inputStream.pipeTo(output)
+                            process.errorStream.pipeTo(output)
+                            process.waitFor()
                         }
-
-                        val errorReader = process.errorStream.bufferedReader()
-                        while (errorReader.readLine().also { line = it } != null) {
-                            writer.write(line)
-                            writer.newLine()
-                            writer.flush()
-                        }
-
-                        process.waitFor()
-                        inputReader.close()
-                        errorReader.close()
-                        writer.close()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

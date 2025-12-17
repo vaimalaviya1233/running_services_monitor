@@ -2,12 +2,12 @@ import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
 
 class ProcessParser {
-  static final serviceRecordRegex = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.]+)');
+  static final serviceRecordRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+)');
   static final _processRecordRegex = RegExp(r'(\d+):([^/]+)/u(\d+)a(\d+)');
   static final _lruLineRegex = RegExp(r'#\s*\d+:\s*(\S+(?:\s*\+\s*\d+)?)\s+(\S+)\s+\S+\s+(\d+):([^/]+)/u(\d+)a(\d+)');
   static final _ramLineRegex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)');
-  static final _connectionRegex = RegExp(r'([a-z0-9.]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
-  static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-z0-9._:]+)(?:\s+\(pid\s+\d+)?', caseSensitive: false);
+  static final _connectionRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
+  static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-zA-Z0-9._:]+)(?:\s+\(pid\s+\d+)?', caseSensitive: false);
   static final _totalRamRegex = RegExp(r'Total RAM:\s+([\d,]+)K');
   static final _freeRamRegex = RegExp(r'Free RAM:\s+([\d,]+)K');
 
@@ -65,6 +65,7 @@ class ProcessParser {
       if (firstChar == '*' || firstChar == 'C') {
         if (trimmed.startsWith('* ConnectionRecord{') || trimmed.startsWith('ConnectionRecord{')) {
           final connMatch = _connectionRegex.firstMatch(trimmed);
+          // print("Conn Match: g1: ${connMatch?.group(1)} g2: ${connMatch?.group(2)}} From: $line");
           if (connMatch != null) {
             connections ??= [];
             connections.add(
@@ -92,8 +93,10 @@ class ProcessParser {
         intent = trimmed.substring(7);
       } else if (firstChar == 'p' && trimmed.startsWith('packageName=')) {
         packageName = trimmed.substring(12);
+        // print("Pkg Name: ${packageName} From: $line");
       } else if (firstChar == 'p' && trimmed.startsWith('processName=')) {
         processName = trimmed.substring(12);
+        // print("Pkg process Name: ${processName} From: $line");
       } else if (firstChar == 'b' && trimmed.startsWith('baseDir=')) {
         baseDir = trimmed.substring(8);
       } else if (firstChar == 'd' && trimmed.startsWith('dataDir=')) {
@@ -116,7 +119,10 @@ class ProcessParser {
         final pidMatch = _processRecordRegex.firstMatch(trimmed);
         if (pidMatch != null) {
           pid = int.tryParse(pidMatch.group(1) ?? '');
-          uid = (int.tryParse(pidMatch.group(3) ?? '0') ?? 0) * 100000 + 10000 + (int.tryParse(pidMatch.group(4) ?? '0') ?? 0);
+          uid =
+              (int.tryParse(pidMatch.group(3) ?? '0') ?? 0) * 100000 +
+              10000 +
+              (int.tryParse(pidMatch.group(4) ?? '0') ?? 0);
         }
       }
     }
@@ -125,7 +131,7 @@ class ProcessParser {
 
     for (var line in lines) {
       rawBuffer.write(line);
-      rawBuffer.write('\n');
+      // rawBuffer.write('\n');
     }
 
     return RunningServiceInfo(
@@ -137,7 +143,8 @@ class ProcessParser {
       isSystemApp:
           !packageName.contains('.') ||
           (uid != null && uid < 10000) ||
-          (baseDir != null && (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext'))),
+          (baseDir != null &&
+              (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext'))),
       intent: intent,
       baseDir: baseDir,
       dataDir: dataDir,
