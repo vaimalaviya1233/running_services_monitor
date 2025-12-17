@@ -55,12 +55,13 @@ extension StopServiceEventPatterns on StopServiceEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _StopAllServices value)?  stopAllServices,TResult Function( _StopSingleService value)?  stopSingleService,TResult Function( _Reset value)?  reset,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _StopAllServices value)?  stopAllServices,TResult Function( _StopSingleService value)?  stopSingleService,TResult Function( _StopByPid value)?  stopByPid,TResult Function( _Reset value)?  reset,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _StopAllServices() when stopAllServices != null:
 return stopAllServices(_that);case _StopSingleService() when stopSingleService != null:
-return stopSingleService(_that);case _Reset() when reset != null:
+return stopSingleService(_that);case _StopByPid() when stopByPid != null:
+return stopByPid(_that);case _Reset() when reset != null:
 return reset(_that);case _:
   return orElse();
 
@@ -79,12 +80,13 @@ return reset(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _StopAllServices value)  stopAllServices,required TResult Function( _StopSingleService value)  stopSingleService,required TResult Function( _Reset value)  reset,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _StopAllServices value)  stopAllServices,required TResult Function( _StopSingleService value)  stopSingleService,required TResult Function( _StopByPid value)  stopByPid,required TResult Function( _Reset value)  reset,}){
 final _that = this;
 switch (_that) {
 case _StopAllServices():
 return stopAllServices(_that);case _StopSingleService():
-return stopSingleService(_that);case _Reset():
+return stopSingleService(_that);case _StopByPid():
+return stopByPid(_that);case _Reset():
 return reset(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -102,12 +104,13 @@ return reset(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _StopAllServices value)?  stopAllServices,TResult? Function( _StopSingleService value)?  stopSingleService,TResult? Function( _Reset value)?  reset,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _StopAllServices value)?  stopAllServices,TResult? Function( _StopSingleService value)?  stopSingleService,TResult? Function( _StopByPid value)?  stopByPid,TResult? Function( _Reset value)?  reset,}){
 final _that = this;
 switch (_that) {
 case _StopAllServices() when stopAllServices != null:
 return stopAllServices(_that);case _StopSingleService() when stopSingleService != null:
-return stopSingleService(_that);case _Reset() when reset != null:
+return stopSingleService(_that);case _StopByPid() when stopByPid != null:
+return stopByPid(_that);case _Reset() when reset != null:
 return reset(_that);case _:
   return null;
 
@@ -125,11 +128,12 @@ return reset(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String packageName,  List<int> pids)?  stopAllServices,TResult Function( String packageName,  String serviceName,  int? pid)?  stopSingleService,TResult Function()?  reset,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String packageName)?  stopAllServices,TResult Function( String packageName,  String serviceName,  int? pid)?  stopSingleService,TResult Function( String packageName,  int pid)?  stopByPid,TResult Function()?  reset,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StopAllServices() when stopAllServices != null:
-return stopAllServices(_that.packageName,_that.pids);case _StopSingleService() when stopSingleService != null:
-return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _Reset() when reset != null:
+return stopAllServices(_that.packageName);case _StopSingleService() when stopSingleService != null:
+return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _StopByPid() when stopByPid != null:
+return stopByPid(_that.packageName,_that.pid);case _Reset() when reset != null:
 return reset();case _:
   return orElse();
 
@@ -148,11 +152,12 @@ return reset();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String packageName,  List<int> pids)  stopAllServices,required TResult Function( String packageName,  String serviceName,  int? pid)  stopSingleService,required TResult Function()  reset,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String packageName)  stopAllServices,required TResult Function( String packageName,  String serviceName,  int? pid)  stopSingleService,required TResult Function( String packageName,  int pid)  stopByPid,required TResult Function()  reset,}) {final _that = this;
 switch (_that) {
 case _StopAllServices():
-return stopAllServices(_that.packageName,_that.pids);case _StopSingleService():
-return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _Reset():
+return stopAllServices(_that.packageName);case _StopSingleService():
+return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _StopByPid():
+return stopByPid(_that.packageName,_that.pid);case _Reset():
 return reset();case _:
   throw StateError('Unexpected subclass');
 
@@ -170,11 +175,12 @@ return reset();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String packageName,  List<int> pids)?  stopAllServices,TResult? Function( String packageName,  String serviceName,  int? pid)?  stopSingleService,TResult? Function()?  reset,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String packageName)?  stopAllServices,TResult? Function( String packageName,  String serviceName,  int? pid)?  stopSingleService,TResult? Function( String packageName,  int pid)?  stopByPid,TResult? Function()?  reset,}) {final _that = this;
 switch (_that) {
 case _StopAllServices() when stopAllServices != null:
-return stopAllServices(_that.packageName,_that.pids);case _StopSingleService() when stopSingleService != null:
-return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _Reset() when reset != null:
+return stopAllServices(_that.packageName);case _StopSingleService() when stopSingleService != null:
+return stopSingleService(_that.packageName,_that.serviceName,_that.pid);case _StopByPid() when stopByPid != null:
+return stopByPid(_that.packageName,_that.pid);case _Reset() when reset != null:
 return reset();case _:
   return null;
 
@@ -187,17 +193,10 @@ return reset();case _:
 
 
 class _StopAllServices implements StopServiceEvent {
-  const _StopAllServices({required this.packageName, required final  List<int> pids}): _pids = pids;
+  const _StopAllServices({required this.packageName});
   
 
  final  String packageName;
- final  List<int> _pids;
- List<int> get pids {
-  if (_pids is EqualUnmodifiableListView) return _pids;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_pids);
-}
-
 
 /// Create a copy of StopServiceEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -209,16 +208,16 @@ _$StopAllServicesCopyWith<_StopAllServices> get copyWith => __$StopAllServicesCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StopAllServices&&(identical(other.packageName, packageName) || other.packageName == packageName)&&const DeepCollectionEquality().equals(other._pids, _pids));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StopAllServices&&(identical(other.packageName, packageName) || other.packageName == packageName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,packageName,const DeepCollectionEquality().hash(_pids));
+int get hashCode => Object.hash(runtimeType,packageName);
 
 @override
 String toString() {
-  return 'StopServiceEvent.stopAllServices(packageName: $packageName, pids: $pids)';
+  return 'StopServiceEvent.stopAllServices(packageName: $packageName)';
 }
 
 
@@ -229,7 +228,7 @@ abstract mixin class _$StopAllServicesCopyWith<$Res> implements $StopServiceEven
   factory _$StopAllServicesCopyWith(_StopAllServices value, $Res Function(_StopAllServices) _then) = __$StopAllServicesCopyWithImpl;
 @useResult
 $Res call({
- String packageName, List<int> pids
+ String packageName
 });
 
 
@@ -246,11 +245,10 @@ class __$StopAllServicesCopyWithImpl<$Res>
 
 /// Create a copy of StopServiceEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? pids = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? packageName = null,}) {
   return _then(_StopAllServices(
 packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
-as String,pids: null == pids ? _self._pids : pids // ignore: cast_nullable_to_non_nullable
-as List<int>,
+as String,
   ));
 }
 
@@ -321,6 +319,74 @@ packageName: null == packageName ? _self.packageName : packageName // ignore: ca
 as String,serviceName: null == serviceName ? _self.serviceName : serviceName // ignore: cast_nullable_to_non_nullable
 as String,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
 as int?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _StopByPid implements StopServiceEvent {
+  const _StopByPid({required this.packageName, required this.pid});
+  
+
+ final  String packageName;
+ final  int pid;
+
+/// Create a copy of StopServiceEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StopByPidCopyWith<_StopByPid> get copyWith => __$StopByPidCopyWithImpl<_StopByPid>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StopByPid&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.pid, pid) || other.pid == pid));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,packageName,pid);
+
+@override
+String toString() {
+  return 'StopServiceEvent.stopByPid(packageName: $packageName, pid: $pid)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StopByPidCopyWith<$Res> implements $StopServiceEventCopyWith<$Res> {
+  factory _$StopByPidCopyWith(_StopByPid value, $Res Function(_StopByPid) _then) = __$StopByPidCopyWithImpl;
+@useResult
+$Res call({
+ String packageName, int pid
+});
+
+
+
+
+}
+/// @nodoc
+class __$StopByPidCopyWithImpl<$Res>
+    implements _$StopByPidCopyWith<$Res> {
+  __$StopByPidCopyWithImpl(this._self, this._then);
+
+  final _StopByPid _self;
+  final $Res Function(_StopByPid) _then;
+
+/// Create a copy of StopServiceEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? pid = null,}) {
+  return _then(_StopByPid(
+packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
+as String,pid: null == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

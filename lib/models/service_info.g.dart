@@ -91,6 +91,11 @@ _AppProcessInfo _$AppProcessInfoFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       cachedMemoryKb: (json['cachedMemoryKb'] as num?)?.toDouble() ?? 0,
+      processes:
+          (json['processes'] as List<dynamic>?)
+              ?.map((e) => ProcessEntry.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$AppProcessInfoToJson(_AppProcessInfo instance) =>
@@ -108,6 +113,7 @@ Map<String, dynamic> _$AppProcessInfoToJson(_AppProcessInfo instance) =>
       'hasServices': instance.hasServices,
       'ramSources': instance.ramSources,
       'cachedMemoryKb': instance.cachedMemoryKb,
+      'processes': instance.processes,
     };
 
 _RamSourceInfo _$RamSourceInfoFromJson(Map<String, dynamic> json) =>
@@ -132,6 +138,20 @@ const _$RamSourceTypeEnumMap = {
   RamSourceType.processName: 'processName',
   RamSourceType.meminfoPss: 'meminfoPss',
 };
+
+_ProcessEntry _$ProcessEntryFromJson(Map<String, dynamic> json) =>
+    _ProcessEntry(
+      processName: json['processName'] as String,
+      ramKb: (json['ramKb'] as num).toDouble(),
+      pid: (json['pid'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$ProcessEntryToJson(_ProcessEntry instance) =>
+    <String, dynamic>{
+      'processName': instance.processName,
+      'ramKb': instance.ramKb,
+      'pid': instance.pid,
+    };
 
 _RunningProcessInfo _$RunningProcessInfoFromJson(Map<String, dynamic> json) =>
     _RunningProcessInfo(

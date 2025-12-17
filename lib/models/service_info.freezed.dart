@@ -350,7 +350,7 @@ as List<ConnectionRecord>,
 /// @nodoc
 mixin _$AppProcessInfo {
 
- String get packageName; String get appName; List<RunningServiceInfo> get services; List<int> get pids; String get totalRam; double get totalRamInKb; bool? get isSystemApp; List<ConnectionRecord> get connections; String? get processState; String? get adjLevel; bool get hasServices; List<RamSourceInfo> get ramSources; double get cachedMemoryKb;
+ String get packageName; String get appName; List<RunningServiceInfo> get services; List<int> get pids; String get totalRam; double get totalRamInKb; bool? get isSystemApp; List<ConnectionRecord> get connections; String? get processState; String? get adjLevel; bool get hasServices; List<RamSourceInfo> get ramSources; double get cachedMemoryKb; List<ProcessEntry> get processes;
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -363,16 +363,16 @@ $AppProcessInfoCopyWith<AppProcessInfo> get copyWith => _$AppProcessInfoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppProcessInfo&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.services, services)&&const DeepCollectionEquality().equals(other.pids, pids)&&(identical(other.totalRam, totalRam) || other.totalRam == totalRam)&&(identical(other.totalRamInKb, totalRamInKb) || other.totalRamInKb == totalRamInKb)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&const DeepCollectionEquality().equals(other.connections, connections)&&(identical(other.processState, processState) || other.processState == processState)&&(identical(other.adjLevel, adjLevel) || other.adjLevel == adjLevel)&&(identical(other.hasServices, hasServices) || other.hasServices == hasServices)&&const DeepCollectionEquality().equals(other.ramSources, ramSources)&&(identical(other.cachedMemoryKb, cachedMemoryKb) || other.cachedMemoryKb == cachedMemoryKb));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppProcessInfo&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.services, services)&&const DeepCollectionEquality().equals(other.pids, pids)&&(identical(other.totalRam, totalRam) || other.totalRam == totalRam)&&(identical(other.totalRamInKb, totalRamInKb) || other.totalRamInKb == totalRamInKb)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&const DeepCollectionEquality().equals(other.connections, connections)&&(identical(other.processState, processState) || other.processState == processState)&&(identical(other.adjLevel, adjLevel) || other.adjLevel == adjLevel)&&(identical(other.hasServices, hasServices) || other.hasServices == hasServices)&&const DeepCollectionEquality().equals(other.ramSources, ramSources)&&(identical(other.cachedMemoryKb, cachedMemoryKb) || other.cachedMemoryKb == cachedMemoryKb)&&const DeepCollectionEquality().equals(other.processes, processes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,packageName,appName,const DeepCollectionEquality().hash(services),const DeepCollectionEquality().hash(pids),totalRam,totalRamInKb,isSystemApp,const DeepCollectionEquality().hash(connections),processState,adjLevel,hasServices,const DeepCollectionEquality().hash(ramSources),cachedMemoryKb);
+int get hashCode => Object.hash(runtimeType,packageName,appName,const DeepCollectionEquality().hash(services),const DeepCollectionEquality().hash(pids),totalRam,totalRamInKb,isSystemApp,const DeepCollectionEquality().hash(connections),processState,adjLevel,hasServices,const DeepCollectionEquality().hash(ramSources),cachedMemoryKb,const DeepCollectionEquality().hash(processes));
 
 @override
 String toString() {
-  return 'AppProcessInfo(packageName: $packageName, appName: $appName, services: $services, pids: $pids, totalRam: $totalRam, totalRamInKb: $totalRamInKb, isSystemApp: $isSystemApp, connections: $connections, processState: $processState, adjLevel: $adjLevel, hasServices: $hasServices, ramSources: $ramSources, cachedMemoryKb: $cachedMemoryKb)';
+  return 'AppProcessInfo(packageName: $packageName, appName: $appName, services: $services, pids: $pids, totalRam: $totalRam, totalRamInKb: $totalRamInKb, isSystemApp: $isSystemApp, connections: $connections, processState: $processState, adjLevel: $adjLevel, hasServices: $hasServices, ramSources: $ramSources, cachedMemoryKb: $cachedMemoryKb, processes: $processes)';
 }
 
 
@@ -383,7 +383,7 @@ abstract mixin class $AppProcessInfoCopyWith<$Res>  {
   factory $AppProcessInfoCopyWith(AppProcessInfo value, $Res Function(AppProcessInfo) _then) = _$AppProcessInfoCopyWithImpl;
 @useResult
 $Res call({
- String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, double cachedMemoryKb
+ String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, double cachedMemoryKb, List<ProcessEntry> processes
 });
 
 
@@ -400,7 +400,7 @@ class _$AppProcessInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? cachedMemoryKb = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? cachedMemoryKb = null,Object? processes = null,}) {
   return _then(_self.copyWith(
 packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
@@ -415,7 +415,8 @@ as String?,adjLevel: freezed == adjLevel ? _self.adjLevel : adjLevel // ignore: 
 as String?,hasServices: null == hasServices ? _self.hasServices : hasServices // ignore: cast_nullable_to_non_nullable
 as bool,ramSources: null == ramSources ? _self.ramSources : ramSources // ignore: cast_nullable_to_non_nullable
 as List<RamSourceInfo>,cachedMemoryKb: null == cachedMemoryKb ? _self.cachedMemoryKb : cachedMemoryKb // ignore: cast_nullable_to_non_nullable
-as double,
+as double,processes: null == processes ? _self.processes : processes // ignore: cast_nullable_to_non_nullable
+as List<ProcessEntry>,
   ));
 }
 
@@ -500,10 +501,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb,  List<ProcessEntry> processes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppProcessInfo() when $default != null:
-return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb);case _:
+return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb,_that.processes);case _:
   return orElse();
 
 }
@@ -521,10 +522,10 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb,  List<ProcessEntry> processes)  $default,) {final _that = this;
 switch (_that) {
 case _AppProcessInfo():
-return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb);case _:
+return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb,_that.processes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -541,10 +542,10 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageName,  String appName,  List<RunningServiceInfo> services,  List<int> pids,  String totalRam,  double totalRamInKb,  bool? isSystemApp,  List<ConnectionRecord> connections,  String? processState,  String? adjLevel,  bool hasServices,  List<RamSourceInfo> ramSources,  double cachedMemoryKb,  List<ProcessEntry> processes)?  $default,) {final _that = this;
 switch (_that) {
 case _AppProcessInfo() when $default != null:
-return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb);case _:
+return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.totalRam,_that.totalRamInKb,_that.isSystemApp,_that.connections,_that.processState,_that.adjLevel,_that.hasServices,_that.ramSources,_that.cachedMemoryKb,_that.processes);case _:
   return null;
 
 }
@@ -556,7 +557,7 @@ return $default(_that.packageName,_that.appName,_that.services,_that.pids,_that.
 @JsonSerializable()
 
 class _AppProcessInfo extends AppProcessInfo {
-  const _AppProcessInfo({required this.packageName, required this.appName, required final  List<RunningServiceInfo> services, required final  List<int> pids, required this.totalRam, required this.totalRamInKb, this.isSystemApp, final  List<ConnectionRecord> connections = const [], this.processState, this.adjLevel, this.hasServices = true, final  List<RamSourceInfo> ramSources = const [], this.cachedMemoryKb = 0}): _services = services,_pids = pids,_connections = connections,_ramSources = ramSources,super._();
+  const _AppProcessInfo({required this.packageName, required this.appName, required final  List<RunningServiceInfo> services, required final  List<int> pids, required this.totalRam, required this.totalRamInKb, this.isSystemApp, final  List<ConnectionRecord> connections = const [], this.processState, this.adjLevel, this.hasServices = true, final  List<RamSourceInfo> ramSources = const [], this.cachedMemoryKb = 0, final  List<ProcessEntry> processes = const []}): _services = services,_pids = pids,_connections = connections,_ramSources = ramSources,_processes = processes,super._();
   factory _AppProcessInfo.fromJson(Map<String, dynamic> json) => _$AppProcessInfoFromJson(json);
 
 @override final  String packageName;
@@ -596,6 +597,13 @@ class _AppProcessInfo extends AppProcessInfo {
 }
 
 @override@JsonKey() final  double cachedMemoryKb;
+ final  List<ProcessEntry> _processes;
+@override@JsonKey() List<ProcessEntry> get processes {
+  if (_processes is EqualUnmodifiableListView) return _processes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_processes);
+}
+
 
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -610,16 +618,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppProcessInfo&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other._services, _services)&&const DeepCollectionEquality().equals(other._pids, _pids)&&(identical(other.totalRam, totalRam) || other.totalRam == totalRam)&&(identical(other.totalRamInKb, totalRamInKb) || other.totalRamInKb == totalRamInKb)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&const DeepCollectionEquality().equals(other._connections, _connections)&&(identical(other.processState, processState) || other.processState == processState)&&(identical(other.adjLevel, adjLevel) || other.adjLevel == adjLevel)&&(identical(other.hasServices, hasServices) || other.hasServices == hasServices)&&const DeepCollectionEquality().equals(other._ramSources, _ramSources)&&(identical(other.cachedMemoryKb, cachedMemoryKb) || other.cachedMemoryKb == cachedMemoryKb));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppProcessInfo&&(identical(other.packageName, packageName) || other.packageName == packageName)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other._services, _services)&&const DeepCollectionEquality().equals(other._pids, _pids)&&(identical(other.totalRam, totalRam) || other.totalRam == totalRam)&&(identical(other.totalRamInKb, totalRamInKb) || other.totalRamInKb == totalRamInKb)&&(identical(other.isSystemApp, isSystemApp) || other.isSystemApp == isSystemApp)&&const DeepCollectionEquality().equals(other._connections, _connections)&&(identical(other.processState, processState) || other.processState == processState)&&(identical(other.adjLevel, adjLevel) || other.adjLevel == adjLevel)&&(identical(other.hasServices, hasServices) || other.hasServices == hasServices)&&const DeepCollectionEquality().equals(other._ramSources, _ramSources)&&(identical(other.cachedMemoryKb, cachedMemoryKb) || other.cachedMemoryKb == cachedMemoryKb)&&const DeepCollectionEquality().equals(other._processes, _processes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,packageName,appName,const DeepCollectionEquality().hash(_services),const DeepCollectionEquality().hash(_pids),totalRam,totalRamInKb,isSystemApp,const DeepCollectionEquality().hash(_connections),processState,adjLevel,hasServices,const DeepCollectionEquality().hash(_ramSources),cachedMemoryKb);
+int get hashCode => Object.hash(runtimeType,packageName,appName,const DeepCollectionEquality().hash(_services),const DeepCollectionEquality().hash(_pids),totalRam,totalRamInKb,isSystemApp,const DeepCollectionEquality().hash(_connections),processState,adjLevel,hasServices,const DeepCollectionEquality().hash(_ramSources),cachedMemoryKb,const DeepCollectionEquality().hash(_processes));
 
 @override
 String toString() {
-  return 'AppProcessInfo(packageName: $packageName, appName: $appName, services: $services, pids: $pids, totalRam: $totalRam, totalRamInKb: $totalRamInKb, isSystemApp: $isSystemApp, connections: $connections, processState: $processState, adjLevel: $adjLevel, hasServices: $hasServices, ramSources: $ramSources, cachedMemoryKb: $cachedMemoryKb)';
+  return 'AppProcessInfo(packageName: $packageName, appName: $appName, services: $services, pids: $pids, totalRam: $totalRam, totalRamInKb: $totalRamInKb, isSystemApp: $isSystemApp, connections: $connections, processState: $processState, adjLevel: $adjLevel, hasServices: $hasServices, ramSources: $ramSources, cachedMemoryKb: $cachedMemoryKb, processes: $processes)';
 }
 
 
@@ -630,7 +638,7 @@ abstract mixin class _$AppProcessInfoCopyWith<$Res> implements $AppProcessInfoCo
   factory _$AppProcessInfoCopyWith(_AppProcessInfo value, $Res Function(_AppProcessInfo) _then) = __$AppProcessInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, double cachedMemoryKb
+ String packageName, String appName, List<RunningServiceInfo> services, List<int> pids, String totalRam, double totalRamInKb, bool? isSystemApp, List<ConnectionRecord> connections, String? processState, String? adjLevel, bool hasServices, List<RamSourceInfo> ramSources, double cachedMemoryKb, List<ProcessEntry> processes
 });
 
 
@@ -647,7 +655,7 @@ class __$AppProcessInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppProcessInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? cachedMemoryKb = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? packageName = null,Object? appName = null,Object? services = null,Object? pids = null,Object? totalRam = null,Object? totalRamInKb = null,Object? isSystemApp = freezed,Object? connections = null,Object? processState = freezed,Object? adjLevel = freezed,Object? hasServices = null,Object? ramSources = null,Object? cachedMemoryKb = null,Object? processes = null,}) {
   return _then(_AppProcessInfo(
 packageName: null == packageName ? _self.packageName : packageName // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
@@ -662,7 +670,8 @@ as String?,adjLevel: freezed == adjLevel ? _self.adjLevel : adjLevel // ignore: 
 as String?,hasServices: null == hasServices ? _self.hasServices : hasServices // ignore: cast_nullable_to_non_nullable
 as bool,ramSources: null == ramSources ? _self._ramSources : ramSources // ignore: cast_nullable_to_non_nullable
 as List<RamSourceInfo>,cachedMemoryKb: null == cachedMemoryKb ? _self.cachedMemoryKb : cachedMemoryKb // ignore: cast_nullable_to_non_nullable
-as double,
+as double,processes: null == processes ? _self._processes : processes // ignore: cast_nullable_to_non_nullable
+as List<ProcessEntry>,
   ));
 }
 
@@ -935,6 +944,275 @@ as RamSourceType,ramKb: null == ramKb ? _self.ramKb : ramKb // ignore: cast_null
 as double,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
 as int?,processName: freezed == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ProcessEntry {
+
+ String get processName; double get ramKb; int? get pid;
+/// Create a copy of ProcessEntry
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProcessEntryCopyWith<ProcessEntry> get copyWith => _$ProcessEntryCopyWithImpl<ProcessEntry>(this as ProcessEntry, _$identity);
+
+  /// Serializes this ProcessEntry to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProcessEntry&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.ramKb, ramKb) || other.ramKb == ramKb)&&(identical(other.pid, pid) || other.pid == pid));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,processName,ramKb,pid);
+
+@override
+String toString() {
+  return 'ProcessEntry(processName: $processName, ramKb: $ramKb, pid: $pid)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ProcessEntryCopyWith<$Res>  {
+  factory $ProcessEntryCopyWith(ProcessEntry value, $Res Function(ProcessEntry) _then) = _$ProcessEntryCopyWithImpl;
+@useResult
+$Res call({
+ String processName, double ramKb, int? pid
+});
+
+
+
+
+}
+/// @nodoc
+class _$ProcessEntryCopyWithImpl<$Res>
+    implements $ProcessEntryCopyWith<$Res> {
+  _$ProcessEntryCopyWithImpl(this._self, this._then);
+
+  final ProcessEntry _self;
+  final $Res Function(ProcessEntry) _then;
+
+/// Create a copy of ProcessEntry
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? processName = null,Object? ramKb = null,Object? pid = freezed,}) {
+  return _then(_self.copyWith(
+processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
+as String,ramKb: null == ramKb ? _self.ramKb : ramKb // ignore: cast_nullable_to_non_nullable
+as double,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ProcessEntry].
+extension ProcessEntryPatterns on ProcessEntry {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProcessEntry value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ProcessEntry() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProcessEntry value)  $default,){
+final _that = this;
+switch (_that) {
+case _ProcessEntry():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProcessEntry value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ProcessEntry() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String processName,  double ramKb,  int? pid)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ProcessEntry() when $default != null:
+return $default(_that.processName,_that.ramKb,_that.pid);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String processName,  double ramKb,  int? pid)  $default,) {final _that = this;
+switch (_that) {
+case _ProcessEntry():
+return $default(_that.processName,_that.ramKb,_that.pid);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String processName,  double ramKb,  int? pid)?  $default,) {final _that = this;
+switch (_that) {
+case _ProcessEntry() when $default != null:
+return $default(_that.processName,_that.ramKb,_that.pid);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ProcessEntry implements ProcessEntry {
+  const _ProcessEntry({required this.processName, required this.ramKb, this.pid});
+  factory _ProcessEntry.fromJson(Map<String, dynamic> json) => _$ProcessEntryFromJson(json);
+
+@override final  String processName;
+@override final  double ramKb;
+@override final  int? pid;
+
+/// Create a copy of ProcessEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ProcessEntryCopyWith<_ProcessEntry> get copyWith => __$ProcessEntryCopyWithImpl<_ProcessEntry>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ProcessEntryToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProcessEntry&&(identical(other.processName, processName) || other.processName == processName)&&(identical(other.ramKb, ramKb) || other.ramKb == ramKb)&&(identical(other.pid, pid) || other.pid == pid));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,processName,ramKb,pid);
+
+@override
+String toString() {
+  return 'ProcessEntry(processName: $processName, ramKb: $ramKb, pid: $pid)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ProcessEntryCopyWith<$Res> implements $ProcessEntryCopyWith<$Res> {
+  factory _$ProcessEntryCopyWith(_ProcessEntry value, $Res Function(_ProcessEntry) _then) = __$ProcessEntryCopyWithImpl;
+@override @useResult
+$Res call({
+ String processName, double ramKb, int? pid
+});
+
+
+
+
+}
+/// @nodoc
+class __$ProcessEntryCopyWithImpl<$Res>
+    implements _$ProcessEntryCopyWith<$Res> {
+  __$ProcessEntryCopyWithImpl(this._self, this._then);
+
+  final _ProcessEntry _self;
+  final $Res Function(_ProcessEntry) _then;
+
+/// Create a copy of ProcessEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? processName = null,Object? ramKb = null,Object? pid = freezed,}) {
+  return _then(_ProcessEntry(
+processName: null == processName ? _self.processName : processName // ignore: cast_nullable_to_non_nullable
+as String,ramKb: null == ramKb ? _self.ramKb : ramKb // ignore: cast_nullable_to_non_nullable
+as double,pid: freezed == pid ? _self.pid : pid // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

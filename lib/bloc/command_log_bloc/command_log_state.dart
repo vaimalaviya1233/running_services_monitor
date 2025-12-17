@@ -19,4 +19,6 @@ class CommandLogState with _$CommandLogState {
     success: (entries, selectedEntryId) => entries,
     error: (entries, message) => entries,
   );
+
+  String? get selectedEntryId => maybeWhen(success: (entries, selectedEntryId) => selectedEntryId, orElse: () => null);
 }

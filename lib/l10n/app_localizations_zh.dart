@@ -489,7 +489,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get workingMode => 'Working Mode';
+  String get workingMode => '工作模式';
 
   @override
   String get rootMode => 'Root';
@@ -498,45 +498,53 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shizukuMode => 'Shizuku';
 
   @override
-  String get selectWorkingMode => 'Select Working Mode';
+  String get selectWorkingMode => '选择工作模式';
 
   @override
-  String get available => 'Available';
+  String get available => '可用';
 
   @override
-  String get notAvailable => 'Not Available';
+  String get notAvailable => '不可用';
 
   @override
-  String get modeNotAvailable => 'This mode is not available';
+  String get modeNotAvailable => '此模式不可用';
 
   @override
-  String get noModeAvailable => 'No permission mode available';
+  String get noModeAvailable => '没有可用的权限模式';
 
   @override
-  String get commandLogs => 'Command Logs';
+  String get commandLogs => '命令日志';
 
   @override
-  String get commandOutput => 'Command Output';
+  String get commandOutput => '命令输出';
 
   @override
-  String get noCommandLogs => 'No commands executed yet';
+  String get noCommandLogs => '尚未执行任何命令';
 
   @override
-  String get clearLogs => 'Clear Logs';
+  String get clearLogs => '清除日志';
 
   @override
-  String get clearLogsConfirm =>
-      'Are you sure you want to clear all command logs?';
+  String get clearLogsConfirm => '确定要清除所有命令日志吗？';
 
   @override
-  String get executedAt => 'Executed at';
+  String get executedAt => '执行时间';
 
   @override
-  String get command => 'Command';
+  String get command => '命令';
 
   @override
-  String get noOutput => 'No output';
+  String get noOutput => '无输出';
 
   @override
-  String get executeCommand => 'Execute';
+  String get executeCommand => '执行';
+
+  @override
+  String get processes => '进程';
+
+  @override
+  String get processesDescription => '该应用从内存信息中获取的所有运行进程。';
+
+  @override
+  String get noProcessesFound => '未找到进程';
 }

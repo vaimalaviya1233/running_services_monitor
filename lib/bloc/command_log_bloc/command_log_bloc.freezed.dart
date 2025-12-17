@@ -55,7 +55,7 @@ extension CommandLogEventPatterns on CommandLogEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _Refresh value)?  refresh,TResult Function( _ClearLogs value)?  clearLogs,TResult Function( _ExecuteCommand value)?  executeCommand,TResult Function( _SelectEntry value)?  selectEntry,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _Refresh value)?  refresh,TResult Function( _ClearLogs value)?  clearLogs,TResult Function( _ExecuteCommand value)?  executeCommand,TResult Function( _SelectEntry value)?  selectEntry,TResult Function( _EntriesUpdated value)?  entriesUpdated,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -63,7 +63,8 @@ return started(_that);case _Refresh() when refresh != null:
 return refresh(_that);case _ClearLogs() when clearLogs != null:
 return clearLogs(_that);case _ExecuteCommand() when executeCommand != null:
 return executeCommand(_that);case _SelectEntry() when selectEntry != null:
-return selectEntry(_that);case _:
+return selectEntry(_that);case _EntriesUpdated() when entriesUpdated != null:
+return entriesUpdated(_that);case _:
   return orElse();
 
 }
@@ -81,7 +82,7 @@ return selectEntry(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _Refresh value)  refresh,required TResult Function( _ClearLogs value)  clearLogs,required TResult Function( _ExecuteCommand value)  executeCommand,required TResult Function( _SelectEntry value)  selectEntry,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _Refresh value)  refresh,required TResult Function( _ClearLogs value)  clearLogs,required TResult Function( _ExecuteCommand value)  executeCommand,required TResult Function( _SelectEntry value)  selectEntry,required TResult Function( _EntriesUpdated value)  entriesUpdated,}){
 final _that = this;
 switch (_that) {
 case _Started():
@@ -89,7 +90,8 @@ return started(_that);case _Refresh():
 return refresh(_that);case _ClearLogs():
 return clearLogs(_that);case _ExecuteCommand():
 return executeCommand(_that);case _SelectEntry():
-return selectEntry(_that);case _:
+return selectEntry(_that);case _EntriesUpdated():
+return entriesUpdated(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -106,7 +108,7 @@ return selectEntry(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _Refresh value)?  refresh,TResult? Function( _ClearLogs value)?  clearLogs,TResult? Function( _ExecuteCommand value)?  executeCommand,TResult? Function( _SelectEntry value)?  selectEntry,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _Refresh value)?  refresh,TResult? Function( _ClearLogs value)?  clearLogs,TResult? Function( _ExecuteCommand value)?  executeCommand,TResult? Function( _SelectEntry value)?  selectEntry,TResult? Function( _EntriesUpdated value)?  entriesUpdated,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -114,7 +116,8 @@ return started(_that);case _Refresh() when refresh != null:
 return refresh(_that);case _ClearLogs() when clearLogs != null:
 return clearLogs(_that);case _ExecuteCommand() when executeCommand != null:
 return executeCommand(_that);case _SelectEntry() when selectEntry != null:
-return selectEntry(_that);case _:
+return selectEntry(_that);case _EntriesUpdated() when entriesUpdated != null:
+return entriesUpdated(_that);case _:
   return null;
 
 }
@@ -131,14 +134,15 @@ return selectEntry(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  refresh,TResult Function()?  clearLogs,TResult Function( String command)?  executeCommand,TResult Function( String? entryId)?  selectEntry,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  refresh,TResult Function()?  clearLogs,TResult Function( String command)?  executeCommand,TResult Function( String? entryId)?  selectEntry,TResult Function( List<CommandLogEntry> entries)?  entriesUpdated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _Refresh() when refresh != null:
 return refresh();case _ClearLogs() when clearLogs != null:
 return clearLogs();case _ExecuteCommand() when executeCommand != null:
 return executeCommand(_that.command);case _SelectEntry() when selectEntry != null:
-return selectEntry(_that.entryId);case _:
+return selectEntry(_that.entryId);case _EntriesUpdated() when entriesUpdated != null:
+return entriesUpdated(_that.entries);case _:
   return orElse();
 
 }
@@ -156,14 +160,15 @@ return selectEntry(_that.entryId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  refresh,required TResult Function()  clearLogs,required TResult Function( String command)  executeCommand,required TResult Function( String? entryId)  selectEntry,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  refresh,required TResult Function()  clearLogs,required TResult Function( String command)  executeCommand,required TResult Function( String? entryId)  selectEntry,required TResult Function( List<CommandLogEntry> entries)  entriesUpdated,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _Refresh():
 return refresh();case _ClearLogs():
 return clearLogs();case _ExecuteCommand():
 return executeCommand(_that.command);case _SelectEntry():
-return selectEntry(_that.entryId);case _:
+return selectEntry(_that.entryId);case _EntriesUpdated():
+return entriesUpdated(_that.entries);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -180,14 +185,15 @@ return selectEntry(_that.entryId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  refresh,TResult? Function()?  clearLogs,TResult? Function( String command)?  executeCommand,TResult? Function( String? entryId)?  selectEntry,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  refresh,TResult? Function()?  clearLogs,TResult? Function( String command)?  executeCommand,TResult? Function( String? entryId)?  selectEntry,TResult? Function( List<CommandLogEntry> entries)?  entriesUpdated,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _Refresh() when refresh != null:
 return refresh();case _ClearLogs() when clearLogs != null:
 return clearLogs();case _ExecuteCommand() when executeCommand != null:
 return executeCommand(_that.command);case _SelectEntry() when selectEntry != null:
-return selectEntry(_that.entryId);case _:
+return selectEntry(_that.entryId);case _EntriesUpdated() when entriesUpdated != null:
+return entriesUpdated(_that.entries);case _:
   return null;
 
 }
@@ -417,6 +423,78 @@ class __$SelectEntryCopyWithImpl<$Res>
   return _then(_SelectEntry(
 freezed == entryId ? _self.entryId : entryId // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _EntriesUpdated implements CommandLogEvent {
+  const _EntriesUpdated(final  List<CommandLogEntry> entries): _entries = entries;
+  
+
+ final  List<CommandLogEntry> _entries;
+ List<CommandLogEntry> get entries {
+  if (_entries is EqualUnmodifiableListView) return _entries;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_entries);
+}
+
+
+/// Create a copy of CommandLogEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EntriesUpdatedCopyWith<_EntriesUpdated> get copyWith => __$EntriesUpdatedCopyWithImpl<_EntriesUpdated>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EntriesUpdated&&const DeepCollectionEquality().equals(other._entries, _entries));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries));
+
+@override
+String toString() {
+  return 'CommandLogEvent.entriesUpdated(entries: $entries)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EntriesUpdatedCopyWith<$Res> implements $CommandLogEventCopyWith<$Res> {
+  factory _$EntriesUpdatedCopyWith(_EntriesUpdated value, $Res Function(_EntriesUpdated) _then) = __$EntriesUpdatedCopyWithImpl;
+@useResult
+$Res call({
+ List<CommandLogEntry> entries
+});
+
+
+
+
+}
+/// @nodoc
+class __$EntriesUpdatedCopyWithImpl<$Res>
+    implements _$EntriesUpdatedCopyWith<$Res> {
+  __$EntriesUpdatedCopyWithImpl(this._self, this._then);
+
+  final _EntriesUpdated _self;
+  final $Res Function(_EntriesUpdated) _then;
+
+/// Create a copy of CommandLogEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? entries = null,}) {
+  return _then(_EntriesUpdated(
+null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
+as List<CommandLogEntry>,
   ));
 }
 

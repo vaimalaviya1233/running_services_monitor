@@ -89,16 +89,19 @@ class ProcessService {
 
       for (final entry in meminfoAppsMap.entries) {
         final existingApp = groupedApps[entry.key];
-        if (existingApp != null && (existingApp.totalRamInKb <= 0 || entry.value > existingApp.totalRamInKb)) {
-          final processList = meminfoProcesses[entry.key] ?? [];
+        final processList = meminfoProcesses[entry.key] ?? [];
+
+        if (existingApp != null) {
+          final shouldUpdateRam = existingApp.totalRamInKb <= 0 || entry.value > existingApp.totalRamInKb;
           final ramSources = processList
               .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
               .toList();
 
           final app = existingApp.copyWith(
-            totalRam: formatRam(entry.value),
-            totalRamInKb: entry.value,
+            totalRam: shouldUpdateRam ? formatRam(entry.value) : existingApp.totalRam,
+            totalRamInKb: shouldUpdateRam ? entry.value : existingApp.totalRamInKb,
             ramSources: [...existingApp.ramSources, ...ramSources],
+            processes: processList,
           );
           groupedApps[entry.key] = app;
           yield app;

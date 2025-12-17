@@ -7,7 +7,7 @@ class ProcessParser {
   static final _lruLineRegex = RegExp(r'#\s*\d+:\s*(\S+(?:\s*\+\s*\d+)?)\s+(\S+)\s+\S+\s+(\d+):([^/]+)/u(\d+)a(\d+)');
   static final _ramLineRegex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)');
   static final _connectionRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
-  static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-zA-Z0-9._:]+)(?:\s+\(pid\s+\d+)?', caseSensitive: false);
+  static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-zA-Z0-9._:]+)(?:\s+\(pid\s+(\d+))?', caseSensitive: false);
   static final _totalRamRegex = RegExp(r'Total RAM:\s+([\d,]+)K');
   static final _freeRamRegex = RegExp(r'Free RAM:\s+([\d,]+)K');
 
@@ -202,9 +202,7 @@ class ProcessParser {
     return (pidMap: pidMap, processNameMap: processNameMap);
   }
 
-  static ({Map<String, double> totals, Map<String, List<({String processName, double ramKb})>> processes}) parseAllAppsFromMeminfo(
-    String meminfoOutput,
-  ) {
+  static ({Map<String, double> totals, Map<String, List<ProcessEntry>> processes}) parseAllAppsFromMeminfo(String meminfoOutput) {
     if (meminfoOutput.isEmpty) return (totals: const {}, processes: const {});
 
     final pssStart = meminfoOutput.indexOf('Total PSS by process:');
@@ -214,7 +212,7 @@ class ProcessParser {
     final section = pssEnd != -1 ? meminfoOutput.substring(pssStart, pssEnd) : meminfoOutput.substring(pssStart);
 
     final totals = <String, double>{};
-    final processes = <String, List<({String processName, double ramKb})>>{};
+    final processes = <String, List<ProcessEntry>>{};
 
     var start = section.indexOf('\n') + 1;
     while (start < section.length) {
@@ -234,9 +232,10 @@ class ProcessParser {
       final basePackage = colonIdx != -1 ? fullProcessName.substring(0, colonIdx) : fullProcessName;
 
       final pssKb = double.tryParse(match.group(1)?.replaceAll(',', '') ?? '0') ?? 0;
+      final pid = int.tryParse(match.group(3) ?? '');
       if (pssKb > 0) {
         totals.update(basePackage, (v) => v + pssKb, ifAbsent: () => pssKb);
-        processes.putIfAbsent(basePackage, () => []).add((processName: fullProcessName, ramKb: pssKb));
+        processes.putIfAbsent(basePackage, () => []).add(ProcessEntry(processName: fullProcessName, ramKb: pssKb, pid: pid));
       }
     }
 

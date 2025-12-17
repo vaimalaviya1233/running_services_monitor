@@ -1119,6 +1119,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Execute'**
   String get executeCommand;
+
+  /// No description provided for @processes.
+  ///
+  /// In en, this message translates to:
+  /// **'Processes'**
+  String get processes;
+
+  /// No description provided for @processesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'All running processes for this app from memory info.'**
+  String get processesDescription;
+
+  /// No description provided for @noProcessesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No processes found'**
+  String get noProcessesFound;
 }
 
 class _AppLocalizationsDelegate

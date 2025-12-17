@@ -17,7 +17,7 @@ class AppListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final processCount = appInfo.pids.length;
+    final processCount = appInfo.processCount;
     final serviceCount = appInfo.services.length;
     final loc = context.loc;
 

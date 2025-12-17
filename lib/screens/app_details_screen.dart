@@ -10,8 +10,8 @@ import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/utils/snackbar_helper.dart';
 import 'widgets/app_header.dart';
 import 'widgets/service_list.dart';
+import 'widgets/process_list.dart';
 import 'widgets/app_details_description.dart';
-import 'widgets/app_details_section_title.dart';
 import 'widgets/state_badges.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,11 +19,20 @@ import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_blo
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 
-class AppDetailsScreen extends StatelessWidget {
+enum AppDetailsFilter { services, processes }
+
+class AppDetailsScreen extends StatefulWidget {
   final String packageId;
   final int tabIndex;
 
   const AppDetailsScreen({super.key, required this.packageId, required this.tabIndex});
+
+  @override
+  State<AppDetailsScreen> createState() => _AppDetailsScreenState();
+}
+
+class _AppDetailsScreenState extends State<AppDetailsScreen> {
+  AppDetailsFilter selectedFilter = AppDetailsFilter.services;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +41,8 @@ class AppDetailsScreen extends StatelessWidget {
       child: BlocListener<HomeBloc, HomeState>(
         bloc: getIt<HomeBloc>(),
         listenWhen: (previous, current) {
-          final prevApp = previous.value.allApps.any((app) => app.packageName == packageId);
-          final currApp = current.value.allApps.any((app) => app.packageName == packageId);
+          final prevApp = previous.value.allApps.any((app) => app.packageName == widget.packageId);
+          final currApp = current.value.allApps.any((app) => app.packageName == widget.packageId);
           return prevApp && !currApp;
         },
         listener: (context, state) {
@@ -43,7 +52,7 @@ class AppDetailsScreen extends StatelessWidget {
         },
         child: BlocSelector<HomeBloc, HomeState, AppProcessInfo?>(
           bloc: getIt<HomeBloc>(),
-          selector: (state) => state.value.allApps.firstWhereOrNull((app) => app.packageName == packageId),
+          selector: (state) => state.value.allApps.firstWhereOrNull((app) => app.packageName == widget.packageId),
           builder: (context, currentAppInfo) {
             if (currentAppInfo == null) {
               return const SizedBox.shrink();
@@ -106,22 +115,25 @@ class AppDetailsScreen extends StatelessWidget {
                         padding: EdgeInsets.only(left: 24.0.w, right: 24.0.w, top: 24.0.w, bottom: 5.0.w),
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
-                            AppHeader(appInfo: currentAppInfo, tabIndex: tabIndex),
+                            AppHeader(appInfo: currentAppInfo, tabIndex: widget.tabIndex),
                             SizedBox(height: 16.h),
-
                             StateBadges(appInfo: currentAppInfo),
                             SizedBox(height: 16.h),
-
                             const AppDetailsDescription(),
-
-                            SizedBox(height: 32.h),
+                            SizedBox(height: 24.h),
                             const Divider(),
-                            SizedBox(height: 16.h),
-
-                            AppDetailsSectionTitle(title: context.loc.activeServices),
-                            SizedBox(height: 5.h),
-                            if (currentAppInfo.services.isEmpty)
-                              Padding(
+                            SizedBox(height: 8.h),
+                            _buildFilterChips(context, currentAppInfo),
+                            SizedBox(height: 8.h),
+                          ]),
+                        ),
+                      ),
+                      if (selectedFilter == AppDetailsFilter.services) ...[
+                        if (currentAppInfo.services.isEmpty)
+                          SliverPadding(
+                            padding: EdgeInsets.symmetric(horizontal: 24.w),
+                            sliver: SliverToBoxAdapter(
+                              child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 24.h),
                                 child: Center(
                                   child: Text(
@@ -132,10 +144,31 @@ class AppDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                          ]),
-                        ),
-                      ),
-                      if (currentAppInfo.services.isNotEmpty) ServiceList(services: currentAppInfo.services),
+                            ),
+                          )
+                        else
+                          ServiceList(services: currentAppInfo.services),
+                      ] else ...[
+                        if (currentAppInfo.processes.isEmpty)
+                          SliverPadding(
+                            padding: EdgeInsets.symmetric(horizontal: 24.w),
+                            sliver: SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24.h),
+                                child: Center(
+                                  child: Text(
+                                    context.loc.noProcessesFound,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          ProcessList(processes: currentAppInfo.processes, packageName: currentAppInfo.packageName),
+                      ],
                     ],
                   ),
                 ),
@@ -195,12 +228,11 @@ class AppDetailsScreen extends StatelessWidget {
                           if (confirmed == true) {
                             if (context.mounted) {
                               context.read<StopServiceBloc>().add(
-                                StopServiceEvent.stopAllServices(packageName: currentAppInfo.packageName, pids: currentAppInfo.pids),
+                                StopServiceEvent.stopAllServices(packageName: currentAppInfo.packageName),
                               );
                             }
                           }
                         },
-                        backgroundColor: Colors.red,
                         icon: const Icon(Icons.stop_circle),
                         label: Text(context.loc.stopAllServices, style: TextStyle(fontSize: 14.sp)),
                       ),
@@ -208,6 +240,30 @@ class AppDetailsScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChips(BuildContext context, AppProcessInfo appInfo) {
+    final serviceCount = appInfo.services.length;
+    final processCount = appInfo.processes.length;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: 8.w,
+        children: [
+          FilterChip(
+            label: Text('${context.loc.activeServices} ($serviceCount)'),
+            selected: selectedFilter == AppDetailsFilter.services,
+            onSelected: (_) => setState(() => selectedFilter = AppDetailsFilter.services),
+          ),
+          FilterChip(
+            label: Text('${context.loc.processes} ($processCount)'),
+            selected: selectedFilter == AppDetailsFilter.processes,
+            onSelected: (_) => setState(() => selectedFilter = AppDetailsFilter.processes),
+          ),
+        ],
       ),
     );
   }

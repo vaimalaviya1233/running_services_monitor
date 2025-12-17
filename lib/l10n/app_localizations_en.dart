@@ -585,4 +585,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get executeCommand => 'Execute';
+
+  @override
+  String get processes => 'Processes';
+
+  @override
+  String get processesDescription =>
+      'All running processes for this app from memory info.';
+
+  @override
+  String get noProcessesFound => 'No processes found';
 }

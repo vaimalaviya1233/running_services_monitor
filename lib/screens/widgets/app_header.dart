@@ -17,7 +17,7 @@ class AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final processCount = appInfo.pids.length;
+    final processCount = appInfo.processCount;
     final serviceCount = appInfo.services.length;
     final loc = context.loc;
 
@@ -87,10 +87,7 @@ class AppHeader extends StatelessWidget {
             SizedBox(height: 4.h),
             GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => RamInfoDialog(appInfo: appInfo),
-                );
+                RamInfoBottomSheet.show(context, appInfo.packageName);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

@@ -52,22 +52,33 @@ abstract class AppProcessInfo with _$AppProcessInfo {
     @Default(true) bool hasServices,
     @Default([]) List<RamSourceInfo> ramSources,
     @Default(0) double cachedMemoryKb,
+    @Default([]) List<ProcessEntry> processes,
   }) = _AppProcessInfo;
 
   factory AppProcessInfo.fromJson(Map<String, dynamic> json) => _$AppProcessInfoFromJson(json);
 
   bool get isActive => isActiveState(processState, hasServices: hasServices);
   bool get isCached => isCachedState(processState);
+  int get processCount {
+    return allPids.isNotEmpty ? allPids.length : (processes.isNotEmpty ? processes.length : pids.length);
+  }
+  List<int> get allPids => <int>{...pids, ...processes.map((p) => p.pid).whereType<int>()}.toList();
 }
 
 enum RamSourceType { pid, lru, processName, meminfoPss }
 
 @freezed
 abstract class RamSourceInfo with _$RamSourceInfo {
-  const factory RamSourceInfo({required RamSourceType source, required double ramKb, int? pid, String? processName}) =
-      _RamSourceInfo;
+  const factory RamSourceInfo({required RamSourceType source, required double ramKb, int? pid, String? processName}) = _RamSourceInfo;
 
   factory RamSourceInfo.fromJson(Map<String, dynamic> json) => _$RamSourceInfoFromJson(json);
+}
+
+@freezed
+abstract class ProcessEntry with _$ProcessEntry {
+  const factory ProcessEntry({required String processName, required double ramKb, int? pid}) = _ProcessEntry;
+
+  factory ProcessEntry.fromJson(Map<String, dynamic> json) => _$ProcessEntryFromJson(json);
 }
 
 @freezed
@@ -110,11 +121,5 @@ class ProcessedAppsResult {
   final double appsRam;
   final List<double>? ramInfo;
 
-  ProcessedAppsResult({
-    required this.allApps,
-    required this.userApps,
-    required this.systemApps,
-    required this.appsRam,
-    this.ramInfo,
-  });
+  ProcessedAppsResult({required this.allApps, required this.userApps, required this.systemApps, required this.appsRam, this.ramInfo});
 }

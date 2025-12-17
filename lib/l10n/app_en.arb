@@ -233,5 +233,8 @@
   "executedAt": "Executed at",
   "command": "Command",
   "noOutput": "No output",
-  "executeCommand": "Execute"
+  "executeCommand": "Execute",
+  "processes": "Processes",
+  "processesDescription": "All running processes for this app from memory info.",
+  "noProcessesFound": "No processes found"
 }

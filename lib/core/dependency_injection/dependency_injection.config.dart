@@ -40,7 +40,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i663.LanguageBloc>(() => _i663.LanguageBloc());
     gh.lazySingleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());
-    gh.lazySingleton<_i404.CommandLogService>(() => _i404.CommandLogService());
+    gh.lazySingleton<_i404.CommandLogService>(
+      () => _i404.CommandLogService(),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i773.ContributorsService>(
       () => _i773.ContributorsService(),
     );

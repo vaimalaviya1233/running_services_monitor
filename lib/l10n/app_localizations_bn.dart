@@ -538,54 +538,63 @@ class AppLocalizationsBn extends AppLocalizations {
   }
 
   @override
-  String get workingMode => 'Working Mode';
+  String get workingMode => 'ওয়ার্কিং মোড';
 
   @override
-  String get rootMode => 'Root';
+  String get rootMode => 'রুট';
 
   @override
-  String get shizukuMode => 'Shizuku';
+  String get shizukuMode => 'শিজুকু';
 
   @override
-  String get selectWorkingMode => 'Select Working Mode';
+  String get selectWorkingMode => 'ওয়ার্কিং মোড নির্বাচন করুন';
 
   @override
-  String get available => 'Available';
+  String get available => 'উপলব্ধ';
 
   @override
-  String get notAvailable => 'Not Available';
+  String get notAvailable => 'অনুপলব্ধ';
 
   @override
-  String get modeNotAvailable => 'This mode is not available';
+  String get modeNotAvailable => 'এই মোড অনুপলব্ধ';
 
   @override
-  String get noModeAvailable => 'No permission mode available';
+  String get noModeAvailable => 'কোনো পারমিশন মোড উপলব্ধ নেই';
 
   @override
-  String get commandLogs => 'Command Logs';
+  String get commandLogs => 'কমান্ড লগস';
 
   @override
-  String get commandOutput => 'Command Output';
+  String get commandOutput => 'কমান্ড আউটপুট';
 
   @override
-  String get noCommandLogs => 'No commands executed yet';
+  String get noCommandLogs => 'এখনো কোনো কমান্ড কার্যকর হয়নি';
 
   @override
-  String get clearLogs => 'Clear Logs';
+  String get clearLogs => 'লগ পরিষ্কার করুন';
 
   @override
-  String get clearLogsConfirm =>
-      'Are you sure you want to clear all command logs?';
+  String get clearLogsConfirm => 'আপনি কি সব কমান্ড লগ পরিষ্কার করতে চান?';
 
   @override
-  String get executedAt => 'Executed at';
+  String get executedAt => 'কার্যকর হয়েছে';
 
   @override
-  String get command => 'Command';
+  String get command => 'কমান্ড';
 
   @override
-  String get noOutput => 'No output';
+  String get noOutput => 'কোনো আউটপুট নেই';
 
   @override
-  String get executeCommand => 'Execute';
+  String get executeCommand => 'কার্যকর করুন';
+
+  @override
+  String get processes => 'প্রসেসগুলো';
+
+  @override
+  String get processesDescription =>
+      'এই অ্যাপের জন্য মেমোরি তথ্য থেকে সব চলমান প্রসেস।';
+
+  @override
+  String get noProcessesFound => 'কোনো প্রসেস পাওয়া যায়নি';
 }

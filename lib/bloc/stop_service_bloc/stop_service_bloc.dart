@@ -16,6 +16,7 @@ class StopServiceBloc extends Bloc<StopServiceEvent, StopServiceState> {
   StopServiceBloc(this._processService) : super(const StopServiceState.initial()) {
     on<_StopAllServices>(_onStopAllServices);
     on<_StopSingleService>(_onStopSingleService);
+    on<_StopByPid>(_onStopByPid);
     on<_Reset>(_onReset);
   }
 
@@ -53,6 +54,23 @@ class StopServiceBloc extends Bloc<StopServiceEvent, StopServiceState> {
           }
         }
         emit(StopServiceState.error(message: L10nKeys.stopServiceError));
+      }
+    } catch (e, s) {
+      logError(e, s);
+      emit(StopServiceState.error(message: L10nKeys.error));
+    }
+  }
+
+  Future<void> _onStopByPid(_StopByPid event, Emitter<StopServiceState> emit) async {
+    emit(StopServiceState.stopping(packageName: event.packageName));
+
+    try {
+      final success = await _processService.stopServiceByPid(event.pid);
+
+      if (success) {
+        emit(StopServiceState.success(packageName: event.packageName, servicePid: event.pid));
+      } else {
+        emit(const StopServiceState.error(message: L10nKeys.stopServiceError));
       }
     } catch (e, s) {
       logError(e, s);

@@ -72,6 +72,7 @@ abstract class L10nKeys {
   static const noMatchingApps = 'noMatchingApps';
   static const noModeAvailable = 'noModeAvailable';
   static const noOutput = 'noOutput';
+  static const noProcessesFound = 'noProcessesFound';
   static const noRamDataAvailable = 'noRamDataAvailable';
   static const noServicesFound = 'noServicesFound';
   static const notAvailable = 'notAvailable';
@@ -112,6 +113,8 @@ abstract class L10nKeys {
   static const processStateTitle = 'processStateTitle';
   static const processStateTop = 'processStateTop';
   static const processStateVis = 'processStateVis';
+  static const processes = 'processes';
+  static const processesDescription = 'processesDescription';
   static const quickStart = 'quickStart';
   static const quickStartSteps = 'quickStartSteps';
   static const ramCalculation = 'ramCalculation';
@@ -239,6 +242,7 @@ extension L10nResolver on AppLocalizations {
       'noMatchingApps' => noMatchingApps,
       'noModeAvailable' => noModeAvailable,
       'noOutput' => noOutput,
+      'noProcessesFound' => noProcessesFound,
       'noRamDataAvailable' => noRamDataAvailable,
       'noServicesFound' => noServicesFound,
       'notAvailable' => notAvailable,
@@ -279,6 +283,8 @@ extension L10nResolver on AppLocalizations {
       'processStateTitle' => processStateTitle,
       'processStateTop' => processStateTop,
       'processStateVis' => processStateVis,
+      'processes' => processes,
+      'processesDescription' => processesDescription,
       'quickStart' => quickStart,
       'quickStartSteps' => quickStartSteps,
       'ramCalculation' => ramCalculation,

@@ -6,6 +6,7 @@ import 'package:running_services_monitor/bloc/command_log_bloc/command_log_bloc.
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/command_log_entry.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CommandOutputScreen extends StatelessWidget {
   final String entryId;
@@ -29,6 +30,15 @@ class CommandOutputScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(context.loc.commandOutput, style: TextStyle(fontSize: 20.sp)),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.share),
+                tooltip: 'Share',
+                onPressed: () async {
+                  final text = '${context.loc.command}:\n${entry.command}\n\n${context.loc.rawOutput}:\n${entry.output}';
+                  final file = XFile.fromData(Uint8List.fromList(text.codeUnits), name: 'command_output.txt', mimeType: 'text/plain');
+                  await SharePlus.instance.share(ShareParams(files: [file]));
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.copy),
                 tooltip: context.loc.copy,
@@ -83,10 +93,13 @@ class CommandOutputScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
-                      child: SelectableText(
-                        scrollPhysics: NeverScrollableScrollPhysics(),
-                        entry.output.isEmpty ? context.loc.noOutput : entry.output,
-                        style: TextStyle(fontSize: 12.sp, fontFamily: 'monospace', height: 1.5, color: const Color(0xFF4EC9B0)),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SelectableText(
+                          scrollPhysics: const NeverScrollableScrollPhysics(),
+                          entry.output.isEmpty ? context.loc.noOutput : entry.output,
+                          style: TextStyle(fontSize: 12.sp, fontFamily: 'monospace', height: 1.5, color: const Color(0xFF4EC9B0)),
+                        ),
                       ),
                     ),
                   ]),
