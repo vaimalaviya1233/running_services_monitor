@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/bloc/working_mode_bloc/working_mode_bloc.dart';
@@ -47,10 +48,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late final GoRouter router;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    router = createAppRouter();
 
     getIt<WorkingModeBloc>().add(const WorkingModeEvent.detectModes());
 
@@ -89,7 +94,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           selector: (state) => state.locale,
           builder: (context, locale) {
             return MaterialApp.router(
-              routerConfig: createAppRouter(),
+              routerConfig: router,
               onGenerateTitle: (context) => context.loc.appTitle,
               localizationsDelegates: const [
                 AppLocalizations.delegate,

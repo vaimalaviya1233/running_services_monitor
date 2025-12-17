@@ -15,7 +15,8 @@
     "clearLogsConfirm",
     "executedAt",
     "command",
-    "noOutput"
+    "noOutput",
+    "executeCommand"
   ],
 
   "zh": [
@@ -34,6 +35,7 @@
     "clearLogsConfirm",
     "executedAt",
     "command",
-    "noOutput"
+    "noOutput",
+    "executeCommand"
   ]
 }

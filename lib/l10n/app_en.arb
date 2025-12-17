@@ -232,5 +232,6 @@
   "clearLogsConfirm": "Are you sure you want to clear all command logs?",
   "executedAt": "Executed at",
   "command": "Command",
-  "noOutput": "No output"
+  "noOutput": "No output",
+  "executeCommand": "Execute"
 }

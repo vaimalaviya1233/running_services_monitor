@@ -176,14 +176,12 @@ val ShizukuApiPigeonMethodCodec = StandardMethodCodec(ShizukuApiPigeonCodec())
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface ShizukuHostApi {
   fun runCommand(request: CommandRequest, callback: (Result<CommandResult>) -> Unit)
-  fun setWorkingMode(mode: String)
-  fun getWorkingMode(): String
   fun pingBinder(): Boolean
   fun checkRootPermission(callback: (Result<Boolean>) -> Unit)
   fun requestRootPermission(callback: (Result<Boolean>) -> Unit)
   fun checkPermission(): Boolean
   fun requestPermission(callback: (Result<Boolean>) -> Unit)
-  fun setStreamCommand(command: String)
+  fun setStreamCommand(command: String, mode: String?)
 
   companion object {
     /** The codec used by ShizukuHostApi. */
@@ -209,39 +207,6 @@ interface ShizukuHostApi {
                 reply.reply(ShizukuApiPigeonUtils.wrapResult(data))
               }
             }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.running_services_monitor.ShizukuHostApi.setWorkingMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val modeArg = args[0] as String
-            val wrapped: List<Any?> = try {
-              api.setWorkingMode(modeArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              ShizukuApiPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.running_services_monitor.ShizukuHostApi.getWorkingMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getWorkingMode())
-            } catch (exception: Throwable) {
-              ShizukuApiPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
@@ -337,8 +302,9 @@ interface ShizukuHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val commandArg = args[0] as String
+            val modeArg = args[1] as String?
             val wrapped: List<Any?> = try {
-              api.setStreamCommand(commandArg)
+              api.setStreamCommand(commandArg, modeArg)
               listOf(null)
             } catch (exception: Throwable) {
               ShizukuApiPigeonUtils.wrapError(exception)
@@ -370,9 +336,9 @@ private class ShizukuApiPigeonStreamHandler<T>(
 }
 
 interface ShizukuApiPigeonEventChannelWrapper<T> {
-  open fun onListen(p0: Any?, sink: PigeonEventSink<T>) {}
+  fun onListen(p0: Any?, sink: PigeonEventSink<T>) {}
 
-  open fun onCancel(p0: Any?) {}
+  fun onCancel(p0: Any?) {}
 }
 
 class PigeonEventSink<T>(private val sink: EventChannel.EventSink) {
@@ -392,7 +358,7 @@ class PigeonEventSink<T>(private val sink: EventChannel.EventSink) {
 abstract class StreamOutputStreamHandler : ShizukuApiPigeonEventChannelWrapper<String> {
   companion object {
     fun register(messenger: BinaryMessenger, streamHandler: StreamOutputStreamHandler, instanceName: String = "") {
-      var channelName: String = "dev.flutter.pigeon.running_services_monitor.ShizukuStreamApi.streamOutput"
+      var channelName = "dev.flutter.pigeon.running_services_monitor.ShizukuStreamApi.streamOutput"
       if (instanceName.isNotEmpty()) {
         channelName += ".$instanceName"
       }

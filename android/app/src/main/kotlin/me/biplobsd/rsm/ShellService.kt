@@ -14,12 +14,12 @@ fun InputStream.pipeTo(output: OutputStream) {
 }
 
 class ShellService : IShellService.Stub {
-    constructor() : super()
+    @Suppress("UNUSED_PARAMETER") constructor() : super()
 
     @Suppress("UNUSED_PARAMETER") constructor(context: Context) : super()
 
     override fun executeCommand(command: String): String {
-        val process = Runtime.getRuntime().exec(command)
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
         val output = process.inputStream.readToString() + process.errorStream.readToString()
         process.waitFor()
         return output
@@ -33,7 +33,7 @@ class ShellService : IShellService.Stub {
         Thread {
                     try {
                         ParcelFileDescriptor.AutoCloseOutputStream(writeFd).use { output ->
-                            val process = Runtime.getRuntime().exec(command)
+                            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
                             process.inputStream.pipeTo(output)
                             process.errorStream.pipeTo(output)
                             process.waitFor()

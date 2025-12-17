@@ -25,7 +25,9 @@ class ProcessService {
       final ramMaps = ProcessParser.parseRamMaps(data);
       final pidRamMap = ramMaps.pidMap;
       final processNameRamMap = ramMaps.processNameMap;
-      final meminfoAppsMap = ProcessParser.parseAllAppsFromMeminfo(data);
+      final meminfoResult = ProcessParser.parseAllAppsFromMeminfo(data);
+      final meminfoAppsMap = meminfoResult.totals;
+      final meminfoProcesses = meminfoResult.processes;
 
       final lruProcessesFuture = fetchLruProcesses();
       final groupedApps = <String, AppProcessInfo>{};
@@ -88,13 +90,15 @@ class ProcessService {
       for (final entry in meminfoAppsMap.entries) {
         final existingApp = groupedApps[entry.key];
         if (existingApp != null && (existingApp.totalRamInKb <= 0 || entry.value > existingApp.totalRamInKb)) {
+          final processList = meminfoProcesses[entry.key] ?? [];
+          final ramSources = processList
+              .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
+              .toList();
+
           final app = existingApp.copyWith(
             totalRam: formatRam(entry.value),
             totalRamInKb: entry.value,
-            ramSources: [
-              ...existingApp.ramSources,
-              RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: entry.value, processName: entry.key),
-            ],
+            ramSources: [...existingApp.ramSources, ...ramSources],
           );
           groupedApps[entry.key] = app;
           yield app;

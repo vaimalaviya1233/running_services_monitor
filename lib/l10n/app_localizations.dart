@@ -1113,6 +1113,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No output'**
   String get noOutput;
+
+  /// No description provided for @executeCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute'**
+  String get executeCommand;
 }
 
 class _AppLocalizationsDelegate

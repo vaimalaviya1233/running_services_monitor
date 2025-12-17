@@ -47,6 +47,7 @@ abstract class L10nKeys {
   static const error = 'error';
   static const errorInitializingShizuku = 'errorInitializingShizuku';
   static const errorLoadingData = 'errorLoadingData';
+  static const executeCommand = 'executeCommand';
   static const executedAt = 'executedAt';
   static const exitApp = 'exitApp';
   static const failedToInitialize = 'failedToInitialize';
@@ -213,6 +214,7 @@ extension L10nResolver on AppLocalizations {
       'error' => error,
       'errorInitializingShizuku' => errorInitializingShizuku,
       'errorLoadingData' => errorLoadingData,
+      'executeCommand' => executeCommand,
       'executedAt' => executedAt,
       'exitApp' => exitApp,
       'failedToInitialize' => failedToInitialize,

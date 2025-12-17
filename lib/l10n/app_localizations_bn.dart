@@ -585,4 +585,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get noOutput => 'No output';
+
+  @override
+  String get executeCommand => 'Execute';
 }

@@ -24,10 +24,6 @@ abstract class ShizukuHostApi {
   @async
   CommandResult runCommand(CommandRequest request);
 
-  void setWorkingMode(String mode);
-
-  String getWorkingMode();
-
   bool pingBinder();
 
   @async
@@ -41,7 +37,7 @@ abstract class ShizukuHostApi {
   @async
   bool requestPermission();
 
-  void setStreamCommand(String command);
+  void setStreamCommand(String command, String? mode);
 }
 
 @EventChannelApi()

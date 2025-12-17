@@ -23,8 +23,10 @@ import '../../services/app_info_service.dart' as _i825;
 import '../../services/command_log_service.dart' as _i404;
 import '../../services/contributors_service.dart' as _i773;
 import '../../services/process_service.dart' as _i622;
+import '../../services/shizuku_api.g.dart' as _i660;
 import '../../services/shizuku_service.dart' as _i842;
 import '../theme/theme_bloc.dart' as _i118;
+import 'dependency_module.dart' as _i241;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -33,6 +35,8 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final dependencyModule = _$DependencyModule();
+    gh.factory<_i660.ShizukuHostApi>(() => dependencyModule.api);
     gh.lazySingleton<_i663.LanguageBloc>(() => _i663.LanguageBloc());
     gh.lazySingleton<_i118.ThemeBloc>(() => _i118.ThemeBloc());
     gh.lazySingleton<_i825.AppInfoService>(() => _i825.AppInfoService());
@@ -43,14 +47,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i340.AppInfoBloc>(
       () => _i340.AppInfoBloc(gh<_i825.AppInfoService>()),
     );
-    gh.lazySingleton<_i725.CommandLogBloc>(
-      () => _i725.CommandLogBloc(gh<_i404.CommandLogService>()),
-    );
     gh.lazySingleton<_i204.AboutBloc>(
       () => _i204.AboutBloc(gh<_i773.ContributorsService>()),
     );
     gh.lazySingleton<_i842.ShizukuService>(
-      () => _i842.ShizukuService(gh<_i404.CommandLogService>()),
+      () => _i842.ShizukuService(
+        gh<_i404.CommandLogService>(),
+        gh<_i660.ShizukuHostApi>(),
+      ),
+    );
+    gh.lazySingleton<_i725.CommandLogBloc>(
+      () => _i725.CommandLogBloc(
+        gh<_i404.CommandLogService>(),
+        gh<_i842.ShizukuService>(),
+      ),
     );
     gh.lazySingleton<_i622.ProcessService>(
       () => _i622.ProcessService(gh<_i842.ShizukuService>()),
@@ -68,3 +78,5 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
+
+class _$DependencyModule extends _i241.DependencyModule {}

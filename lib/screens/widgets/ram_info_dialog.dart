@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:go_router/go_router.dart';
+import 'package:running_services_monitor/bloc/command_log_bloc/command_log_bloc.dart';
+import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
@@ -12,10 +16,7 @@ class RamInfoDialog extends StatelessWidget {
 
   String _formatRawKb(double kb) {
     final kbInt = kb.toInt();
-    final formatted = kbInt.toString().replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    );
+    final formatted = kbInt.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
     return '${formatted}K';
   }
 
@@ -72,11 +73,7 @@ class RamInfoDialog extends StatelessWidget {
                   ),
                   Text(
                     appInfo.totalRam,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                   ),
                 ],
               ),
@@ -146,11 +143,7 @@ class RamInfoDialog extends StatelessWidget {
                           ),
                           Text(
                             formatRam(source.ramKb),
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                           ),
                         ],
                       ),
@@ -201,13 +194,45 @@ class RamInfoDialog extends StatelessWidget {
                         icon: Icon(Icons.copy, size: 16.sp),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: verifyCommand));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(loc.copiedToClipboard), duration: const Duration(seconds: 2)),
-                          );
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(loc.copiedToClipboard), duration: const Duration(seconds: 2)));
                         },
                         tooltip: loc.copy,
                         padding: EdgeInsets.zero,
                         constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.h),
+                      ),
+                      BlocSelector<CommandLogBloc, CommandLogState, bool>(
+                        bloc: getIt<CommandLogBloc>(),
+                        selector: (state) => state.mapOrNull(loading: (_) => true) ?? false,
+                        builder: (context, isLoading) {
+                          return IconButton(
+                            icon: isLoading
+                                ? SizedBox(width: 16.sp, height: 16.sp, child: const CircularProgressIndicator(strokeWidth: 2))
+                                : Icon(Icons.play_arrow, size: 16.sp),
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    final command = 'dumpsys meminfo | grep "${appInfo.packageName}"';
+                                    getIt<CommandLogBloc>().add(CommandLogEvent.executeCommand(command));
+                                  },
+                            tooltip: loc.executeCommand,
+                            padding: EdgeInsets.zero,
+                            constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.h),
+                          );
+                        },
+                      ),
+                      BlocListener<CommandLogBloc, CommandLogState>(
+                        bloc: getIt<CommandLogBloc>(),
+                        listener: (context, state) {
+                          state.mapOrNull(
+                            success: (value) {
+                              if(value.selectedEntryId == null) return;
+                              context.push('/command-output', extra: value.selectedEntryId);
+                            },
+                          );
+                        },
+                        child: const SizedBox.shrink(),
                       ),
                     ],
                   ),
@@ -217,11 +242,7 @@ class RamInfoDialog extends StatelessWidget {
             SizedBox(height: 12.h),
             Text(
               loc.ramCalculationExplanation,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
-              ),
+              style: TextStyle(fontSize: 11.sp, color: Theme.of(context).colorScheme.onSurfaceVariant, fontStyle: FontStyle.italic),
             ),
           ],
         ),

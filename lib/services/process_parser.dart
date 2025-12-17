@@ -119,10 +119,7 @@ class ProcessParser {
         final pidMatch = _processRecordRegex.firstMatch(trimmed);
         if (pidMatch != null) {
           pid = int.tryParse(pidMatch.group(1) ?? '');
-          uid =
-              (int.tryParse(pidMatch.group(3) ?? '0') ?? 0) * 100000 +
-              10000 +
-              (int.tryParse(pidMatch.group(4) ?? '0') ?? 0);
+          uid = (int.tryParse(pidMatch.group(3) ?? '0') ?? 0) * 100000 + 10000 + (int.tryParse(pidMatch.group(4) ?? '0') ?? 0);
         }
       }
     }
@@ -143,8 +140,7 @@ class ProcessParser {
       isSystemApp:
           !packageName.contains('.') ||
           (uid != null && uid < 10000) ||
-          (baseDir != null &&
-              (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext'))),
+          (baseDir != null && (baseDir.startsWith('/system') || baseDir.startsWith('/product') || baseDir.startsWith('/system_ext'))),
       intent: intent,
       baseDir: baseDir,
       dataDir: dataDir,
@@ -206,16 +202,19 @@ class ProcessParser {
     return (pidMap: pidMap, processNameMap: processNameMap);
   }
 
-  static Map<String, double> parseAllAppsFromMeminfo(String meminfoOutput) {
-    if (meminfoOutput.isEmpty) return const {};
+  static ({Map<String, double> totals, Map<String, List<({String processName, double ramKb})>> processes}) parseAllAppsFromMeminfo(
+    String meminfoOutput,
+  ) {
+    if (meminfoOutput.isEmpty) return (totals: const {}, processes: const {});
 
     final pssStart = meminfoOutput.indexOf('Total PSS by process:');
-    if (pssStart == -1) return const {};
+    if (pssStart == -1) return (totals: const {}, processes: const {});
 
     final pssEnd = meminfoOutput.indexOf('Total PSS by OOM', pssStart);
     final section = pssEnd != -1 ? meminfoOutput.substring(pssStart, pssEnd) : meminfoOutput.substring(pssStart);
 
-    final allApps = <String, double>{};
+    final totals = <String, double>{};
+    final processes = <String, List<({String processName, double ramKb})>>{};
 
     var start = section.indexOf('\n') + 1;
     while (start < section.length) {
@@ -228,19 +227,20 @@ class ProcessParser {
       final match = _pssLineRegex.firstMatch(line);
       if (match == null) continue;
 
-      var processName = match.group(2) ?? '';
-      if (!processName.contains('.')) continue;
+      final fullProcessName = match.group(2) ?? '';
+      if (!fullProcessName.contains('.')) continue;
 
-      final colonIdx = processName.indexOf(':');
-      if (colonIdx != -1) processName = processName.substring(0, colonIdx);
+      final colonIdx = fullProcessName.indexOf(':');
+      final basePackage = colonIdx != -1 ? fullProcessName.substring(0, colonIdx) : fullProcessName;
 
       final pssKb = double.tryParse(match.group(1)?.replaceAll(',', '') ?? '0') ?? 0;
       if (pssKb > 0) {
-        allApps.update(processName, (v) => v + pssKb, ifAbsent: () => pssKb);
+        totals.update(basePackage, (v) => v + pssKb, ifAbsent: () => pssKb);
+        processes.putIfAbsent(basePackage, () => []).add((processName: fullProcessName, ramKb: pssKb));
       }
     }
 
-    return allApps;
+    return (totals: totals, processes: processes);
   }
 
   static AppProcessInfo createLruAppInfo({

@@ -20,7 +20,7 @@ class CommandLogScreen extends StatelessWidget {
           title: Text(context.loc.commandLogs, style: TextStyle(fontSize: 20.sp)),
           actions: [
             BlocSelector<CommandLogBloc, CommandLogState, bool>(
-              selector: (state) => state.entries.isNotEmpty,
+              selector: (state) => state.value.isNotEmpty,
               builder: (context, hasEntries) {
                 if (!hasEntries) return const SizedBox.shrink();
                 return IconButton(
@@ -51,7 +51,7 @@ class CommandLogScreen extends StatelessWidget {
           ],
         ),
         body: BlocSelector<CommandLogBloc, CommandLogState, List<CommandLogEntry>>(
-          selector: (state) => state.entries,
+          selector: (state) => state.value,
           builder: (context, entries) {
             if (entries.isEmpty) {
               return Center(

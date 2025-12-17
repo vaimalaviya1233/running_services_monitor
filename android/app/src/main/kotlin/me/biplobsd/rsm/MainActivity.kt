@@ -27,8 +27,8 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
     var pendingPermissionCallback: ((Result<Boolean>) -> Unit)? = null
     val mainHandler = Handler(Looper.getMainLooper())
     var isRootAvailable: Boolean? = null
-    var currentWorkingMode: String = "auto"
     var pendingStreamCommand: String? = null
+    var pendingStreamMode: String? = null
 
     var shellService: IShellService? = null
     var boundConnection: ServiceConnection? = null
@@ -60,7 +60,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
 
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            executeCommandWithStream(command, currentWorkingMode, sink)
+                            executeCommandWithStream(command, pendingStreamMode ?: "auto", sink)
                             withContext(Dispatchers.Main) { sink.endOfStream() }
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
@@ -103,7 +103,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
     override fun runCommand(request: CommandRequest, callback: (Result<CommandResult>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val mode = request.mode ?: currentWorkingMode
+                val mode = request.mode ?: "auto"
                 val output = executeCommand(request.command, mode)
                 withContext(Dispatchers.Main) {
                     callback(Result.success(CommandResult(output = output)))
@@ -117,11 +117,6 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         }
     }
 
-    override fun setWorkingMode(mode: String) {
-        currentWorkingMode = mode
-    }
-
-    override fun getWorkingMode(): String = currentWorkingMode
 
     override fun pingBinder(): Boolean =
             try {
@@ -167,8 +162,9 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         }
     }
 
-    override fun setStreamCommand(command: String) {
+    override fun setStreamCommand(command: String, mode: String?) {
         pendingStreamCommand = command
+        pendingStreamMode = mode
     }
 
     fun bindShellService(): Boolean {

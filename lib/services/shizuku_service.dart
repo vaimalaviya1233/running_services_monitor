@@ -8,9 +8,9 @@ import 'package:running_services_monitor/services/shizuku_api.g.dart';
 @lazySingleton
 class ShizukuService {
   final CommandLogService commandLogService;
-  final ShizukuHostApi api = ShizukuHostApi();
+  final ShizukuHostApi api;
 
-  ShizukuService(this.commandLogService);
+  ShizukuService(this.commandLogService, this.api);
 
   bool isInitialized = false;
   bool hasPermission = false;
@@ -39,9 +39,8 @@ class ShizukuService {
     return hasPermission;
   }
 
-  Future<void> setWorkingMode(WorkingMode mode) async {
+  void setWorkingMode(WorkingMode mode) {
     currentMode = mode;
-    await api.setWorkingMode(mode.name);
   }
 
   Future<bool> initialize() async {
@@ -79,7 +78,7 @@ class ShizukuService {
       throw Exception('Not initialized or no permission');
     }
 
-    final result = await api.runCommand(CommandRequest(command: command));
+    final result = await api.runCommand(CommandRequest(command: command, mode: currentMode?.name));
 
     if (result.error != null) {
       if (logCommand) commandLogService.addEntry(command, 'Error: ${result.error}', isSuccess: false);
@@ -99,7 +98,7 @@ class ShizukuService {
     final outputBuffer = StringBuffer();
 
     api
-        .setStreamCommand(command)
+        .setStreamCommand(command, currentMode?.name)
         .then((_) {
           streamOutput().listen(
             (line) {
