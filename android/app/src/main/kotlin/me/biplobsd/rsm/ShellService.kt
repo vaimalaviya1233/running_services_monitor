@@ -18,11 +18,12 @@ class ShellService : IShellService.Stub {
 
     @Suppress("UNUSED_PARAMETER") constructor(context: Context) : super()
 
-    override fun executeCommand(command: String): String {
+    override fun executeCommand(command: String): ShellResult {
         val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
-        val output = process.inputStream.readToString() + process.errorStream.readToString()
-        process.waitFor()
-        return output
+        val output = process.inputStream.readToString()
+        val errorOutput = process.errorStream.readToString()
+        val exitCode = process.waitFor()
+        return ShellResult(exitCode, output + errorOutput)
     }
 
     override fun executeCommandWithFd(command: String): ParcelFileDescriptor {
@@ -35,7 +36,6 @@ class ShellService : IShellService.Stub {
                         ParcelFileDescriptor.AutoCloseOutputStream(writeFd).use { output ->
                             val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
                             process.inputStream.pipeTo(output)
-                            process.errorStream.pipeTo(output)
                             process.waitFor()
                         }
                     } catch (e: Exception) {

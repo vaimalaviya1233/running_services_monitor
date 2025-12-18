@@ -14,7 +14,8 @@ class CommandRequest {
 }
 
 class CommandResult {
-  CommandResult({this.output, this.error});
+  CommandResult({this.exitCode, this.output, this.error});
+  int? exitCode;
   String? output;
   String? error;
 }

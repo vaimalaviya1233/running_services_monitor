@@ -85,8 +85,17 @@ class ShizukuService {
       throw Exception(result.error);
     }
 
-    if (logCommand) commandLogService.addEntry(command, result.output ?? '');
-    return result.output;
+    final exitCode = result.exitCode ?? 0;
+    final output = result.output ?? '';
+    final isSuccess = exitCode == 0;
+
+    if (logCommand) commandLogService.addEntry(command, output, isSuccess: isSuccess);
+
+    if (!isSuccess) {
+      throw Exception('Command failed with exit code $exitCode: $output');
+    }
+
+    return output;
   }
 
   Stream<String> executeCommandStream(String command, {bool logCommand = true}) {

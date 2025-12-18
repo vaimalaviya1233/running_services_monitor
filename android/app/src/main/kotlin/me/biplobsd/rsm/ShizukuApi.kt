@@ -111,19 +111,22 @@ data class CommandRequest (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class CommandResult (
+  val exitCode: Long? = null,
   val output: String? = null,
   val error: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CommandResult {
-      val output = pigeonVar_list[0] as String?
-      val error = pigeonVar_list[1] as String?
-      return CommandResult(output, error)
+      val exitCode = pigeonVar_list[0] as Long?
+      val output = pigeonVar_list[1] as String?
+      val error = pigeonVar_list[2] as String?
+      return CommandResult(exitCode, output, error)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
+      exitCode,
       output,
       error,
     )
@@ -336,9 +339,9 @@ private class ShizukuApiPigeonStreamHandler<T>(
 }
 
 interface ShizukuApiPigeonEventChannelWrapper<T> {
-  fun onListen(p0: Any?, sink: PigeonEventSink<T>) {}
+  open fun onListen(p0: Any?, sink: PigeonEventSink<T>) {}
 
-  fun onCancel(p0: Any?) {}
+  open fun onCancel(p0: Any?) {}
 }
 
 class PigeonEventSink<T>(private val sink: EventChannel.EventSink) {
@@ -358,7 +361,7 @@ class PigeonEventSink<T>(private val sink: EventChannel.EventSink) {
 abstract class StreamOutputStreamHandler : ShizukuApiPigeonEventChannelWrapper<String> {
   companion object {
     fun register(messenger: BinaryMessenger, streamHandler: StreamOutputStreamHandler, instanceName: String = "") {
-      var channelName = "dev.flutter.pigeon.running_services_monitor.ShizukuStreamApi.streamOutput"
+      var channelName: String = "dev.flutter.pigeon.running_services_monitor.ShizukuStreamApi.streamOutput"
       if (instanceName.isNotEmpty()) {
         channelName += ".$instanceName"
       }

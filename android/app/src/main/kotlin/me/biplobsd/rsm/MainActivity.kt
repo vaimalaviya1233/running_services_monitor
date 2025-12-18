@@ -104,9 +104,9 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val mode = request.mode ?: "auto"
-                val output = executeCommand(request.command, mode)
+                val result = executeCommand(request.command, mode)
                 withContext(Dispatchers.Main) {
-                    callback(Result.success(CommandResult(output = output)))
+                    callback(Result.success(CommandResult(exitCode = result.exitCode.toLong(), output = result.output)))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -201,7 +201,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         }
     }
 
-    fun executeCommand(command: String, mode: String): String =
+    fun executeCommand(command: String, mode: String): ShellResult =
             when (mode) {
                 "root" ->
                         if (checkRootAvailable()) executeRootCommand(command)
@@ -217,7 +217,7 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
                         }
             }
 
-    fun executeShizukuCommand(command: String): String {
+    fun executeShizukuCommand(command: String): ShellResult {
         if (!bindShellService()) throw Exception("Failed to bind shell service")
         return shellService?.executeCommand(command)
                 ?: throw Exception("Shell service is not available")
@@ -238,11 +238,13 @@ class MainActivity : FlutterActivity(), Shizuku.OnRequestPermissionResultListene
         return isRootAvailable!!
     }
 
-    fun executeRootCommand(command: String): String {
+    fun executeRootCommand(command: String): ShellResult {
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
         val output = process.inputStream.readToString()
-        process.waitFor()
-        return output
+        val errorOutput = process.errorStream.readToString()
+        val exitCode = process.waitFor()
+
+        return ShellResult(exitCode, output + errorOutput)
     }
 
     fun executeCommandWithStream(command: String, mode: String, sink: PigeonEventSink<String>) =

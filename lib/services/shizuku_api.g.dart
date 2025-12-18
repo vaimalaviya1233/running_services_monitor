@@ -77,9 +77,12 @@ class CommandRequest {
 
 class CommandResult {
   CommandResult({
+    this.exitCode,
     this.output,
     this.error,
   });
+
+  int? exitCode;
 
   String? output;
 
@@ -87,6 +90,7 @@ class CommandResult {
 
   List<Object?> _toList() {
     return <Object?>[
+      exitCode,
       output,
       error,
     ];
@@ -98,8 +102,9 @@ class CommandResult {
   static CommandResult decode(Object result) {
     result as List<Object?>;
     return CommandResult(
-      output: result[0] as String?,
-      error: result[1] as String?,
+      exitCode: result[0] as int?,
+      output: result[1] as String?,
+      error: result[2] as String?,
     );
   }
 
