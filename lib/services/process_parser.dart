@@ -9,17 +9,12 @@ class ProcessParser {
   static final _ramLineRegex = RegExp(r'^\s*([\d,]+)K:\s+(\S+)\s+\(pid\s+(\d+)');
   static final _connectionRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
   static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-zA-Z0-9._:]+)(?:\s+\(pid\s+(\d+))?', caseSensitive: false);
-
   static final _totalRamRegex = RegExp(r'Total RAM:\s+([\d,]+)K\s*(?:\(status\s+(\w+)\))?');
-  static final _freeRamRegex = RegExp(
-    r'Free RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+cached pss\s*\+\s*([\d,]+)K\s+cached kernel\s*\+\s*([\d,]+)K\s+free\)',
-  );
+  static final _freeRamRegex = RegExp(r'Free RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+cached pss\s*\+\s*([\d,]+)K\s+cached kernel\s*\+\s*([\d,]+)K\s+free\)');
   static final _usedRamRegex = RegExp(r'Used RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+used pss\s*\+\s*([\d,]+)K\s+kernel\)');
   static final _gpuRegex = RegExp(r'GPU:\s+([\d,]+)K');
   static final _lostRamRegex = RegExp(r'Lost RAM:\s+([\d,]+)K');
-  static final _zramRegex = RegExp(
-    r'ZRAM:\s+([\d,]+)K\s+physical\s+used\s+for\s+([\d,]+)K\s+in\s+swap\s*\(\s*([\d,]+)K\s+total\s+swap\)',
-  );
+  static final _zramRegex = RegExp(r'ZRAM:\s+([\d,]+)K\s+physical\s+used\s+for\s+([\d,]+)K\s+in\s+swap\s*\(\s*([\d,]+)K\s+total\s+swap\)');
   static final _tuningRegex = RegExp(r'Tuning:.*oom\s+([\d,]+)K.*restore limit\s+([\d,]+)K');
 
   static double _parseKb(String? value) {
@@ -277,7 +272,7 @@ class ProcessParser {
       if (match == null) continue;
 
       final fullProcessName = match.group(2) ?? '';
-      if (!fullProcessName.contains('.')) continue;
+      // if (!fullProcessName.contains('.')) continue;
 
       final colonIdx = fullProcessName.indexOf(':');
       final basePackage = colonIdx != -1 ? fullProcessName.substring(0, colonIdx) : fullProcessName;

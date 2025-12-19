@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/working_mode_bloc/working_mode_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/models/working_mode.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
@@ -35,7 +36,7 @@ class ProcessListItem extends StatelessWidget {
         trailing: BlocSelector<WorkingModeBloc, WorkingModeState, bool>(
           bloc: getIt<WorkingModeBloc>(),
           selector: (state) {
-            return process.pid != null && state.value.isRootAvailable;
+            return process.pid != null && state.value.currentMode == WorkingMode.root;
           },
           builder: (context, isShow) {
             return isShow
