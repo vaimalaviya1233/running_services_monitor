@@ -6,6 +6,7 @@ import 'package:running_services_monitor/bloc/command_log_bloc/command_log_bloc.
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/command_log_entry.dart';
+import 'package:running_services_monitor/screens/widgets/code_output_box.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CommandOutputScreen extends StatelessWidget {
@@ -34,8 +35,13 @@ class CommandOutputScreen extends StatelessWidget {
                 icon: const Icon(Icons.share),
                 tooltip: 'Share',
                 onPressed: () async {
-                  final text = '${context.loc.command}:\n${entry.command}\n\n${context.loc.rawOutput}:\n${entry.output}';
-                  final file = XFile.fromData(Uint8List.fromList(text.codeUnits), name: 'command_output.txt', mimeType: 'text/plain');
+                  final text =
+                      '${context.loc.command}:\n${entry.command}\n\n${context.loc.rawOutput}:\n${entry.output}';
+                  final file = XFile.fromData(
+                    Uint8List.fromList(text.codeUnits),
+                    name: 'command_output.txt',
+                    mimeType: 'text/plain',
+                  );
                   await SharePlus.instance.share(ShareParams(files: [file]));
                 },
               ),
@@ -44,9 +50,9 @@ class CommandOutputScreen extends StatelessWidget {
                 tooltip: context.loc.copy,
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: entry.output));
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(context.loc.copiedToClipboard), duration: const Duration(seconds: 2)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.loc.copiedToClipboard), duration: const Duration(seconds: 2)),
+                  );
                 },
               ),
             ],
@@ -68,7 +74,11 @@ class CommandOutputScreen extends StatelessWidget {
                       children: [
                         Text(
                           context.loc.command,
-                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         SizedBox(height: 4.h),
                         SelectableText(
@@ -78,21 +88,13 @@ class CommandOutputScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: SelectableText(
-                        scrollPhysics: const NeverScrollableScrollPhysics(),
-                        entry.output.isEmpty ? context.loc.noOutput : entry.output,
-                        style: TextStyle(fontSize: 12.sp, fontFamily: 'monospace', height: 1.5, color: const Color(0xFF4EC9B0)),
-                      ),
-                    ),
+                  CodeOutputBox(
+                    text: entry.output.isEmpty ? context.loc.noOutput : entry.output,
+                    fontSize: 12.sp,
+                    textColor: const Color(0xFF4EC9B0),
+                    backgroundColor: Colors.black,
+                    horizontalScroll: true,
+                    hasBorder: true,
                   ),
                 ]),
               ),

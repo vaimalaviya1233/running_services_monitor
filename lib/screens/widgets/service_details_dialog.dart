@@ -4,6 +4,7 @@ import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 // import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'code_output_box.dart';
 import 'service_detail_row.dart';
 import 'status_badge.dart';
 
@@ -93,8 +94,7 @@ class ServiceDetailsDialog extends StatelessWidget {
               label: context.loc.type,
               value: service.isSystemApp ? context.loc.systemApp : context.loc.userApp,
             ),
-            if (service.connections.isNotEmpty) ...[
-              SizedBox(height: 16.h),
+            if (service.connections.isNotEmpty)
               ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 title: Text(
@@ -149,9 +149,7 @@ class ServiceDetailsDialog extends StatelessWidget {
                   ),
                 ],
               ),
-            ],
-            if (service.rawServiceRecord != null) ...[
-              SizedBox(height: 16.h),
+            if (service.rawServiceRecord != null)
               ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 title: Text(
@@ -159,22 +157,16 @@ class ServiceDetailsDialog extends StatelessWidget {
                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
                 ),
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(8.rSafe),
-                    ),
-                    child: SelectableText(
-                      service.rawServiceRecord!,
-                      scrollPhysics: NeverScrollableScrollPhysics(),
-                      style: TextStyle(fontSize: 10.sp, fontFamily: 'monospace'),
-                    ),
+                  CodeOutputBox(
+                    text: service.rawServiceRecord!,
+                    fontSize: 12.sp,
+                    textColor: const Color(0xFF4EC9B0),
+                    backgroundColor: Colors.black,
+                    hasBorder: true,
+                    horizontalScroll: true,
                   ),
                 ],
               ),
-            ],
           ],
         ),
       ),

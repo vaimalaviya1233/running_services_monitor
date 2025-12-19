@@ -146,6 +146,7 @@ class ProcessParser {
 
     for (var line in lines) {
       rawBuffer.write(line);
+      rawBuffer.write('\n');
     }
 
     return RunningServiceInfo(
