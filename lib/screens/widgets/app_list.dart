@@ -6,6 +6,7 @@ import 'package:running_services_monitor/core/dependency_injection/dependency_in
 import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'app_list_item.dart';
 import 'empty_list_state.dart';
 import 'custom_scroll_provider.dart';
@@ -45,7 +46,8 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
             if (state.value.searchQuery.trim().isNotEmpty) {
               final name = app.appName.trim().toLowerCase();
               final pkg = app.packageName.trim().toLowerCase();
-              if (!name.contains(state.value.searchQuery.trim().toLowerCase()) && !pkg.contains(state.value.searchQuery.trim().toLowerCase())) {
+              if (!name.contains(state.value.searchQuery.trim().toLowerCase()) &&
+                  !pkg.contains(state.value.searchQuery.trim().toLowerCase())) {
                 return false;
               }
             }
@@ -74,19 +76,28 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
             controller: scrollProvider.scrollControllers[widget.tabIndex],
             slivers: [
               SliverToBoxAdapter(
-                child: BlocSelector<HomeBloc, HomeState, ({SystemRamInfo ramInfo, bool isLoading})>(
-                  selector: (state) =>
-                      (ramInfo: state.value.systemRamInfo, isLoading: state.mapOrNull(loading: (_) => true) ?? false),
+                child: BlocSelector<HomeBloc, HomeState, ({SystemRamInfo ramInfo, bool showSkeleton, bool isLoadingRam})>(
+                  selector: (state) {
+                    final rawRamInfo = state.value.systemRamInfo;
+                    final showSkeleton = state.value.isLoadingRam && rawRamInfo.totalRamKb <= 0;
+                    final ramInfo = rawRamInfo.totalRamKb > 0
+                        ? rawRamInfo
+                        : const SystemRamInfo(totalRamKb: 8000000, usedRamKb: 4000000, freeRamKb: 4000000);
+                    return (ramInfo: ramInfo, showSkeleton: showSkeleton, isLoadingRam: state.value.isLoadingRam);
+                  },
                   builder: (context, state) {
-                    if (widget.tabIndex != 0 || state.ramInfo.totalRamKb <= 0) {
+                    if (widget.tabIndex != 0) {
                       return const SizedBox.shrink();
                     }
                     return Column(
                       children: [
-                        Container(
-                          color: Theme.of(context).colorScheme.surface,
-                          padding: EdgeInsets.only(bottom: 10.h),
-                          child: RamBar(ramInfo: state.ramInfo, isLoading: state.isLoading),
+                        Skeletonizer(
+                          enabled: state.showSkeleton,
+                          child: Container(
+                            color: Theme.of(context).colorScheme.surface,
+                            padding: EdgeInsets.only(bottom: 10.h),
+                            child: RamBar(ramInfo: state.ramInfo, isLoading: state.isLoadingRam),
+                          ),
                         ),
                         Divider(height: 1.h),
                       ],

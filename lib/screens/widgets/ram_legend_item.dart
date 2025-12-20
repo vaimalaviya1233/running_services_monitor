@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class RamLegendItem extends StatelessWidget {
   final Color? color;
@@ -13,10 +14,12 @@ class RamLegendItem extends StatelessWidget {
     return Row(
       children: [
         if (color != null) ...[
-          Container(
-            width: 16.w,
-            height: 16.h,
-            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4.rSafe)),
+          Skeleton.shade(
+            child: Container(
+              width: 16.w,
+              height: 16.h,
+              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4.rSafe)),
+            ),
           ),
           SizedBox(width: 12.w),
         ],

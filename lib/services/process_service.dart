@@ -14,32 +14,35 @@ class ProcessService {
 
   ProcessService(this.shizukuService);
 
-  ({Stream<AppProcessInfo> apps, Future<SystemRamInfo?> systemRamInfo}) streamAppProcessInfosWithRamInfo() {
-    final meminfoCompleter = Completer<String?>();
+  ({
+    Stream<AppProcessInfo> apps,
+    Future<SystemRamInfo?> systemRamInfo,
+    Future<void> Function(void Function(Map<String, AppProcessInfo>)) onRamInfoReady,
+  })
+  streamAppProcessInfosWithRamInfo() {
+    final meminfoFuture = meminfo();
+    final groupedAppsCompleter = Completer<Map<String, AppProcessInfo>>();
 
     Stream<AppProcessInfo> appStream() async* {
-      final data = await meminfo();
-      meminfoCompleter.complete(data);
-
-      if (data == null) return;
-
-      final ramMaps = ProcessParser.parseRamMaps(data);
-      final pidRamMap = ramMaps.pidMap;
-      final processNameRamMap = ramMaps.processNameMap;
-      final meminfoResult = ProcessParser.parseAllAppsFromMeminfo(data);
-      final meminfoAppsMap = meminfoResult.totals;
-      final meminfoProcesses = meminfoResult.processes;
-
       final lruProcessesFuture = fetchLruProcesses();
       final groupedApps = <String, AppProcessInfo>{};
       final currentBlock = <String>[];
       final rawBuffer = StringBuffer();
       String? currentPackage;
+      final emptyPidRamMap = <int, double>{};
+      final emptyProcessNameRamMap = <String, double>{};
 
       await for (final line in shizukuService.executeCommandStream(AppConstants.cmdDumpsysActivityServices)) {
         if (line.trim().isEmpty) {
           if (currentBlock.isNotEmpty && currentPackage != null) {
-            final app = _processBlock(currentBlock, currentPackage, groupedApps, pidRamMap, processNameRamMap, rawBuffer);
+            final app = _processBlock(
+              currentBlock,
+              currentPackage,
+              groupedApps,
+              emptyPidRamMap,
+              emptyProcessNameRamMap,
+              rawBuffer,
+            );
             if (app != null) yield app;
             currentBlock.clear();
             rawBuffer.clear();
@@ -60,7 +63,14 @@ class ProcessService {
       }
 
       if (currentBlock.isNotEmpty && currentPackage != null) {
-        final app = _processBlock(currentBlock, currentPackage, groupedApps, pidRamMap, processNameRamMap, rawBuffer);
+        final app = _processBlock(
+          currentBlock,
+          currentPackage,
+          groupedApps,
+          emptyPidRamMap,
+          emptyProcessNameRamMap,
+          rawBuffer,
+        );
         if (app != null) yield app;
       }
 
@@ -80,39 +90,83 @@ class ProcessService {
           final app = ProcessParser.createLruAppInfo(
             packageName: entry.key,
             lruInfo: entry.value,
-            pidRamMap: pidRamMap,
-            processNameRamMap: processNameRamMap,
+            pidRamMap: emptyPidRamMap,
+            processNameRamMap: emptyProcessNameRamMap,
           );
           groupedApps[entry.key] = app;
           yield app;
         }
       }
 
-      for (final entry in meminfoAppsMap.entries) {
-        final existingApp = groupedApps[entry.key];
-        final processList = meminfoProcesses[entry.key] ?? [];
+      groupedAppsCompleter.complete(Map.from(groupedApps));
+    }
 
-        if (existingApp != null) {
-          final shouldUpdateRam = existingApp.totalRamInKb <= 0 || entry.value > existingApp.totalRamInKb;
-          final ramSources = processList
-              .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
-              .toList();
+    Future<void> onRamInfoReady(void Function(Map<String, AppProcessInfo>) callback) async {
+      final data = await meminfoFuture;
 
-          final app = existingApp.copyWith(
-            totalRam: shouldUpdateRam ? formatRam(entry.value) : existingApp.totalRam,
-            totalRamInKb: shouldUpdateRam ? entry.value : existingApp.totalRamInKb,
-            ramSources: [...existingApp.ramSources, ...ramSources],
-            processes: processList,
-          );
-          groupedApps[entry.key] = app;
-          yield app;
+      if (data == null) return;
+
+      final groupedApps = await groupedAppsCompleter.future;
+      final ramMaps = ProcessParser.parseRamMaps(data);
+      final pidRamMap = ramMaps.pidMap;
+      final processNameRamMap = ramMaps.processNameMap;
+      final meminfoResult = ProcessParser.parseAllAppsFromMeminfo(data);
+      final meminfoAppsMap = meminfoResult.totals;
+      final meminfoProcesses = meminfoResult.processes;
+
+      final updatedApps = <String, AppProcessInfo>{};
+
+      for (final entry in groupedApps.entries) {
+        final packageName = entry.key;
+        final existingApp = entry.value;
+        final meminfoRam = meminfoAppsMap[packageName];
+        final processList = meminfoProcesses[packageName] ?? [];
+
+        var updatedApp = existingApp;
+
+        final enrichedServices = existingApp.services.map((s) {
+          if (s.ramInKb != null || s.pid == null) return s;
+          final ramKb = pidRamMap[s.pid];
+          return ramKb != null ? s.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb)) : s;
+        }).toList();
+
+        var totalRamKb = 0.0;
+        final countedPids = <int>{};
+        for (final s in enrichedServices) {
+          final pid = s.pid;
+          if (pid != null && countedPids.add(pid)) {
+            totalRamKb += pidRamMap[pid] ?? s.ramInKb ?? 0;
+          }
         }
+
+        if (totalRamKb <= 0) totalRamKb = processNameRamMap[packageName] ?? 0;
+
+        if (meminfoRam != null && meminfoRam > totalRamKb) {
+          totalRamKb = meminfoRam;
+        }
+
+        final ramSources = processList
+            .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
+            .toList();
+
+        updatedApp = updatedApp.copyWith(
+          services: enrichedServices,
+          totalRam: formatRam(totalRamKb),
+          totalRamInKb: totalRamKb,
+          ramSources: [...updatedApp.ramSources, ...ramSources],
+          processes: processList.isNotEmpty ? processList : updatedApp.processes,
+        );
+
+        updatedApps[packageName] = updatedApp;
       }
+
+      callback(updatedApps);
     }
 
     return (
       apps: appStream(),
-      systemRamInfo: meminfoCompleter.future.then((data) => data != null ? ProcessParser.parseSystemRamInfo(data) : null),
+      systemRamInfo: meminfoFuture.then((data) => data != null ? ProcessParser.parseSystemRamInfo(data) : null),
+      onRamInfoReady: onRamInfoReady,
     );
   }
 
@@ -210,7 +264,9 @@ class ProcessService {
   }
 
   Future<bool> stopServiceByComponent({required String packageName, required String serviceName}) async {
-    final component = serviceName.startsWith('.') ? '$packageName/$packageName$serviceName' : '$packageName/$serviceName';
+    final component = serviceName.startsWith('.')
+        ? '$packageName/$packageName$serviceName'
+        : '$packageName/$serviceName';
     final result = await shizukuService.executeCommand('am stop-service $component');
     return result == null || result.isEmpty || !result.toLowerCase().contains('error');
   }

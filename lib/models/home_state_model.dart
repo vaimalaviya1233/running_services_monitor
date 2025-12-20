@@ -16,6 +16,7 @@ abstract class HomeStateModel with _$HomeStateModel {
     @Default(SystemRamInfo()) SystemRamInfo systemRamInfo,
 
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isAutoUpdateEnabled,
+    @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isLoadingRam,
     @Default(false) bool isSearching,
     @Default('') String searchQuery,
     @Default(ProcessStateFilter.all) ProcessStateFilter selectedProcessFilter,

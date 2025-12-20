@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
+import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'app_icon.dart';
 import 'status_badge.dart';
 
@@ -70,7 +72,16 @@ class AppListItem extends StatelessWidget {
           ),
         ],
       ),
-      trailing: Text(appInfo.totalRam, style: TextStyle(fontSize: 14.sp)),
+      trailing: BlocSelector<HomeBloc, HomeState, bool>(
+        bloc: getIt<HomeBloc>(),
+        selector: (state) => state.value.isLoadingRam && appInfo.totalRamInKb <= 0,
+        builder: (context, showSkeleton) {
+          return Skeletonizer(
+            enabled: showSkeleton,
+            child: Text(showSkeleton ? '00.0 MB' : appInfo.totalRam, style: TextStyle(fontSize: 14.sp)),
+          );
+        },
+      ),
       onTap: () {
         context.push('/app-details', extra: {'packageName': appInfo.packageName, 'tabIndex': tabIndex});
       },

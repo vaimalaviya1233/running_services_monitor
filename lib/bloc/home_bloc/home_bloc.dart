@@ -9,6 +9,7 @@ import 'package:running_services_monitor/models/home_state_model.dart';
 import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:running_services_monitor/services/process_service.dart';
 import 'package:running_services_monitor/services/shizuku_service.dart';
 
@@ -34,6 +35,7 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
     on<_SetProcessFilter>(_onSetProcessFilter);
     on<_ToggleSortOrder>(_onToggleSortOrder);
     on<_UpdateCachedApps>(_onUpdateCachedApps);
+    on<_UpdateRamInfo>(_onUpdateRamInfo);
   }
 
   @override
@@ -94,6 +96,11 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onLoadData(_LoadData event, Emitter<HomeState> emit) async {
+    final isLoading = state.mapOrNull(loading: (value) => true) ?? false;
+    if (state.value.isLoadingRam || isLoading) {
+      return;
+    }
+
     if (event.silent) {
       await _loadDataSimple(emit, event);
     } else {
@@ -102,55 +109,71 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   }
 
   Future<void> _loadDataSimple(Emitter<HomeState> emit, _LoadData event) async {
-    emit(HomeState.loading(state.value));
+    emit(HomeState.loading(state.value.copyWith(isLoadingRam: true)));
     try {
+      final previousApps = {for (var app in state.value.allApps) app.packageName: app};
       final Map<String, AppProcessInfo> appsMap = {};
       final streamResult = _processService.streamAppProcessInfosWithRamInfo();
 
+      final ramInfoCompleter = Completer<Map<String, AppProcessInfo>>();
+      streamResult.onRamInfoReady((updatedAppsMap) {
+        ramInfoCompleter.complete(updatedAppsMap);
+      });
+
       await for (final app in streamResult.apps) {
-        appsMap[app.packageName] = app;
+        final prevApp = previousApps[app.packageName];
+        if (prevApp != null && app.totalRamInKb <= 0) {
+          appsMap[app.packageName] = app.copyWith(
+            totalRam: prevApp.totalRam,
+            totalRamInKb: prevApp.totalRamInKb,
+            ramSources: prevApp.ramSources,
+          );
+        } else {
+          appsMap[app.packageName] = app;
+        }
       }
 
-      final allApps = appsMap.values.toList();
+      final updatedAppsMap = await ramInfoCompleter.future;
       final ramInfo = await streamResult.systemRamInfo;
 
+      final allApps = appsMap.keys.map((key) => updatedAppsMap[key] ?? appsMap[key]!).toList();
       emit(
         HomeState.success(
-          state.value.copyWith(allApps: allApps, systemRamInfo: ramInfo ?? state.value.systemRamInfo),
+          state.value.copyWith(
+            allApps: allApps,
+            systemRamInfo: ramInfo ?? state.value.systemRamInfo,
+            isLoadingRam: false,
+          ),
           event.notify ? L10nKeys.refreshedSuccessfully : null,
         ),
       );
     } catch (e, s) {
       logError(e, s);
-      emit(HomeState.failure(state.value, L10nKeys.errorLoadingData));
+      emit(HomeState.failure(state.value.copyWith(isLoadingRam: false), L10nKeys.errorLoadingData));
     }
   }
 
   Future<void> _loadDataWithStream(Emitter<HomeState> emit, _LoadData event) async {
-    emit(HomeState.loading(state.value, L10nKeys.loadingApps));
+    emit(HomeState.loading(state.value.copyWith(isLoadingRam: true), L10nKeys.loadingApps));
     try {
       final Map<String, AppProcessInfo> appsMap = {};
-
       final streamResult = _processService.streamAppProcessInfosWithRamInfo();
+
+      streamResult.onRamInfoReady((updatedAppsMap) {
+        add(_UpdateRamInfo(updatedAppsMap.values.toList(), streamResult.systemRamInfo, true));
+      });
+
       await for (final app in streamResult.apps) {
         appsMap[app.packageName] = app;
-
         final allApps = appsMap.values.toList();
-
-        emit(HomeState.loading(state.value.copyWith(allApps: allApps)));
+        emit(HomeState.loading(state.value.copyWith(allApps: allApps, isLoadingRam: true)));
       }
 
       final allApps = appsMap.values.toList();
-      final ramInfo = await streamResult.systemRamInfo;
-      emit(
-        HomeState.success(
-          state.value.copyWith(allApps: allApps, systemRamInfo: ramInfo ?? state.value.systemRamInfo),
-          L10nKeys.refreshedSuccessfully,
-        ),
-      );
+      emit(HomeState.success(state.value.copyWith(allApps: allApps, isLoadingRam: true)));
     } catch (e, s) {
       logError(e, s);
-      emit(HomeState.failure(state.value, L10nKeys.errorLoadingData));
+      emit(HomeState.failure(state.value.copyWith(isLoadingRam: false), L10nKeys.errorLoadingData));
     }
   }
 
@@ -172,7 +195,11 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   Future<void> _onToggleSearch(_ToggleSearch event, Emitter<HomeState> emit) async {
     final newSearchState = !state.value.isSearching;
 
-    emit(HomeState.success(state.value.copyWith(isSearching: newSearchState, searchQuery: newSearchState ? state.value.searchQuery : '')));
+    emit(
+      HomeState.success(
+        state.value.copyWith(isSearching: newSearchState, searchQuery: newSearchState ? state.value.searchQuery : ''),
+      ),
+    );
   }
 
   Future<void> _onUpdateSearchQuery(_UpdateSearchQuery event, Emitter<HomeState> emit) async {
@@ -207,7 +234,12 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         }
       }
 
-      return app.copyWith(services: updatedServices, pids: pids.toList(), totalRamInKb: totalRamKb, totalRam: formatRam(totalRamKb));
+      return app.copyWith(
+        services: updatedServices,
+        pids: pids.toList(),
+        totalRamInKb: totalRamKb,
+        totalRam: formatRam(totalRamKb),
+      );
     }
 
     final updatedAllApps = currentState.allApps.map(updateApp).whereType<AppProcessInfo>().toList();
@@ -278,6 +310,20 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
     }).toList();
 
     emit(HomeState.success(state.value.copyWith(allApps: updatedApps)));
+  }
+
+  Future<void> _onUpdateRamInfo(_UpdateRamInfo event, Emitter<HomeState> emit) async {
+    final ramInfo = await event.systemRamInfoFuture;
+    emit(
+      HomeState.success(
+        state.value.copyWith(
+          allApps: event.apps,
+          systemRamInfo: ramInfo ?? state.value.systemRamInfo,
+          isLoadingRam: false,
+        ),
+        event.notify ? L10nKeys.refreshedSuccessfully : null,
+      ),
+    );
   }
 
   @override

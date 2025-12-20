@@ -4,6 +4,7 @@ import 'package:progress_indicator_m3e/progress_indicator_m3e.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'ram_legend_item.dart';
 import 'constrained_wavy_progress.dart';
 import 'ram_expanded_section.dart';
@@ -132,7 +133,7 @@ class _RamBarState extends State<RamBar> with SingleTickerProviderStateMixin {
                   ),
                   SizedBox(height: 15.h),
                   widget.isLoading
-                      ? ConstrainedWavyProgress(value: previousRatio, animate: true)
+                      ? Skeleton.shade(child: ConstrainedWavyProgress(value: previousRatio, animate: true))
                       : AnimatedBuilder(
                           animation: animation,
                           builder: (context, child) {
