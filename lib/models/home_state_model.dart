@@ -17,10 +17,10 @@ abstract class HomeStateModel with _$HomeStateModel {
 
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isAutoUpdateEnabled,
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isLoadingRam,
-    @Default(false) bool isSearching,
-    @Default('') String searchQuery,
-    @Default(ProcessStateFilter.all) ProcessStateFilter selectedProcessFilter,
-    @Default(false) bool sortAscending,
+    @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isSearching,
+    @JsonKey(includeFromJson: false, includeToJson: false) @Default('') String searchQuery,
+    @JsonKey(includeFromJson: false, includeToJson: false) @Default(ProcessStateFilter.all) ProcessStateFilter selectedProcessFilter,
+    @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool sortAscending,
   }) = _HomeStateModel;
 
   factory HomeStateModel.fromJson(Map<String, dynamic> json) => _$HomeStateModelFromJson(json);

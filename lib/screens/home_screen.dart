@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
@@ -18,6 +17,7 @@ import 'widgets/theme_toggle_button.dart';
 import 'widgets/about_button.dart';
 import 'widgets/app_logo.dart';
 import 'widgets/search_field.dart';
+import 'widgets/loading_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   if (!data.shizukuReady) return const SizedBox.shrink();
                   return IconButton(
                     icon: data.isLoading
-                        ? SizedBox(width: 30.w, height: 30.h, child: LoadingIndicatorM3E())
+                        ? SizedBox(width: 30.w, height: 30.h, child: const LoadingIndicator())
                         : const Icon(Icons.refresh),
                     onPressed: data.isLoading ? null : () => homeBloc.add(const HomeEvent.loadData()),
                     tooltip: context.loc.refresh,

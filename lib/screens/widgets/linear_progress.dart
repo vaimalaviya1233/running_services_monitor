@@ -2,43 +2,38 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class ConstrainedWavyProgress extends StatefulWidget {
-  final double value;
-  final bool animate;
+class LinearProgress extends StatefulWidget {
+  final double? value;
   final Color? activeColor;
   final Color? trackColor;
 
-  const ConstrainedWavyProgress({
-    super.key,
-    required this.value,
-    this.animate = false,
-    this.activeColor,
-    this.trackColor,
-  });
+  const LinearProgress({super.key, this.value, this.activeColor, this.trackColor});
 
   @override
-  State<ConstrainedWavyProgress> createState() => _ConstrainedWavyProgressState();
+  State<LinearProgress> createState() => _LinearProgressState();
 }
 
-class _ConstrainedWavyProgressState extends State<ConstrainedWavyProgress> with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+class _LinearProgressState extends State<LinearProgress> with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+
+  bool get shouldAnimate => widget.value == null || widget.value! >= 1.0;
 
   @override
   void initState() {
     super.initState();
     controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
       ..addListener(() {
-        if (mounted && widget.animate) setState(() {});
+        if (mounted && shouldAnimate) setState(() {});
       });
-    if (widget.animate) {
+    if (shouldAnimate) {
       controller.repeat();
     }
   }
 
   @override
-  void didUpdateWidget(covariant ConstrainedWavyProgress oldWidget) {
+  void didUpdateWidget(covariant LinearProgress oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.animate) {
+    if (shouldAnimate) {
       if (!controller.isAnimating) controller.repeat();
     } else {
       if (controller.isAnimating) controller.stop();
@@ -54,7 +49,6 @@ class _ConstrainedWavyProgressState extends State<ConstrainedWavyProgress> with 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     final active = widget.activeColor ?? colorScheme.primary;
     final track = widget.trackColor ?? colorScheme.surfaceContainerHighest;
 
@@ -68,7 +62,7 @@ class _ConstrainedWavyProgressState extends State<ConstrainedWavyProgress> with 
     const inset = 4.0;
 
     final totalHeight = trackHeight + 2 * waveAmplitude;
-    final phaseValue = widget.animate ? controller.value * 2 * math.pi : 0.0;
+    final phaseValue = shouldAnimate ? controller.value * 2 * math.pi : 0.0;
 
     return RepaintBoundary(
       child: SizedBox(
@@ -96,7 +90,7 @@ class _ConstrainedWavyProgressState extends State<ConstrainedWavyProgress> with 
 }
 
 class _WavyPainter extends CustomPainter {
-  final double value;
+  final double? value;
   final Color active;
   final Color track;
   final double phase;
@@ -137,14 +131,18 @@ class _WavyPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..isAntiAlias = true;
 
-    final double p = value.clamp(0.0, 1.0);
-    final double activeEndX = left + width * p;
-    final double trackStartX = math.min(right, activeEndX + gap);
+    final double p = (value ?? 0).clamp(0.0, 1.0);
+    final bool waveOnly = value == null || p >= 1.0;
 
-    canvas.drawLine(Offset(trackStartX, cy), Offset(right, cy), base..color = track);
+    final double activeEndX = value == null ? right : (left + width * p);
+    final double trackStartX = value == null ? left : math.min(right, activeEndX + gap);
+
+    if (!waveOnly) {
+      canvas.drawLine(Offset(trackStartX, cy), Offset(right, cy), base..color = track);
+    }
 
     final start = left;
-    final end = activeEndX;
+    final end = value == null ? right : (left + width * p);
     final path = Path();
     const step = 1.5;
     final k = 2 * math.pi / wavePeriod;
@@ -166,8 +164,10 @@ class _WavyPainter extends CustomPainter {
         ..strokeWidth = trackHeight,
     );
 
-    final dotCenterX = math.max(left, right - dotOffset);
-    canvas.drawCircle(Offset(dotCenterX, cy), dotDiameter / 2, Paint()..color = active);
+    if (!waveOnly) {
+      final dotCenterX = math.max(left, right - dotOffset);
+      canvas.drawCircle(Offset(dotCenterX, cy), dotDiameter / 2, Paint()..color = active);
+    }
   }
 
   @override

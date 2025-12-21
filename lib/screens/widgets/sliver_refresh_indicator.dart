@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import 'package:progress_indicator_m3e/progress_indicator_m3e.dart';
+import 'circular_progress.dart';
 
 class SliverRefreshIndicator extends StatefulWidget {
   final Future<void> Function() onRefresh;
@@ -148,8 +148,8 @@ class SliverRefreshIndicatorState extends State<SliverRefreshIndicator> with Sin
                           width: 32.w,
                           height: 32.w,
                           child: isRefreshing
-                              ? CircularProgressIndicatorM3E(activeColor: colorScheme.primary)
-                              : CircularProgressIndicatorM3E(
+                              ? CircularProgress(activeColor: colorScheme.primary)
+                              : CircularProgress(
                                   value: (dragOffset / triggerThreshold).clamp(0.0, 1.0),
                                   activeColor: colorScheme.primary,
                                 ),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
-import 'package:running_services_monitor/models/process_state_filter.dart';
+import 'package:running_services_monitor/core/utils/helper.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -42,28 +42,12 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
       },
       child: BlocSelector<HomeBloc, HomeState, List<AppProcessInfo>>(
         selector: (state) {
-          var filteredApps = widget.apps.where((app) {
-            if (state.value.searchQuery.trim().isNotEmpty) {
-              final name = app.appName.trim().toLowerCase();
-              final pkg = app.packageName.trim().toLowerCase();
-              if (!name.contains(state.value.searchQuery.trim().toLowerCase()) &&
-                  !pkg.contains(state.value.searchQuery.trim().toLowerCase())) {
-                return false;
-              }
-            }
-            return state.value.selectedProcessFilter.matchesAppState(
-              app.processState,
-              app.hasServices,
-              isCached: app.isCached,
-            );
-          }).toList();
-
-          if (state.value.sortAscending) {
-            filteredApps.sort((a, b) => a.totalRamInKb.compareTo(b.totalRamInKb));
-          } else {
-            filteredApps.sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
-          }
-          return filteredApps;
+          final filteredApps = Helper.filterApps(
+            widget.apps,
+            state.value.searchQuery,
+            state.value.selectedProcessFilter,
+          );
+          return Helper.sortApps(filteredApps, state.value.sortAscending);
         },
         builder: (context, filteredApps) {
           if (filteredApps.isEmpty) {
@@ -76,34 +60,37 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
             controller: scrollProvider.scrollControllers[widget.tabIndex],
             slivers: [
               SliverToBoxAdapter(
-                child: BlocSelector<HomeBloc, HomeState, ({SystemRamInfo ramInfo, bool showSkeleton, bool isLoadingRam})>(
-                  selector: (state) {
-                    final rawRamInfo = state.value.systemRamInfo;
-                    final showSkeleton = state.value.isLoadingRam && rawRamInfo.totalRamKb <= 0;
-                    final ramInfo = rawRamInfo.totalRamKb > 0
-                        ? rawRamInfo
-                        : const SystemRamInfo(totalRamKb: 8000000, usedRamKb: 4000000, freeRamKb: 4000000);
-                    return (ramInfo: ramInfo, showSkeleton: showSkeleton, isLoadingRam: state.value.isLoadingRam);
-                  },
-                  builder: (context, state) {
-                    if (widget.tabIndex != 0) {
-                      return const SizedBox.shrink();
-                    }
-                    return Column(
-                      children: [
-                        Skeletonizer(
-                          enabled: state.showSkeleton,
-                          child: Container(
-                            color: Theme.of(context).colorScheme.surface,
-                            padding: EdgeInsets.only(bottom: 10.h),
-                            child: RamBar(ramInfo: state.ramInfo, isLoading: state.isLoadingRam),
-                          ),
-                        ),
-                        Divider(height: 1.h),
-                      ],
-                    );
-                  },
-                ),
+                child: widget.tabIndex != 0
+                    ? const SizedBox.shrink()
+                    : BlocSelector<
+                        HomeBloc,
+                        HomeState,
+                        ({SystemRamInfo ramInfo, bool showSkeleton, bool isLoadingRam})
+                      >(
+                        selector: (state) {
+                          final rawRamInfo = state.value.systemRamInfo;
+                          final showSkeleton = state.value.isLoadingRam && rawRamInfo.totalRamKb <= 0;
+                          final ramInfo = rawRamInfo.totalRamKb > 0
+                              ? rawRamInfo
+                              : const SystemRamInfo(totalRamKb: 8000000, usedRamKb: 4000000, freeRamKb: 4000000);
+                          return (ramInfo: ramInfo, showSkeleton: showSkeleton, isLoadingRam: state.value.isLoadingRam);
+                        },
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              Skeletonizer(
+                                enabled: state.showSkeleton,
+                                child: Container(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  padding: EdgeInsets.only(bottom: 10.h),
+                                  child: RamBar(ramInfo: state.ramInfo, isLoading: state.isLoadingRam),
+                                ),
+                              ),
+                              Divider(height: 1.h),
+                            ],
+                          );
+                        },
+                      ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {

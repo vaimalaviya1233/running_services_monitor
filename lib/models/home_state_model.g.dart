@@ -18,31 +18,10 @@ _HomeStateModel _$HomeStateModelFromJson(Map<String, dynamic> json) =>
           : SystemRamInfo.fromJson(
               json['systemRamInfo'] as Map<String, dynamic>,
             ),
-      isSearching: json['isSearching'] as bool? ?? false,
-      searchQuery: json['searchQuery'] as String? ?? '',
-      selectedProcessFilter:
-          $enumDecodeNullable(
-            _$ProcessStateFilterEnumMap,
-            json['selectedProcessFilter'],
-          ) ??
-          ProcessStateFilter.all,
-      sortAscending: json['sortAscending'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$HomeStateModelToJson(_HomeStateModel instance) =>
     <String, dynamic>{
       'allApps': instance.allApps,
       'systemRamInfo': instance.systemRamInfo,
-      'isSearching': instance.isSearching,
-      'searchQuery': instance.searchQuery,
-      'selectedProcessFilter':
-          _$ProcessStateFilterEnumMap[instance.selectedProcessFilter]!,
-      'sortAscending': instance.sortAscending,
     };
-
-const _$ProcessStateFilterEnumMap = {
-  ProcessStateFilter.all: 'all',
-  ProcessStateFilter.active: 'active',
-  ProcessStateFilter.cached: 'cached',
-  ProcessStateFilter.withServices: 'withServices',
-};

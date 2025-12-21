@@ -28,12 +28,9 @@ dependencies:
   go_router: ^17.0.0
   intl: ^0.20.2
   flutter_scale_kit: ^1.5.2
-  fluttertoast: ^9.0.0
   collection: ^1.19.1
   expressive_refresh: ^0.1.2
-  loading_indicator_m3e: ^0.1.1
-  m3e_design: ^0.2.0
-  progress_indicator_m3e: ^0.1.1
+  material_new_shapes: ^1.0.0
   share_plus: ^12.0.1
   skeletonizer: ^2.1.2
 

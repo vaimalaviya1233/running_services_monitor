@@ -1,10 +1,13 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/services/shizuku_service.dart';
 
+typedef OnErrorCallback = void Function(String message);
+
 class AndroidSettingsHelper {
+  static OnErrorCallback? onError;
+
   static Future<void> tryOpenSystemRunningServices() async {
     try {
       final intent = AndroidIntent(
@@ -29,15 +32,6 @@ class AndroidSettingsHelper {
     try {
       final shizukuService = getIt<ShizukuService>();
 
-      // if (!shizukuService.isInitialized || !shizukuService.hasPermission) {
-      //   Fluttertoast.showToast(
-      //     msg: 'Running Services settings not available. Shizuku permission required.',
-      //     toastLength: Toast.LENGTH_LONG,
-      //     gravity: ToastGravity.BOTTOM,
-      //   );
-      //   return;
-      // }
-
       final command =
           'am start -n com.android.settings/com.android.settings.SubSettings '
           '-e :settings:show_fragment com.android.settings.applications.RunningServices';
@@ -45,18 +39,10 @@ class AndroidSettingsHelper {
       final result = await shizukuService.executeCommand(command);
 
       if (result == null || result.contains('Error') || result.contains('Exception')) {
-        Fluttertoast.showToast(
-          msg: 'Failed to open Running Services settings',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        onError?.call('Failed to open Running Services settings');
       }
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: 'Error opening Running Services: ${e.toString()}',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      onError?.call('Error opening Running Services: ${e.toString()}');
     }
   }
 }

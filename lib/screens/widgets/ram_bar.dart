@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import 'package:progress_indicator_m3e/progress_indicator_m3e.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
@@ -8,6 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'ram_legend_item.dart';
 import 'constrained_wavy_progress.dart';
 import 'ram_expanded_section.dart';
+import 'linear_progress.dart';
 
 class RamBar extends StatefulWidget {
   final SystemRamInfo ramInfo;
@@ -137,7 +137,7 @@ class _RamBarState extends State<RamBar> with SingleTickerProviderStateMixin {
                       : AnimatedBuilder(
                           animation: animation,
                           builder: (context, child) {
-                            return LinearProgressIndicatorM3E(value: animation.value);
+                            return LinearProgress(value: animation.value);
                           },
                         ),
                   SizedBox(height: 16.h),

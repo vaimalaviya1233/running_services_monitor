@@ -4,6 +4,7 @@ import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
+import 'package:running_services_monitor/core/utils/helper.dart';
 import 'package:running_services_monitor/l10n/l10n_keys.dart';
 import 'package:running_services_monitor/models/home_state_model.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
@@ -39,7 +40,6 @@ class HomeBody extends StatelessWidget {
             HomeStateModel model,
             List<AppProcessInfo> userApps,
             List<AppProcessInfo> systemApps,
-            double appsRam,
           })
         >(
           selector: (state) {
@@ -47,20 +47,8 @@ class HomeBody extends StatelessWidget {
             final (isError, errorMessage) = state.mapOrNull(failure: (s) => (true, s.message)) ?? (false, null);
 
             final allApps = state.value.allApps;
-
-            bool? isSystemApp(AppProcessInfo app) {
-              final cached = cachedApps[app.packageName];
-              if (cached != null) {
-                return cached.isSystemApp;
-              }
-              return app.isSystemApp;
-            }
-
-            final userApps = allApps.where((a) => isSystemApp(a) == false).toList()
-              ..sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
-            final systemApps = allApps.where((a) => isSystemApp(a) == true).toList()
-              ..sort((a, b) => b.totalRamInKb.compareTo(a.totalRamInKb));
-            final appsRam = allApps.fold(0.0, (sum, a) => sum + a.totalRamInKb);
+            final userApps = allApps.where((a) => Helper.isSystemApp(a, cachedApps) == false).toList();
+            final systemApps = allApps.where((a) => Helper.isSystemApp(a, cachedApps) == true).toList();
 
             return (
               isLoading: isLoading,
@@ -71,7 +59,6 @@ class HomeBody extends StatelessWidget {
               model: state.value,
               userApps: userApps,
               systemApps: systemApps,
-              appsRam: appsRam,
             );
           },
           builder: (context, data) {
