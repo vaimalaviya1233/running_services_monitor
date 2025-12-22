@@ -44,3 +44,38 @@ class FilterChipsDelegate extends SliverPersistentHeaderDelegate {
     return child != oldDelegate.child;
   }
 }
+
+class AnimatedFilterChipsDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final bool isVisible;
+  final double height;
+
+  AnimatedFilterChipsDelegate({required this.child, required this.isVisible, double? height}) : height = height ?? 52.h;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ClipRect(
+      child: AnimatedSlide(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        offset: isVisible ? Offset.zero : const Offset(0, -1),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: isVisible ? 1.0 : 0.0,
+          child: Container(color: Theme.of(context).colorScheme.surface, child: child),
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => isVisible ? height : 0;
+
+  @override
+  double get minExtent => isVisible ? height : 0;
+
+  @override
+  bool shouldRebuild(covariant AnimatedFilterChipsDelegate oldDelegate) {
+    return child != oldDelegate.child || isVisible != oldDelegate.isVisible;
+  }
+}

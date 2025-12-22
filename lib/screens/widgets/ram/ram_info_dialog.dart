@@ -33,7 +33,10 @@ class _RamInfoBottomSheetState extends State<RamInfoBottomSheet> {
 
   String _formatRawKb(double kb) {
     final kbInt = kb.toInt();
-    final formatted = kbInt.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    final formatted = kbInt.toString().replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
     return '${formatted}K';
   }
 
@@ -170,7 +173,7 @@ class _RamInfoBottomSheetState extends State<RamInfoBottomSheet> {
                                         style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
                                       ),
                                       Text(
-                                        appInfo.totalRam,
+                                        appInfo.totalRamInKb.formatRam(),
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.bold,
@@ -190,12 +193,19 @@ class _RamInfoBottomSheetState extends State<RamInfoBottomSheet> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.info_outline, size: 20.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                        Icon(
+                                          Icons.info_outline,
+                                          size: 20.sp,
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        ),
                                         SizedBox(width: 8.w),
                                         Expanded(
                                           child: Text(
                                             loc.noRamDataAvailable,
-                                            style: TextStyle(fontSize: 12.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -244,7 +254,7 @@ class _RamInfoBottomSheetState extends State<RamInfoBottomSheet> {
                                                 ),
                                               ),
                                               Text(
-                                                formatRam(source.ramKb),
+                                                source.ramKb.formatRam(),
                                                 style: TextStyle(
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.bold,
@@ -260,7 +270,9 @@ class _RamInfoBottomSheetState extends State<RamInfoBottomSheet> {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context).colorScheme.surface,
                                               borderRadius: BorderRadius.circular(4.rSafe),
-                                              border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
+                                              border: Border.all(
+                                                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                              ),
                                             ),
                                             child: SelectableText(
                                               _getRawDataLine(source, widget.packageName),

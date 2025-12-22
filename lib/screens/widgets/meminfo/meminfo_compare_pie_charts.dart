@@ -128,7 +128,7 @@ class _PieChartColumn extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         Text(
-          summary != null ? formatRam(summary!.totalPss.toDouble()) : '-',
+          summary != null ? summary!.totalPss.formatRam() : '-',
           style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: color),
         ),
       ],

@@ -1,167 +1,132 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RefreshIndicatorState;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
+import 'package:running_services_monitor/bloc/refresh_indicator_bloc/refresh_indicator_bloc.dart';
 import 'circular_progress.dart';
 
-class SliverRefreshIndicator extends StatefulWidget {
-  final Future<void> Function() onRefresh;
+class RefreshWrapper extends StatelessWidget {
   final Widget child;
+  final Future<void> Function() onRefresh;
 
-  const SliverRefreshIndicator({super.key, required this.onRefresh, required this.child});
+  const RefreshWrapper({super.key, required this.child, required this.onRefresh});
 
   @override
-  State<SliverRefreshIndicator> createState() => SliverRefreshIndicatorState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => RefreshIndicatorBloc(),
+      child: _RefreshWrapperBody(onRefresh: onRefresh, child: child),
+    );
+  }
 }
 
-class SliverRefreshIndicatorState extends State<SliverRefreshIndicator> with SingleTickerProviderStateMixin {
-  bool isRefreshing = false;
-  bool isDismissing = false;
-  double dragOffset = 0.0;
-  bool isDragging = false;
-  bool wasUserDragging = false;
-  late AnimationController dismissController;
-  late Animation<double> dismissAnimation;
+class _RefreshWrapperBody extends StatelessWidget {
+  final Widget child;
+  final Future<void> Function() onRefresh;
 
-  static const double triggerThreshold = 80.0;
-  static const double indicatorHeight = 60.0;
+  const _RefreshWrapperBody({required this.child, required this.onRefresh});
 
   @override
-  void initState() {
-    super.initState();
-    dismissController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    dismissAnimation = CurvedAnimation(parent: dismissController, curve: Curves.easeOut);
-    dismissController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          isDismissing = false;
-          dragOffset = 0.0;
-        });
-        dismissController.reset();
-      }
-    });
+  Widget build(BuildContext context) {
+    return BlocListener<RefreshIndicatorBloc, RefreshIndicatorState>(
+      listenWhen: (prev, curr) => !prev.shouldTriggerRefresh && curr.shouldTriggerRefresh,
+      listener: (context, state) async {
+        await onRefresh();
+        if (context.mounted) {
+          context.read<RefreshIndicatorBloc>().add(const RefreshIndicatorEvent.refreshComplete());
+          await Future.delayed(const Duration(milliseconds: 300));
+          if (context.mounted) {
+            context.read<RefreshIndicatorBloc>().add(const RefreshIndicatorEvent.dismissComplete());
+          }
+        }
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) => _handleScrollNotification(context, notification),
+        child: child,
+      ),
+    );
   }
 
-  @override
-  void dispose() {
-    dismissController.dispose();
-    super.dispose();
-  }
+  bool _handleScrollNotification(BuildContext context, ScrollNotification notification) {
+    final bloc = context.read<RefreshIndicatorBloc>();
+    final state = bloc.state;
 
-  bool handleScrollNotification(ScrollNotification notification) {
-    if (isRefreshing || isDismissing) return false;
+    if (state.isRefreshing || state.isDismissing) return false;
 
     if (notification is ScrollStartNotification) {
       if (notification.metrics.extentBefore == 0 && notification.dragDetails != null) {
-        isDragging = true;
-        wasUserDragging = true;
+        bloc.add(const RefreshIndicatorEvent.startDrag());
       }
     }
 
     if (notification is ScrollUpdateNotification) {
       final isUserDrag = notification.dragDetails != null;
 
-      if (isDragging && isUserDrag) {
+      if (state.isDragging && isUserDrag) {
         if (notification.metrics.extentBefore == 0 &&
             notification.scrollDelta != null &&
             notification.scrollDelta! < 0) {
-          setState(() {
-            dragOffset += -notification.scrollDelta!;
-          });
-          if (dragOffset >= triggerThreshold && !isRefreshing) {
-            triggerRefresh();
-            return true;
-          }
-        } else if (notification.scrollDelta != null && notification.scrollDelta! > 0 && dragOffset > 0) {
-          setState(() {
-            dragOffset = (dragOffset - notification.scrollDelta!).clamp(0.0, double.infinity);
-          });
+          bloc.add(RefreshIndicatorEvent.updateDrag(-notification.scrollDelta!));
+          return true;
+        } else if (notification.scrollDelta != null && notification.scrollDelta! > 0 && state.dragOffset > 0) {
+          bloc.add(RefreshIndicatorEvent.updateDrag(-notification.scrollDelta!));
         }
       }
 
-      if (wasUserDragging && !isUserDrag) {
-        wasUserDragging = false;
-        isDragging = false;
-        if (dragOffset >= triggerThreshold && !isRefreshing) {
-          triggerRefresh();
-          return true;
-        } else if (dragOffset > 0) {
-          setState(() {
-            dragOffset = 0;
-          });
-        }
+      if (state.isDragging && !isUserDrag) {
+        bloc.add(const RefreshIndicatorEvent.endDrag());
       }
     }
 
     if (notification is OverscrollNotification) {
       if (notification.overscroll < 0 && notification.dragDetails != null) {
-        isDragging = true;
-        wasUserDragging = true;
-        setState(() {
-          dragOffset += -notification.overscroll;
-        });
+        bloc.add(RefreshIndicatorEvent.overscroll(-notification.overscroll));
       }
     }
 
     return false;
   }
+}
 
-  void triggerRefresh() async {
-    setState(() {
-      isRefreshing = true;
-      dragOffset = indicatorHeight;
-    });
-
-    await widget.onRefresh();
-
-    if (mounted) {
-      setState(() {
-        isRefreshing = false;
-        isDismissing = true;
-      });
-      dismissController.forward();
-    }
-  }
+class SliverRefreshHeader extends StatelessWidget {
+  const SliverRefreshHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final showIndicator = dragOffset > 0 || isRefreshing || isDismissing;
+    return BlocBuilder<RefreshIndicatorBloc, RefreshIndicatorState>(
+      builder: (context, state) {
+        final colorScheme = Theme.of(context).colorScheme;
+        final isVisible = state.showIndicator && state.currentHeight > 0;
 
-    double currentHeight = dragOffset.clamp(0.0, indicatorHeight);
-    if (isDismissing) {
-      currentHeight = indicatorHeight * (1 - dismissAnimation.value);
-    }
-
-    return NotificationListener<ScrollNotification>(
-      onNotification: handleScrollNotification,
-      child: Column(
-        children: [
-          AnimatedBuilder(
-            animation: dismissAnimation,
-            builder: (context, child) {
-              return AnimatedContainer(
-                duration: isRefreshing || isDismissing ? Duration.zero : const Duration(milliseconds: 100),
-                height: currentHeight,
-                color: colorScheme.surface,
-                child: Center(
-                  child: showIndicator && currentHeight > 20
-                      ? SizedBox(
-                          width: 32.w,
-                          height: 32.w,
-                          child: isRefreshing
-                              ? CircularProgress(activeColor: colorScheme.primary)
-                              : CircularProgress(
-                                  value: (dragOffset / triggerThreshold).clamp(0.0, 1.0),
-                                  activeColor: colorScheme.primary,
-                                ),
-                        )
-                      : const SizedBox.shrink(),
+        return SliverToBoxAdapter(
+          child: ClipRect(
+            child: AnimatedContainer(
+              duration: state.isRefreshing || state.isDismissing ? Duration.zero : const Duration(milliseconds: 150),
+              height: state.currentHeight,
+              color: colorScheme.surface,
+              child: AnimatedSlide(
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOutCubic,
+                offset: isVisible ? Offset.zero : const Offset(0, -1),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 150),
+                  opacity: isVisible ? 1.0 : 0.0,
+                  child: Center(
+                    child: state.currentHeight > 20
+                        ? SizedBox(
+                            width: 32.w,
+                            height: 32.w,
+                            child: state.isRefreshing
+                                ? CircularProgress(activeColor: colorScheme.primary)
+                                : CircularProgress(value: state.progress, activeColor: colorScheme.primary),
+                          )
+                        : const SizedBox(),
+                  ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
-          Expanded(child: widget.child),
-        ],
-      ),
+        );
+      },
     );
   }
 }

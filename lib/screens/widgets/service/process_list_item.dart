@@ -70,7 +70,7 @@ class ProcessListItem extends StatelessWidget {
                   children: [
                     Icon(Icons.storage, size: 12.w, color: colorScheme.secondary),
                     Text(
-                      formatRam(process.ramKb),
+                      process.ramKb.formatRam(),
                       style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: colorScheme.secondary),
                     ),
                   ],
@@ -116,7 +116,7 @@ class ProcessListItem extends StatelessWidget {
             children: [
               _buildDetailRow(context, context.loc.package, packageName),
               _buildDetailRow(context, context.loc.process, process.processName),
-              _buildDetailRow(context, context.loc.ramUsage, formatRam(process.ramKb)),
+              _buildDetailRow(context, context.loc.ramUsage, process.ramKb.formatRam()),
               if (process.pid != null) _buildDetailRow(context, context.loc.pid, process.pid.toString()),
             ],
           ),
@@ -128,7 +128,7 @@ class ProcessListItem extends StatelessWidget {
                   '''
 ${context.loc.package}: $packageName
 ${context.loc.process}: ${process.processName}
-${context.loc.ramUsage}: ${formatRam(process.ramKb)}
+${context.loc.ramUsage}: ${process.ramKb.formatRam()}
 ${context.loc.pid}: ${process.pid ?? 'N/A'}
 ''';
               Clipboard.setData(ClipboardData(text: text));

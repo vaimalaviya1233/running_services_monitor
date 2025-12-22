@@ -43,7 +43,7 @@ class MemInfoChartData {
     return segments.fold(0.0, (sum, s) => sum + s.value);
   }
 
-  static List<MemoryMetric> buildMetrics(AppSummary? current, AppSummary? compare) {
+  static List<MemoryMetric> buildPssMetrics(AppSummary? current, AppSummary? compare) {
     return [
       MemoryMetric('Java', current?.javaHeapPss.toDouble() ?? 0, compare?.javaHeapPss.toDouble() ?? 0),
       MemoryMetric('Native', current?.nativeHeapPss.toDouble() ?? 0, compare?.nativeHeapPss.toDouble() ?? 0),
@@ -52,6 +52,25 @@ class MemInfoChartData {
       MemoryMetric('Graphics', current?.graphicsPss.toDouble() ?? 0, compare?.graphicsPss.toDouble() ?? 0),
       MemoryMetric('Other', current?.privateOther.toDouble() ?? 0, compare?.privateOther.toDouble() ?? 0),
     ];
+  }
+
+  static List<MemoryMetric> buildRssMetrics(AppSummary? current, AppSummary? compare) {
+    return [
+      MemoryMetric('Java', current?.javaHeapRss.toDouble() ?? 0, compare?.javaHeapRss.toDouble() ?? 0),
+      MemoryMetric('Native', current?.nativeHeapRss.toDouble() ?? 0, compare?.nativeHeapRss.toDouble() ?? 0),
+      MemoryMetric('Code', current?.codeRss.toDouble() ?? 0, compare?.codeRss.toDouble() ?? 0),
+      MemoryMetric('Stack', current?.stackRss.toDouble() ?? 0, compare?.stackRss.toDouble() ?? 0),
+      MemoryMetric('Graphics', current?.graphicsRss.toDouble() ?? 0, compare?.graphicsRss.toDouble() ?? 0),
+      MemoryMetric('Unknown', current?.unknownRss.toDouble() ?? 0, compare?.unknownRss.toDouble() ?? 0),
+    ];
+  }
+
+  static MemoryMetric getTotalPss(AppSummary? current, AppSummary? compare) {
+    return MemoryMetric('Total PSS', current?.totalPss.toDouble() ?? 0, compare?.totalPss.toDouble() ?? 0);
+  }
+
+  static MemoryMetric getTotalRss(AppSummary? current, AppSummary? compare) {
+    return MemoryMetric('Total RSS', current?.totalRss.toDouble() ?? 0, compare?.totalRss.toDouble() ?? 0);
   }
 
   static List<({String label, Color color})> legendItems = [

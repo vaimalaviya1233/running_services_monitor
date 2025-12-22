@@ -15,8 +15,6 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     required String packageName,
     required bool isSystemApp,
     String? serviceClass,
-    String? appName,
-    String? ramUsage,
     double? ramInKb,
     String? intent,
     String? baseDir,
@@ -44,10 +42,8 @@ abstract class AppProcessInfo with _$AppProcessInfo {
   const AppProcessInfo._();
   const factory AppProcessInfo({
     required String packageName,
-    required String appName,
     required List<RunningServiceInfo> services,
     required List<int> pids,
-    required String totalRam,
     required double totalRamInKb,
     bool? isSystemApp,
     @Default([]) List<ConnectionRecord> connections,

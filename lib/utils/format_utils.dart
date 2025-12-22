@@ -1,11 +1,32 @@
-String formatRam(double kb) {
-  if (kb <= 0) {
-    return 'N/A';
+class FormatUtils {
+  static String formatRam(double kb, {int decimalPlaces = 2}) {
+    if (kb <= 0) {
+      return '0 KB';
+    }
+    if (kb >= 1024 * 1024 * 1024) {
+      return '${(kb / (1024 * 1024 * 1024)).toStringAsFixed(decimalPlaces)} TB';
+    } else if (kb >= 1024 * 1024) {
+      return '${(kb / (1024 * 1024)).toStringAsFixed(decimalPlaces)} GB';
+    } else if (kb >= 1024) {
+      return '${(kb / 1024).toStringAsFixed(decimalPlaces)} MB';
+    }
+    return '${kb.toStringAsFixed(decimalPlaces)} KB';
   }
-  if (kb > 1024 * 1024) {
-    return '${(kb / (1024 * 1024)).toStringAsFixed(2)} GB';
-  } else if (kb > 1024) {
-    return '${(kb / 1024).toStringAsFixed(1)} MB';
-  }
-  return '${kb.toStringAsFixed(0)} KB';
+}
+
+extension RamFormat on double {
+  String formatRam({int decimalPlaces = 2}) => FormatUtils.formatRam(this, decimalPlaces: decimalPlaces);
+}
+
+extension RamFormatNullable on double? {
+  String formatRam({int decimalPlaces = 2}) => FormatUtils.formatRam(this ?? 0, decimalPlaces: decimalPlaces);
+}
+
+extension RamFormatInt on int {
+  String formatRam({int decimalPlaces = 2}) => FormatUtils.formatRam(toDouble(), decimalPlaces: decimalPlaces);
+}
+
+extension RamFormatIntNullable on int? {
+  String formatRam({int decimalPlaces = 2}) =>
+      FormatUtils.formatRam((this ?? 0).toDouble(), decimalPlaces: decimalPlaces);
 }

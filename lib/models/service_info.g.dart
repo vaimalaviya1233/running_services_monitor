@@ -15,8 +15,6 @@ _RunningServiceInfo _$RunningServiceInfoFromJson(Map<String, dynamic> json) =>
       packageName: json['packageName'] as String,
       isSystemApp: json['isSystemApp'] as bool,
       serviceClass: json['serviceClass'] as String?,
-      appName: json['appName'] as String?,
-      ramUsage: json['ramUsage'] as String?,
       ramInKb: (json['ramInKb'] as num?)?.toDouble(),
       intent: json['intent'] as String?,
       baseDir: json['baseDir'] as String?,
@@ -47,8 +45,6 @@ Map<String, dynamic> _$RunningServiceInfoToJson(_RunningServiceInfo instance) =>
       'packageName': instance.packageName,
       'isSystemApp': instance.isSystemApp,
       'serviceClass': instance.serviceClass,
-      'appName': instance.appName,
-      'ramUsage': instance.ramUsage,
       'ramInKb': instance.ramInKb,
       'intent': instance.intent,
       'baseDir': instance.baseDir,
@@ -69,14 +65,12 @@ Map<String, dynamic> _$RunningServiceInfoToJson(_RunningServiceInfo instance) =>
 _AppProcessInfo _$AppProcessInfoFromJson(Map<String, dynamic> json) =>
     _AppProcessInfo(
       packageName: json['packageName'] as String,
-      appName: json['appName'] as String,
       services: (json['services'] as List<dynamic>)
           .map((e) => RunningServiceInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
       pids: (json['pids'] as List<dynamic>)
           .map((e) => (e as num).toInt())
           .toList(),
-      totalRam: json['totalRam'] as String,
       totalRamInKb: (json['totalRamInKb'] as num).toDouble(),
       isSystemApp: json['isSystemApp'] as bool?,
       connections:
@@ -103,10 +97,8 @@ _AppProcessInfo _$AppProcessInfoFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AppProcessInfoToJson(_AppProcessInfo instance) =>
     <String, dynamic>{
       'packageName': instance.packageName,
-      'appName': instance.appName,
       'services': instance.services,
       'pids': instance.pids,
-      'totalRam': instance.totalRam,
       'totalRamInKb': instance.totalRamInKb,
       'isSystemApp': instance.isSystemApp,
       'connections': instance.connections,

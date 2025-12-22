@@ -1,6 +1,5 @@
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
-import 'package:running_services_monitor/utils/format_utils.dart';
 
 class ProcessParser {
   static final serviceRecordRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+)');
@@ -10,23 +9,20 @@ class ProcessParser {
   static final _connectionRegex = RegExp(r'([a-zA-Z0-9._]+)/\.?([A-Za-z0-9.$]+):@([a-f0-9]+)\s+flags=(0x[a-f0-9]+)');
   static final _pssLineRegex = RegExp(r'^\s*([\d,]+)K:\s+([a-zA-Z0-9._:]+)(?:\s+\(pid\s+(\d+))?', caseSensitive: false);
   static final _totalRamRegex = RegExp(r'Total RAM:\s+([\d,]+)K\s*(?:\(status\s+(\w+)\))?');
-  static final _freeRamRegex = RegExp(r'Free RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+cached pss\s*\+\s*([\d,]+)K\s+cached kernel\s*\+\s*([\d,]+)K\s+free\)');
+  static final _freeRamRegex = RegExp(
+   r'Free RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+cached pss\s*\+\s*([\d,]+)K\s+cached kernel\s*\+\s*([\d,]+)K\s+free\)',
+  );
   static final _usedRamRegex = RegExp(r'Used RAM:\s+([\d,]+)K\s*\(\s*([\d,]+)K\s+used pss\s*\+\s*([\d,]+)K\s+kernel\)');
   static final _gpuRegex = RegExp(r'GPU:\s+([\d,]+)K');
   static final _lostRamRegex = RegExp(r'Lost RAM:\s+([\d,]+)K');
-  static final _zramRegex = RegExp(r'ZRAM:\s+([\d,]+)K\s+physical\s+used\s+for\s+([\d,]+)K\s+in\s+swap\s*\(\s*([\d,]+)K\s+total\s+swap\)');
+  static final _zramRegex = RegExp(
+    r'ZRAM:\s+([\d,]+)K\s+physical\s+used\s+for\s+([\d,]+)K\s+in\s+swap\s*\(\s*([\d,]+)K\s+total\s+swap\)',
+  );
   static final _tuningRegex = RegExp(r'Tuning:.*oom\s+([\d,]+)K.*restore limit\s+([\d,]+)K');
 
   static double _parseKb(String? value) {
     if (value == null) return 0.0;
     return double.tryParse(value.replaceAll(',', '')) ?? 0.0;
-  }
-
-  static String getAppName(String packageName) {
-    final lastDot = packageName.lastIndexOf('.');
-    if (lastDot == -1 || lastDot == packageName.length - 1) return packageName;
-    final name = packageName.substring(lastDot + 1);
-    return name.isEmpty ? packageName : '${name[0].toUpperCase()}${name.substring(1)}';
   }
 
   static ({String packageName, String state, String adj, int pid, int uid})? parseLruLine(String line) {
@@ -297,7 +293,6 @@ class ProcessParser {
     required Map<int, double> pidRamMap,
     required Map<String, double> processNameRamMap,
   }) {
-    final appName = getAppName(packageName);
     final ramFromPid = pidRamMap[lruInfo.pid];
     final ramFromName = processNameRamMap[packageName];
 
@@ -310,10 +305,8 @@ class ProcessParser {
 
     return AppProcessInfo(
       packageName: packageName,
-      appName: appName,
       services: const [],
       pids: [lruInfo.pid],
-      totalRam: formatRam(ramKb),
       totalRamInKb: ramKb,
       processState: lruInfo.state,
       adjLevel: lruInfo.adj,
@@ -328,11 +321,9 @@ class ProcessParser {
     required Map<int, double> pidRamMap,
     required Map<String, double> processNameRamMap,
   }) {
-    final appName = getAppName(packageName);
     final pids = <int>{};
     final ramSources = <RamSourceInfo>[];
     var totalRamKb = 0.0;
-    var isSystem = false;
 
     final enrichedServices = List<RunningServiceInfo>.generate(services.length, (i) {
       final service = services[i];
@@ -346,12 +337,7 @@ class ProcessParser {
         }
       }
 
-      if (service.isSystemApp) isSystem = true;
-
-      final ramKb = pidRamMap[pid];
-      return ramKb != null
-          ? service.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb), appName: appName)
-          : service.copyWith(appName: appName);
+      return service.copyWith(ramInKb: pidRamMap[pid]);
     });
 
     if (totalRamKb <= 0) {
@@ -364,12 +350,9 @@ class ProcessParser {
 
     return AppProcessInfo(
       packageName: packageName,
-      appName: appName,
       services: enrichedServices,
       pids: pids.toList(),
-      totalRam: formatRam(totalRamKb),
       totalRamInKb: totalRamKb,
-      isSystemApp: isSystem ? true : null,
       ramSources: ramSources,
     );
   }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:running_services_monitor/core/utils/log_helper.dart';
-import 'package:running_services_monitor/utils/format_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:running_services_monitor/l10n/l10n_keys.dart';
@@ -34,7 +33,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
     on<_RemoveByPid>(_onRemoveByPid);
     on<_SetProcessFilter>(_onSetProcessFilter);
     on<_ToggleSortOrder>(_onToggleSortOrder);
-    on<_UpdateCachedApps>(_onUpdateCachedApps);
     on<_UpdateRamInfo>(_onUpdateRamInfo);
   }
 
@@ -124,7 +122,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         final prevApp = previousApps[app.packageName];
         if (prevApp != null && app.totalRamInKb <= 0) {
           appsMap[app.packageName] = app.copyWith(
-            totalRam: prevApp.totalRam,
             totalRamInKb: prevApp.totalRamInKb,
             ramSources: prevApp.ramSources,
           );
@@ -238,7 +235,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         services: updatedServices,
         pids: pids.toList(),
         totalRamInKb: totalRamKb,
-        totalRam: formatRam(totalRamKb),
       );
     }
 
@@ -283,7 +279,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         pids: updatedPids,
         processes: updatedProcesses,
         totalRamInKb: totalRamKb,
-        totalRam: formatRam(totalRamKb),
       );
     }
 
@@ -298,18 +293,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
 
   Future<void> _onToggleSortOrder(_ToggleSortOrder event, Emitter<HomeState> emit) async {
     emit(HomeState.success(state.value.copyWith(sortAscending: !state.value.sortAscending)));
-  }
-
-  Future<void> _onUpdateCachedApps(_UpdateCachedApps event, Emitter<HomeState> emit) async {
-    final updatedApps = state.value.allApps.map((app) {
-      final cached = event.cachedApps[app.packageName];
-      if (cached != null) {
-        return app.copyWith(appName: cached.appName, isSystemApp: cached.isSystemApp);
-      }
-      return app;
-    }).toList();
-
-    emit(HomeState.success(state.value.copyWith(allApps: updatedApps)));
   }
 
   Future<void> _onUpdateRamInfo(_UpdateRamInfo event, Emitter<HomeState> emit) async {

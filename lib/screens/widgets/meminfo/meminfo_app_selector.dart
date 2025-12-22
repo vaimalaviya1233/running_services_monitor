@@ -104,7 +104,7 @@ class _MemInfoAppSelectorState extends State<MemInfoAppSelector> {
                           bloc: getIt<AppInfoBloc>(),
                           selector: (state) => state.value.cachedApps[app.packageName]?.appName,
                           builder: (context, appName) {
-                            return Text(appName ?? app.appName, overflow: TextOverflow.ellipsis);
+                            return Text(appName ?? app.packageName, overflow: TextOverflow.ellipsis);
                           },
                         ),
                       ),

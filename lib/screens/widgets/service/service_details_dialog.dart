@@ -4,6 +4,7 @@ import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 // import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/utils/format_utils.dart';
 import '../common/code_output_box.dart';
 import 'service_detail_row.dart';
 import '../common/status_badge.dart';
@@ -17,79 +18,46 @@ class ServiceDetailsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-      title: Text(service.appName ?? service.packageName, style: TextStyle(fontSize: 18.sp)),
+      title: Text(service.packageName, style: TextStyle(fontSize: 18.sp)),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
+          spacing: 8.h,
           children: [
             ServiceDetailRow(label: context.loc.package, value: service.packageName),
-            SizedBox(height: 8.h),
             ServiceDetailRow(label: context.loc.service, value: service.serviceName),
-            SizedBox(height: 8.h),
             ServiceDetailRow(label: context.loc.process, value: service.processName),
-            if (service.pid != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.pid, value: service.pid.toString()),
-            ],
-            if (service.uid != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.uid, value: service.uid.toString()),
-            ],
-            if (service.recentCallingUid != null) ...[
-              SizedBox(height: 8.h),
+            if (service.pid != null) ServiceDetailRow(label: context.loc.pid, value: service.pid.toString()),
+            if (service.uid != null) ServiceDetailRow(label: context.loc.uid, value: service.uid.toString()),
+            if (service.recentCallingUid != null)
               ServiceDetailRow(label: context.loc.recentCallingUid, value: service.recentCallingUid.toString()),
-            ],
-            if (service.ramUsage != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.ramUsage, value: service.ramUsage!),
-            ],
-            if (service.intent != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.intent, value: service.intent!),
-            ],
-            if (service.isForeground != null) ...[
-              SizedBox(height: 8.h),
+            if (service.ramInKb != null)
+              ServiceDetailRow(label: context.loc.ramUsage, value: service.ramInKb.formatRam()),
+            if (service.intent != null) ServiceDetailRow(label: context.loc.intent, value: service.intent!),
+            if (service.isForeground != null)
               ServiceDetailRow(
                 label: context.loc.foreground,
                 value: service.isForeground! ? context.loc.yes : context.loc.no,
               ),
-            ],
-            if (service.foregroundId != null && service.foregroundId != 0) ...[
-              SizedBox(height: 8.h),
+            if (service.foregroundId != null && service.foregroundId != 0)
               ServiceDetailRow(label: context.loc.foregroundId, value: service.foregroundId.toString()),
-            ],
-            if (service.startRequested != null) ...[
-              SizedBox(height: 8.h),
+
+            if (service.startRequested != null)
               ServiceDetailRow(
                 label: context.loc.startRequested,
                 value: service.startRequested! ? context.loc.yes : context.loc.no,
               ),
-            ],
-            if (service.createdFromFg != null) ...[
-              SizedBox(height: 8.h),
+            if (service.createdFromFg != null)
               ServiceDetailRow(
                 label: context.loc.createdFromFg,
                 value: service.createdFromFg! ? context.loc.yes : context.loc.no,
               ),
-            ],
-            if (service.createTime != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.createTime, value: service.createTime!),
-            ],
-            if (service.lastActivityTime != null) ...[
-              SizedBox(height: 8.h),
+            if (service.createTime != null) ServiceDetailRow(label: context.loc.createTime, value: service.createTime!),
+            if (service.lastActivityTime != null)
               ServiceDetailRow(label: context.loc.lastActivity, value: service.lastActivityTime!),
-            ],
-            if (service.baseDir != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.baseDir, value: service.baseDir!),
-            ],
-            if (service.dataDir != null) ...[
-              SizedBox(height: 8.h),
-              ServiceDetailRow(label: context.loc.dataDir, value: service.dataDir!),
-            ],
-            SizedBox(height: 8.h),
+            if (service.baseDir != null) ServiceDetailRow(label: context.loc.baseDir, value: service.baseDir!),
+            if (service.dataDir != null) ServiceDetailRow(label: context.loc.dataDir, value: service.dataDir!),
             ServiceDetailRow(
               label: context.loc.type,
               value: service.isSystemApp ? context.loc.systemApp : context.loc.userApp,
@@ -175,29 +143,6 @@ class ServiceDetailsDialog extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(context.loc.close, style: TextStyle(fontSize: 14.sp)),
         ),
-        // if (service.isStoppable)
-        //   FilledButton(
-        //     onPressed: () {
-        //       context.read<StopServiceBloc>().add(
-        //         StopServiceEvent.stopSingleService(
-        //           packageName: service.packageName,
-        //           serviceName: service.serviceName,
-        //           pid: service.pid,
-        //         ),
-        //       );
-        //       Navigator.of(context).pop();
-        //     },
-        //     style: FilledButton.styleFrom(backgroundColor: Colors.red),
-        //     child: Text(context.loc.stop, style: TextStyle(fontSize: 14.sp)),
-        //   )
-        // else
-        //   Tooltip(
-        //     message: context.loc.boundServiceCannotStop,
-        //     child: OutlinedButton(
-        //       onPressed: null,
-        //       child: Text(context.loc.stop, style: TextStyle(fontSize: 14.sp)),
-        //     ),
-        //   ),
       ],
     );
   }

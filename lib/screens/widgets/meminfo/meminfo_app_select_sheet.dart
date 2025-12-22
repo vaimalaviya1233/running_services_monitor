@@ -119,7 +119,7 @@ class _MemInfoAppSelectSheetState extends State<MemInfoAppSelectSheet> {
                             selector: (state) => state.value.cachedApps[app.packageName]?.appName,
                             builder: (context, appName) {
                               return Text(
-                                appName ?? app.appName,
+                                appName ?? app.packageName,
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                                 overflow: TextOverflow.ellipsis,
                               );

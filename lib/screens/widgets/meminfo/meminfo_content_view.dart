@@ -6,7 +6,7 @@ import 'package:running_services_monitor/models/meminfo_data.dart';
 import 'meminfo_category_card.dart';
 import 'meminfo_summary_card.dart';
 import 'meminfo_objects_card.dart';
-import 'meminfo_pie_chart.dart';
+import '../home/stats/meminfo_pie_chart.dart';
 import '../common/code_output_box.dart';
 
 class MemInfoContentView extends StatelessWidget {

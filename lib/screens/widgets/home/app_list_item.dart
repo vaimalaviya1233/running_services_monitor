@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/utils/format_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../common/app_icon.dart';
+import '../common/app_name_text.dart';
 import '../common/status_badge.dart';
 
 class AppListItem extends StatelessWidget {
@@ -42,19 +43,11 @@ class AppListItem extends StatelessWidget {
         tag: 'app-icon-$tabIndex-${appInfo.packageName}',
         child: AppIcon(appInfo: appInfo, size: 40.sp),
       ),
-      title: BlocSelector<AppInfoBloc, AppInfoState, String?>(
-        bloc: getIt<AppInfoBloc>(),
-        selector: (state) {
-          return state.value.cachedApps[appInfo.packageName]?.appName;
-        },
-        builder: (context, appName) {
-          return Text(
-            appName ?? appInfo.appName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 16.sp),
-          );
-        },
+      title: AppNameText(
+        packageName: appInfo.packageName,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 16.sp),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +71,7 @@ class AppListItem extends StatelessWidget {
         builder: (context, showSkeleton) {
           return Skeletonizer(
             enabled: showSkeleton,
-            child: Text(showSkeleton ? '00.0 MB' : appInfo.totalRam, style: TextStyle(fontSize: 14.sp)),
+            child: Text(showSkeleton ? '00.0 MB' : appInfo.totalRamInKb.formatRam(), style: TextStyle(fontSize: 14.sp)),
           );
         },
       ),

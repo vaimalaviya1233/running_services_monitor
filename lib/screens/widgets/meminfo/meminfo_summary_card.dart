@@ -97,7 +97,7 @@ class MemInfoSummaryCard extends StatelessWidget {
           ),
           SizedBox(height: 4.h),
           Text(
-            formatRam(value.toDouble()),
+            value.formatRam(),
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: color),
           ),
         ],
@@ -130,7 +130,7 @@ class MemInfoSummaryCard extends StatelessWidget {
                 style: TextStyle(fontSize: 10.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
               Text(
-                formatRam(item.pss.toDouble()),
+                item.pss.formatRam(),
                 style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: item.color),
               ),
             ],

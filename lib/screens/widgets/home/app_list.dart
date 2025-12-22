@@ -33,7 +33,7 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
 
     final scrollProvider = CustomScrollProviderData.of(context);
 
-    return SliverRefreshIndicator(
+    return RefreshWrapper(
       onRefresh: () async {
         final homeBloc = getIt<HomeBloc>();
         homeBloc.add(const HomeEvent.loadData(silent: true, notify: true));
@@ -59,6 +59,7 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
           return CustomScrollView(
             controller: scrollProvider.scrollControllers[widget.tabIndex],
             slivers: [
+              const SliverRefreshHeader(),
               SliverToBoxAdapter(
                 child: widget.tabIndex != 0
                     ? const SizedBox.shrink()

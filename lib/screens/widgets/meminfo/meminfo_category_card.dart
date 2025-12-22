@@ -70,7 +70,7 @@ class MemInfoCategoryCard extends StatelessWidget {
                       style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      'PSS: ${formatRam(category.pssTotal.toDouble())}',
+                      'PSS: ${category.pssTotal.formatRam()}',
                       style: TextStyle(fontSize: 11.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
@@ -80,12 +80,12 @@ class MemInfoCategoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    formatRam(category.pssTotal.toDouble()),
+                    category.pssTotal.formatRam(),
                     style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: color),
                   ),
                   if (category.rssTotal > 0)
                     Text(
-                      'RSS: ${formatRam(category.rssTotal.toDouble())}',
+                      'RSS: ${category.rssTotal.formatRam()}',
                       style: TextStyle(fontSize: 10.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                 ],
@@ -127,7 +127,7 @@ class MemInfoCategoryCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6.rSafe)),
       child: Text(
-        '$label: ${formatRam(value.toDouble())}',
+        '$label: ${value.formatRam()}',
         style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w500, color: color),
       ),
     );

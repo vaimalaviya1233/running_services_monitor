@@ -81,7 +81,7 @@ class MemInfoPieChart extends StatelessWidget {
           SizedBox(height: 12.h),
           Center(
             child: Text(
-              'Total PSS: ${formatRam(summary.totalPss.toDouble())}',
+              'Total PSS: ${summary.totalPss.formatRam()}',
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,

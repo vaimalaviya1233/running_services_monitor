@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/core/extensions.dart';
+import 'package:running_services_monitor/utils/format_utils.dart';
 import 'service_details_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_services_monitor/bloc/stop_service_bloc/stop_service_bloc.dart';
@@ -17,7 +18,7 @@ class ServiceListItem extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 25.w, vertical: 4.h),
       child: ListTile(
         title: Text(
-          service.appName ?? service.packageName,
+          service.packageName,
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
         ),
         subtitle: Column(
@@ -31,13 +32,13 @@ class ServiceListItem extends StatelessWidget {
             Row(
               spacing: 8.w,
               children: [
-                if (service.ramUsage != null)
+                if (service.ramInKb != null)
                   Row(
                     spacing: 4.w,
                     children: [
                       Icon(Icons.memory, size: 12.w, color: Theme.of(context).colorScheme.secondary),
                       Text(
-                        service.ramUsage!,
+                        service.ramInKb.formatRam(),
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.bold,

@@ -1371,6 +1371,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Compare with'**
   String get compareWith;
+
+  /// No description provided for @stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get stats;
+
+  /// No description provided for @statsLiveRamArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Live System RAM'**
+  String get statsLiveRamArea;
+
+  /// No description provided for @statsLiveRamAreaSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used RAM over time'**
+  String get statsLiveRamAreaSubtitle;
+
+  /// No description provided for @statsRamDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'System RAM Distribution'**
+  String get statsRamDistribution;
+
+  /// No description provided for @statsRamDistributionTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {size}'**
+  String statsRamDistributionTotal(String size);
+
+  /// No description provided for @statsRamLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM'**
+  String get statsRamLabel;
+
+  /// No description provided for @statsZram.
+  ///
+  /// In en, this message translates to:
+  /// **'ZRAM'**
+  String get statsZram;
+
+  /// No description provided for @statsUserVsSystemRam.
+  ///
+  /// In en, this message translates to:
+  /// **'User vs System Apps RAM'**
+  String get statsUserVsSystemRam;
+
+  /// No description provided for @statsAppStateDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'App State Distribution'**
+  String get statsAppStateDistribution;
+
+  /// No description provided for @statsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statsActive;
+
+  /// No description provided for @statsBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get statsBackground;
+
+  /// No description provided for @statsCached.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached'**
+  String get statsCached;
+
+  /// No description provided for @statsAppsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Apps'**
+  String statsAppsCount(int count);
+
+  /// No description provided for @statsSystemVsUserAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'System vs User Analysis'**
+  String get statsSystemVsUserAnalysis;
+
+  /// No description provided for @statsAppCount.
+  ///
+  /// In en, this message translates to:
+  /// **'App Count'**
+  String get statsAppCount;
+
+  /// No description provided for @statsTotalRam.
+  ///
+  /// In en, this message translates to:
+  /// **'Total RAM'**
+  String get statsTotalRam;
+
+  /// No description provided for @statsPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get statsPerformance;
+
+  /// No description provided for @statsRamDistributionScatter.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Distribution Scatter'**
+  String get statsRamDistributionScatter;
+
+  /// No description provided for @statsRamDistributionScatterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Y: RAM, X: App Index'**
+  String get statsRamDistributionScatterSubtitle;
+
+  /// No description provided for @statsTopRamConsumers.
+  ///
+  /// In en, this message translates to:
+  /// **'Top RAM Consumers'**
+  String get statsTopRamConsumers;
+
+  /// No description provided for @statsServicesVsRamCorrelation.
+  ///
+  /// In en, this message translates to:
+  /// **'Services vs RAM Correlation'**
+  String get statsServicesVsRamCorrelation;
+
+  /// No description provided for @statsServicesVsRamSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Y: RAM, X: Service Count, Bubble: Process Count'**
+  String get statsServicesVsRamSubtitle;
+
+  /// No description provided for @statsRamHistogram.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Frequency Histogram'**
+  String get statsRamHistogram;
+
+  /// No description provided for @statsRamHistogramSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Count of Apps by Memory Size'**
+  String get statsRamHistogramSubtitle;
+
+  /// No description provided for @statsMemoryHeatmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Heatmap'**
+  String get statsMemoryHeatmap;
+
+  /// No description provided for @statsMemoryHeatmapSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All Apps Sorted by RAM Intensity'**
+  String get statsMemoryHeatmapSubtitle;
+
+  /// No description provided for @statsTopAppsRelativeImpact.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Apps Relative Impact'**
+  String get statsTopAppsRelativeImpact;
+
+  /// No description provided for @statsGanttSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gantt-style Visualization of RAM Share'**
+  String get statsGanttSubtitle;
+
+  /// No description provided for @statsStackedAreaChart.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Breakdown Over Time'**
+  String get statsStackedAreaChart;
+
+  /// No description provided for @statsStackedAreaSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'User, System, and Kernel RAM'**
+  String get statsStackedAreaSubtitle;
+
+  /// No description provided for @statsPolarChart.
+  ///
+  /// In en, this message translates to:
+  /// **'Process State Distribution'**
+  String get statsPolarChart;
+
+  /// No description provided for @statsPolarSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Polar view of app states'**
+  String get statsPolarSubtitle;
+
+  /// No description provided for @statsTreemap.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Distribution Treemap'**
+  String get statsTreemap;
+
+  /// No description provided for @statsTreemapSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Proportional RAM usage by app'**
+  String get statsTreemapSubtitle;
+
+  /// No description provided for @statsFunnelChart.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Usage Tiers'**
+  String get statsFunnelChart;
+
+  /// No description provided for @statsFunnelSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps grouped by memory size'**
+  String get statsFunnelSubtitle;
+
+  /// No description provided for @statsWaterfallChart.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Allocation Waterfall'**
+  String get statsWaterfallChart;
+
+  /// No description provided for @statsWaterfallSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakdown from total to components'**
+  String get statsWaterfallSubtitle;
+
+  /// No description provided for @statsGaugeChart.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Usage Gauge'**
+  String get statsGaugeChart;
+
+  /// No description provided for @statsGaugeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall system memory utilization'**
+  String get statsGaugeSubtitle;
+
+  /// No description provided for @statsTiny.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiny'**
+  String get statsTiny;
+
+  /// No description provided for @statsSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get statsSmall;
+
+  /// No description provided for @statsMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get statsMedium;
+
+  /// No description provided for @statsLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get statsLarge;
+
+  /// No description provided for @statsHuge.
+  ///
+  /// In en, this message translates to:
+  /// **'Huge'**
+  String get statsHuge;
+
+  /// No description provided for @statsNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get statsNoData;
+
+  /// No description provided for @statsWaitingForData.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for data...'**
+  String get statsWaitingForData;
+
+  /// No description provided for @statsRamDistributionPie.
+  ///
+  /// In en, this message translates to:
+  /// **'System RAM Distribution'**
+  String get statsRamDistributionPie;
+
+  /// No description provided for @statsRamDistributionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used, Free, and ZRAM'**
+  String get statsRamDistributionSubtitle;
+
+  /// No description provided for @statsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get statsUsed;
+
+  /// No description provided for @statsFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get statsFree;
+
+  /// No description provided for @statsUserVsSystemPie.
+  ///
+  /// In en, this message translates to:
+  /// **'User vs System Apps RAM'**
+  String get statsUserVsSystemPie;
+
+  /// No description provided for @statsUserVsSystemSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare user and system app memory'**
+  String get statsUserVsSystemSubtitle;
+
+  /// No description provided for @statsProcessStateBar.
+  ///
+  /// In en, this message translates to:
+  /// **'App State Distribution'**
+  String get statsProcessStateBar;
+
+  /// No description provided for @statsProcessStateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active, Background, and Cached apps'**
+  String get statsProcessStateSubtitle;
+
+  /// No description provided for @statsScatterChart.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Distribution Scatter'**
+  String get statsScatterChart;
+
+  /// No description provided for @statsScatterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Y: RAM (MB), X: App Index'**
+  String get statsScatterSubtitle;
 }
 
 class _AppLocalizationsDelegate

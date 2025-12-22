@@ -715,4 +715,185 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get compareWith => 'Compare with';
+
+  @override
+  String get stats => 'পরিসংখ্যান';
+
+  @override
+  String get statsLiveRamArea => 'লাইভ সিস্টেম র‍্যাম';
+
+  @override
+  String get statsLiveRamAreaSubtitle => 'সময়ের সাথে ব্যবহৃত র‍্যাম';
+
+  @override
+  String get statsRamDistribution => 'সিস্টেম র‍্যাম বিতরণ';
+
+  @override
+  String statsRamDistributionTotal(String size) {
+    return 'মোট: $size';
+  }
+
+  @override
+  String get statsRamLabel => 'র‍্যাম';
+
+  @override
+  String get statsZram => 'ZRAM';
+
+  @override
+  String get statsUserVsSystemRam => 'ইউজার বনাম সিস্টেম অ্যাপস র‍্যাম';
+
+  @override
+  String get statsAppStateDistribution => 'অ্যাপ স্টেট বিতরণ';
+
+  @override
+  String get statsActive => 'সক্রিয়';
+
+  @override
+  String get statsBackground => 'ব্যাকগ্রাউন্ড';
+
+  @override
+  String get statsCached => 'ক্যাশড';
+
+  @override
+  String statsAppsCount(int count) {
+    return '$count অ্যাপস';
+  }
+
+  @override
+  String get statsSystemVsUserAnalysis => 'সিস্টেম বনাম ইউজার বিশ্লেষণ';
+
+  @override
+  String get statsAppCount => 'অ্যাপ সংখ্যা';
+
+  @override
+  String get statsTotalRam => 'মোট র‍্যাম';
+
+  @override
+  String get statsPerformance => 'পারফরম্যান্স';
+
+  @override
+  String get statsRamDistributionScatter => 'র‍্যাম বিতরণ স্ক্যাটার';
+
+  @override
+  String get statsRamDistributionScatterSubtitle =>
+      'Y: র‍্যাম, X: অ্যাপ ইনডেক্স';
+
+  @override
+  String get statsTopRamConsumers => 'শীর্ষ র‍্যাম ব্যবহারকারী';
+
+  @override
+  String get statsServicesVsRamCorrelation => 'সার্ভিস বনাম র‍্যাম সম্পর্ক';
+
+  @override
+  String get statsServicesVsRamSubtitle =>
+      'Y: র‍্যাম, X: সার্ভিস সংখ্যা, বাবল: প্রসেস সংখ্যা';
+
+  @override
+  String get statsRamHistogram => 'র‍্যাম ফ্রিকোয়েন্সি হিস্টোগ্রাম';
+
+  @override
+  String get statsRamHistogramSubtitle => 'মেমোরি সাইজ অনুযায়ী অ্যাপ সংখ্যা';
+
+  @override
+  String get statsMemoryHeatmap => 'মেমোরি হিটম্যাপ';
+
+  @override
+  String get statsMemoryHeatmapSubtitle =>
+      'র‍্যাম তীব্রতা অনুযায়ী সাজানো সব অ্যাপ';
+
+  @override
+  String get statsTopAppsRelativeImpact => 'শীর্ষ অ্যাপস আপেক্ষিক প্রভাব';
+
+  @override
+  String get statsGanttSubtitle =>
+      'র‍্যাম শেয়ারের গ্যান্ট-স্টাইল ভিজ্যুয়ালাইজেশন';
+
+  @override
+  String get statsStackedAreaChart => 'সময়ের সাথে র‍্যাম ভাঙ্গন';
+
+  @override
+  String get statsStackedAreaSubtitle => 'ইউজার, সিস্টেম, এবং কার্নেল র‍্যাম';
+
+  @override
+  String get statsPolarChart => 'প্রসেস স্টেট বিতরণ';
+
+  @override
+  String get statsPolarSubtitle => 'অ্যাপ স্টেটের পোলার ভিউ';
+
+  @override
+  String get statsTreemap => 'র‍্যাম বিতরণ ট্রিম্যাপ';
+
+  @override
+  String get statsTreemapSubtitle => 'অ্যাপ অনুযায়ী আনুপাতিক র‍্যাম ব্যবহার';
+
+  @override
+  String get statsFunnelChart => 'র‍্যাম ব্যবহার স্তর';
+
+  @override
+  String get statsFunnelSubtitle => 'মেমোরি সাইজ অনুযায়ী গ্রুপ করা অ্যাপস';
+
+  @override
+  String get statsWaterfallChart => 'র‍্যাম বরাদ্দ ওয়াটারফল';
+
+  @override
+  String get statsWaterfallSubtitle => 'মোট থেকে কম্পোনেন্টে ভাঙ্গন';
+
+  @override
+  String get statsGaugeChart => 'র‍্যাম ব্যবহার গেজ';
+
+  @override
+  String get statsGaugeSubtitle => 'সামগ্রিক সিস্টেম মেমোরি ব্যবহার';
+
+  @override
+  String get statsTiny => 'ক্ষুদ্র';
+
+  @override
+  String get statsSmall => 'ছোট';
+
+  @override
+  String get statsMedium => 'মাঝারি';
+
+  @override
+  String get statsLarge => 'বড়';
+
+  @override
+  String get statsHuge => 'বিশাল';
+
+  @override
+  String get statsNoData => 'কোনো ডেটা উপলব্ধ নেই';
+
+  @override
+  String get statsWaitingForData => 'ডেটার জন্য অপেক্ষা করা হচ্ছে...';
+
+  @override
+  String get statsRamDistributionPie => 'সিস্টেম র‍্যাম বিতরণ';
+
+  @override
+  String get statsRamDistributionSubtitle => 'ব্যবহৃত, ফাঁকা, এবং ZRAM';
+
+  @override
+  String get statsUsed => 'ব্যবহৃত';
+
+  @override
+  String get statsFree => 'ফাঁকা';
+
+  @override
+  String get statsUserVsSystemPie => 'ইউজার বনাম সিস্টেম অ্যাপস র‍্যাম';
+
+  @override
+  String get statsUserVsSystemSubtitle =>
+      'ইউজার এবং সিস্টেম অ্যাপ মেমোরি তুলনা';
+
+  @override
+  String get statsProcessStateBar => 'অ্যাপ স্টেট বিতরণ';
+
+  @override
+  String get statsProcessStateSubtitle =>
+      'সক্রিয়, ব্যাকগ্রাউন্ড, এবং ক্যাশড অ্যাপস';
+
+  @override
+  String get statsScatterChart => 'র‍্যাম বিতরণ স্ক্যাটার';
+
+  @override
+  String get statsScatterSubtitle => 'Y: র‍্যাম (MB), X: অ্যাপ ইনডেক্স';
 }

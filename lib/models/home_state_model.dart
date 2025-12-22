@@ -19,7 +19,9 @@ abstract class HomeStateModel with _$HomeStateModel {
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isLoadingRam,
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool isSearching,
     @JsonKey(includeFromJson: false, includeToJson: false) @Default('') String searchQuery,
-    @JsonKey(includeFromJson: false, includeToJson: false) @Default(ProcessStateFilter.all) ProcessStateFilter selectedProcessFilter,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(ProcessStateFilter.all)
+    ProcessStateFilter selectedProcessFilter,
     @JsonKey(includeFromJson: false, includeToJson: false) @Default(false) bool sortAscending,
   }) = _HomeStateModel;
 

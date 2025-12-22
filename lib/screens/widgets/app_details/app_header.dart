@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_scale_kit/flutter_scale_kit.dart';
-import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
-import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
 import '../common/app_icon.dart';
+import '../common/app_name_text.dart';
 import '../ram/ram_info_dialog.dart';
 
 class AppHeader extends StatelessWidget {
@@ -29,15 +27,7 @@ class AppHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BlocSelector<AppInfoBloc, AppInfoState, String?>(
-                  bloc: getIt<AppInfoBloc>(),
-                  selector: (state) {
-                    return state.value.cachedApps[appInfo.packageName]?.appName;
-                  },
-                  builder: (context, appName) {
-                    return Text(appName ?? appInfo.appName, style: Theme.of(context).textTheme.headlineSmall);
-                  },
-                ),
+                AppNameText(packageName: appInfo.packageName, style: Theme.of(context).textTheme.headlineSmall),
                 SizedBox(height: 4.h),
                 Text(
                   appInfo.packageName,
@@ -53,12 +43,14 @@ class AppHeader extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SelectionArea(child: Text(appInfo.totalRam, style: Theme.of(context).textTheme.titleMedium)),
+            SelectionArea(
+              child: Text(appInfo.totalRamInKb.formatRam(), style: Theme.of(context).textTheme.titleMedium),
+            ),
             if (appInfo.cachedMemoryKb > 0) ...[
               SizedBox(height: 2.h),
               SelectionArea(
                 child: Text(
-                  'Cached: ${formatRam(appInfo.cachedMemoryKb)}',
+                  'Cached: ${appInfo.cachedMemoryKb.formatRam()}',
                   style: TextStyle(fontSize: 11.sp, color: Colors.grey),
                 ),
               ),

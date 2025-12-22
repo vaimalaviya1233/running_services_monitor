@@ -275,5 +275,76 @@
   "allApps": "All",
   "userApps": "User",
   "systemApps": "System",
-  "compareWith": "Compare with"
+  "compareWith": "Compare with",
+  "stats": "Stats",
+  "statsLiveRamArea": "Live System RAM",
+  "statsLiveRamAreaSubtitle": "Used RAM over time",
+  "statsRamDistribution": "System RAM Distribution",
+  "statsRamDistributionTotal": "Total: {size}",
+  "@statsRamDistributionTotal": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRamLabel": "RAM",
+  "statsZram": "ZRAM",
+  "statsUserVsSystemRam": "User vs System Apps RAM",
+  "statsAppStateDistribution": "App State Distribution",
+  "statsActive": "Active",
+  "statsBackground": "Background",
+  "statsCached": "Cached",
+  "statsAppsCount": "{count} Apps",
+  "@statsAppsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsSystemVsUserAnalysis": "System vs User Analysis",
+  "statsAppCount": "App Count",
+  "statsTotalRam": "Total RAM",
+  "statsPerformance": "Performance",
+  "statsRamDistributionScatter": "RAM Distribution Scatter",
+  "statsRamDistributionScatterSubtitle": "Y: RAM, X: App Index",
+  "statsTopRamConsumers": "Top RAM Consumers",
+  "statsServicesVsRamCorrelation": "Services vs RAM Correlation",
+  "statsServicesVsRamSubtitle": "Y: RAM, X: Service Count, Bubble: Process Count",
+  "statsRamHistogram": "RAM Frequency Histogram",
+  "statsRamHistogramSubtitle": "Count of Apps by Memory Size",
+  "statsMemoryHeatmap": "Memory Heatmap",
+  "statsMemoryHeatmapSubtitle": "All Apps Sorted by RAM Intensity",
+  "statsTopAppsRelativeImpact": "Top Apps Relative Impact",
+  "statsGanttSubtitle": "Gantt-style Visualization of RAM Share",
+  "statsStackedAreaChart": "RAM Breakdown Over Time",
+  "statsStackedAreaSubtitle": "User, System, and Kernel RAM",
+  "statsPolarChart": "Process State Distribution",
+  "statsPolarSubtitle": "Polar view of app states",
+  "statsTreemap": "RAM Distribution Treemap",
+  "statsTreemapSubtitle": "Proportional RAM usage by app",
+  "statsFunnelChart": "RAM Usage Tiers",
+  "statsFunnelSubtitle": "Apps grouped by memory size",
+  "statsWaterfallChart": "RAM Allocation Waterfall",
+  "statsWaterfallSubtitle": "Breakdown from total to components",
+  "statsGaugeChart": "RAM Usage Gauge",
+  "statsGaugeSubtitle": "Overall system memory utilization",
+  "statsTiny": "Tiny",
+  "statsSmall": "Small",
+  "statsMedium": "Medium",
+  "statsLarge": "Large",
+  "statsHuge": "Huge",
+  "statsNoData": "No data available",
+  "statsWaitingForData": "Waiting for data...",
+  "statsRamDistributionPie": "System RAM Distribution",
+  "statsRamDistributionSubtitle": "Used, Free, and ZRAM",
+  "statsUsed": "Used",
+  "statsFree": "Free",
+  "statsUserVsSystemPie": "User vs System Apps RAM",
+  "statsUserVsSystemSubtitle": "Compare user and system app memory",
+  "statsProcessStateBar": "App State Distribution",
+  "statsProcessStateSubtitle": "Active, Background, and Cached apps",
+  "statsScatterChart": "RAM Distribution Scatter",
+  "statsScatterSubtitle": "Y: RAM (MB), X: App Index"
 }

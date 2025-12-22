@@ -713,4 +713,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get compareWith => 'Compare with';
+
+  @override
+  String get stats => 'Stats';
+
+  @override
+  String get statsLiveRamArea => 'Live System RAM';
+
+  @override
+  String get statsLiveRamAreaSubtitle => 'Used RAM over time';
+
+  @override
+  String get statsRamDistribution => 'System RAM Distribution';
+
+  @override
+  String statsRamDistributionTotal(String size) {
+    return 'Total: $size';
+  }
+
+  @override
+  String get statsRamLabel => 'RAM';
+
+  @override
+  String get statsZram => 'ZRAM';
+
+  @override
+  String get statsUserVsSystemRam => 'User vs System Apps RAM';
+
+  @override
+  String get statsAppStateDistribution => 'App State Distribution';
+
+  @override
+  String get statsActive => 'Active';
+
+  @override
+  String get statsBackground => 'Background';
+
+  @override
+  String get statsCached => 'Cached';
+
+  @override
+  String statsAppsCount(int count) {
+    return '$count Apps';
+  }
+
+  @override
+  String get statsSystemVsUserAnalysis => 'System vs User Analysis';
+
+  @override
+  String get statsAppCount => 'App Count';
+
+  @override
+  String get statsTotalRam => 'Total RAM';
+
+  @override
+  String get statsPerformance => 'Performance';
+
+  @override
+  String get statsRamDistributionScatter => 'RAM Distribution Scatter';
+
+  @override
+  String get statsRamDistributionScatterSubtitle => 'Y: RAM, X: App Index';
+
+  @override
+  String get statsTopRamConsumers => 'Top RAM Consumers';
+
+  @override
+  String get statsServicesVsRamCorrelation => 'Services vs RAM Correlation';
+
+  @override
+  String get statsServicesVsRamSubtitle =>
+      'Y: RAM, X: Service Count, Bubble: Process Count';
+
+  @override
+  String get statsRamHistogram => 'RAM Frequency Histogram';
+
+  @override
+  String get statsRamHistogramSubtitle => 'Count of Apps by Memory Size';
+
+  @override
+  String get statsMemoryHeatmap => 'Memory Heatmap';
+
+  @override
+  String get statsMemoryHeatmapSubtitle => 'All Apps Sorted by RAM Intensity';
+
+  @override
+  String get statsTopAppsRelativeImpact => 'Top Apps Relative Impact';
+
+  @override
+  String get statsGanttSubtitle => 'Gantt-style Visualization of RAM Share';
+
+  @override
+  String get statsStackedAreaChart => 'RAM Breakdown Over Time';
+
+  @override
+  String get statsStackedAreaSubtitle => 'User, System, and Kernel RAM';
+
+  @override
+  String get statsPolarChart => 'Process State Distribution';
+
+  @override
+  String get statsPolarSubtitle => 'Polar view of app states';
+
+  @override
+  String get statsTreemap => 'RAM Distribution Treemap';
+
+  @override
+  String get statsTreemapSubtitle => 'Proportional RAM usage by app';
+
+  @override
+  String get statsFunnelChart => 'RAM Usage Tiers';
+
+  @override
+  String get statsFunnelSubtitle => 'Apps grouped by memory size';
+
+  @override
+  String get statsWaterfallChart => 'RAM Allocation Waterfall';
+
+  @override
+  String get statsWaterfallSubtitle => 'Breakdown from total to components';
+
+  @override
+  String get statsGaugeChart => 'RAM Usage Gauge';
+
+  @override
+  String get statsGaugeSubtitle => 'Overall system memory utilization';
+
+  @override
+  String get statsTiny => 'Tiny';
+
+  @override
+  String get statsSmall => 'Small';
+
+  @override
+  String get statsMedium => 'Medium';
+
+  @override
+  String get statsLarge => 'Large';
+
+  @override
+  String get statsHuge => 'Huge';
+
+  @override
+  String get statsNoData => 'No data available';
+
+  @override
+  String get statsWaitingForData => 'Waiting for data...';
+
+  @override
+  String get statsRamDistributionPie => 'System RAM Distribution';
+
+  @override
+  String get statsRamDistributionSubtitle => 'Used, Free, and ZRAM';
+
+  @override
+  String get statsUsed => 'Used';
+
+  @override
+  String get statsFree => 'Free';
+
+  @override
+  String get statsUserVsSystemPie => 'User vs System Apps RAM';
+
+  @override
+  String get statsUserVsSystemSubtitle => 'Compare user and system app memory';
+
+  @override
+  String get statsProcessStateBar => 'App State Distribution';
+
+  @override
+  String get statsProcessStateSubtitle => 'Active, Background, and Cached apps';
+
+  @override
+  String get statsScatterChart => 'RAM Distribution Scatter';
+
+  @override
+  String get statsScatterSubtitle => 'Y: RAM (MB), X: App Index';
 }

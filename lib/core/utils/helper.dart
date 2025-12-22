@@ -7,9 +7,8 @@ class Helper {
     return apps.where((app) {
       if (searchQuery.trim().isNotEmpty) {
         final query = searchQuery.trim().toLowerCase();
-        final name = app.appName.trim().toLowerCase();
         final pkg = app.packageName.trim().toLowerCase();
-        if (!name.contains(query) && !pkg.contains(query)) {
+        if (!pkg.contains(query)) {
           return false;
         }
       }

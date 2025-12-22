@@ -49,10 +49,10 @@ class RamExpandedSection extends StatelessWidget {
           Row(
             children: [
               LegendDot(color: primaryColor),
-              Text(' ${loc.usedPss}: ${formatRam(ram.usedPssKb)}', style: TextStyle(fontSize: 11.sp)),
+              Text(' ${loc.usedPss}: ${ram.usedPssKb.formatRam()}', style: TextStyle(fontSize: 11.sp)),
               SizedBox(width: 12.w),
               LegendDot(color: primaryColor.withValues(alpha: 0.6)),
-              Text(' ${loc.kernel}: ${formatRam(ram.kernelKb)}', style: TextStyle(fontSize: 11.sp)),
+              Text(' ${loc.kernel}: ${ram.kernelKb.formatRam()}', style: TextStyle(fontSize: 11.sp)),
             ],
           ),
           SizedBox(height: 16.h),
@@ -91,14 +91,14 @@ class RamExpandedSection extends StatelessWidget {
             spacing: 12.w,
             runSpacing: 4.h,
             children: [
-              LegendLabel(color: freeColor, text: '${loc.cachedPss}: ${formatRam(ram.cachedPssKb)}'),
+              LegendLabel(color: freeColor, text: '${loc.cachedPss}: ${ram.cachedPssKb.formatRam()}'),
               LegendLabel(
                 color: freeColor.withValues(alpha: 0.7),
-                text: '${loc.cachedKernel}: ${formatRam(ram.cachedKernelKb)}',
+                text: '${loc.cachedKernel}: ${ram.cachedKernelKb.formatRam()}',
               ),
               LegendLabel(
                 color: freeColor.withValues(alpha: 0.4),
-                text: '${loc.actualFree}: ${formatRam(ram.actualFreeKb)}',
+                text: '${loc.actualFree}: ${ram.actualFreeKb.formatRam()}',
               ),
             ],
           ),
@@ -111,7 +111,7 @@ class RamExpandedSection extends StatelessWidget {
           if (ram.gpuKb > 0) ...[
             RamProgressRow(
               label: loc.gpu,
-              value: formatRam(ram.gpuKb),
+              value: ram.gpuKb.formatRam(),
               progress: ram.gpuKb / ram.totalRamKb,
               color: primaryColor,
             ),
@@ -119,7 +119,7 @@ class RamExpandedSection extends StatelessWidget {
           ],
           RamProgressRow(
             label: loc.lostRam,
-            value: formatRam(ram.lostRamKb),
+            value: ram.lostRamKb.formatRam(),
             progress: ram.lostRamKb / ram.totalRamKb,
             color: primaryColor.withValues(alpha: 0.5),
           ),
@@ -132,14 +132,14 @@ class RamExpandedSection extends StatelessWidget {
             SizedBox(height: 8.h),
             RamProgressRow(
               label: loc.zramPhysical,
-              value: formatRam(ram.zramPhysicalKb),
+              value: ram.zramPhysicalKb.formatRam(),
               progress: ram.zramPhysicalKb / ram.totalRamKb,
               color: primaryColor,
             ),
             SizedBox(height: 6.h),
             RamProgressRow(
               label: loc.zramSwapUsed,
-              value: '${formatRam(ram.zramSwapKb)} / ${formatRam(ram.zramTotalSwapKb)}',
+              value: '${ram.zramSwapKb.formatRam()} / ${ram.zramTotalSwapKb.formatRam()}',
               progress: ram.zramSwapKb / ram.zramTotalSwapKb,
               color: primaryColor.withValues(alpha: 0.6),
             ),
@@ -153,14 +153,14 @@ class RamExpandedSection extends StatelessWidget {
             SizedBox(height: 8.h),
             RamProgressRow(
               label: loc.oomThreshold,
-              value: formatRam(ram.oomKb),
+              value: ram.oomKb.formatRam(),
               progress: ram.oomKb / ram.totalRamKb,
               color: primaryColor.withValues(alpha: 0.8),
             ),
             SizedBox(height: 6.h),
             RamProgressRow(
               label: loc.restoreLimit,
-              value: formatRam(ram.restoreLimitKb),
+              value: ram.restoreLimitKb.formatRam(),
               progress: ram.restoreLimitKb / ram.totalRamKb,
               color: primaryColor.withValues(alpha: 0.5),
             ),

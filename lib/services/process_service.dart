@@ -5,7 +5,6 @@ import 'package:running_services_monitor/core/constants.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:running_services_monitor/parsers/process_parser.dart';
-import 'package:running_services_monitor/utils/format_utils.dart';
 import 'shizuku_service.dart';
 
 @lazySingleton
@@ -127,7 +126,7 @@ class ProcessService {
         final enrichedServices = existingApp.services.map((s) {
           if (s.ramInKb != null || s.pid == null) return s;
           final ramKb = pidRamMap[s.pid];
-          return ramKb != null ? s.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb)) : s;
+          return s.copyWith(ramInKb: ramKb);
         }).toList();
 
         var totalRamKb = 0.0;
@@ -151,7 +150,6 @@ class ProcessService {
 
         updatedApp = updatedApp.copyWith(
           services: enrichedServices,
-          totalRam: formatRam(totalRamKb),
           totalRamInKb: totalRamKb,
           ramSources: [...updatedApp.ramSources, ...ramSources],
           processes: processList.isNotEmpty ? processList : updatedApp.processes,
@@ -223,13 +221,12 @@ class ProcessService {
     final enrichedServices = mergedServices.map((s) {
       if (s.ramInKb != null || s.pid == null) return s;
       final ramKb = pidRamMap[s.pid];
-      return ramKb != null ? s.copyWith(ramInKb: ramKb, ramUsage: formatRam(ramKb)) : s;
+      return s.copyWith(ramInKb: ramKb);
     }).toList();
 
     final app = existing.copyWith(
       services: enrichedServices,
       pids: mergedPids.toList(),
-      totalRam: formatRam(totalRamKb),
       totalRamInKb: totalRamKb,
     );
     groupedApps[packageName] = app;

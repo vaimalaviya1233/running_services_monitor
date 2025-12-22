@@ -2,7 +2,8 @@ part of 'home_bloc.dart';
 
 @freezed
 class HomeEvent with _$HomeEvent {
-  const factory HomeEvent.initializeShizuku({@Default(false) bool silent, @Default(false) bool notify}) = _InitializeShizuku;
+  const factory HomeEvent.initializeShizuku({@Default(false) bool silent, @Default(false) bool notify}) =
+      _InitializeShizuku;
   const factory HomeEvent.loadData({@Default(false) bool silent, @Default(false) bool notify}) = _LoadData;
   const factory HomeEvent.toggleAutoUpdate() = _ToggleAutoUpdate;
   const factory HomeEvent.toggleSearch() = _ToggleSearch;
@@ -13,5 +14,9 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.setProcessFilter(ProcessStateFilter filter) = _SetProcessFilter;
   const factory HomeEvent.toggleSortOrder() = _ToggleSortOrder;
   const factory HomeEvent.updateCachedApps(Map<String, CachedAppInfo> cachedApps) = _UpdateCachedApps;
-  const factory HomeEvent.updateRamInfo(List<AppProcessInfo> apps, Future<SystemRamInfo?> systemRamInfoFuture, bool notify) = _UpdateRamInfo;
+  const factory HomeEvent.updateRamInfo(
+    List<AppProcessInfo> apps,
+    Future<SystemRamInfo?> systemRamInfoFuture,
+    bool notify,
+  ) = _UpdateRamInfo;
 }

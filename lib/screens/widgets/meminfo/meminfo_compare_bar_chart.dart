@@ -141,12 +141,12 @@ class _MetricBarRow extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    formatRam(metric.currentValue),
+                    metric.currentValue.formatRam(),
                     style: TextStyle(fontSize: 10.sp, color: primaryColor, fontWeight: FontWeight.w600),
                   ),
                   Text(' / ', style: TextStyle(fontSize: 10.sp)),
                   Text(
-                    formatRam(metric.compareValue),
+                    metric.compareValue.formatRam(),
                     style: TextStyle(fontSize: 10.sp, color: secondaryColor, fontWeight: FontWeight.w600),
                   ),
                 ],

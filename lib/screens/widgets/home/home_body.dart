@@ -9,6 +9,7 @@ import 'package:running_services_monitor/l10n/l10n_keys.dart';
 import 'package:running_services_monitor/models/home_state_model.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
 import 'package:running_services_monitor/models/service_info.dart';
+import 'package:running_services_monitor/screens/widgets/home/stats/stats_tab.dart';
 import 'app_list.dart';
 
 import '../common/loading_state.dart';
@@ -79,6 +80,8 @@ class HomeBody extends StatelessWidget {
                   ListenableBuilder(
                     listenable: tabController,
                     builder: (context, child) {
+                      final isVisible = tabController.index != 3;
+                      if (!isVisible) return const SliverToBoxAdapter(child: SizedBox(height: 1));
                       return SliverPersistentHeader(
                         pinned: true,
                         delegate: FilterChipsDelegate(
@@ -109,6 +112,7 @@ class HomeBody extends StatelessWidget {
                         AppList(apps: data.model.allApps, tabIndex: 0),
                         AppList(apps: data.userApps, tabIndex: 1),
                         AppList(apps: data.systemApps, tabIndex: 2),
+                        const StatsTab(),
                       ],
                     ),
                   );

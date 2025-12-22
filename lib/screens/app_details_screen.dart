@@ -194,7 +194,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  currentAppInfo.appName,
+                                  currentAppInfo.packageName,
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
                                 ),
                                 SizedBox(height: 8.h),
