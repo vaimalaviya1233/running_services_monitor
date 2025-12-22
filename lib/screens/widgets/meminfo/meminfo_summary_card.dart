@@ -4,21 +4,29 @@ import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/meminfo_data.dart';
 import 'package:running_services_monitor/utils/format_utils.dart';
 
-class MemInfoSummaryCard extends StatelessWidget {
+class MemInfoSummaryCard extends StatefulWidget {
   final AppSummary summary;
 
   const MemInfoSummaryCard({super.key, required this.summary});
 
   @override
+  State<MemInfoSummaryCard> createState() => _MemInfoSummaryCardState();
+}
+
+class _MemInfoSummaryCardState extends State<MemInfoSummaryCard> {
+  bool showPss = true;
+
+  @override
   Widget build(BuildContext context) {
     final items = [
-      _SummaryItem('Java Heap', summary.javaHeapPss, summary.javaHeapRss, Colors.green),
-      _SummaryItem('Native Heap', summary.nativeHeapPss, summary.nativeHeapRss, Colors.orange),
-      _SummaryItem('Code', summary.codePss, summary.codeRss, Colors.blue),
-      _SummaryItem('Stack', summary.stackPss, summary.stackRss, Colors.purple),
-      _SummaryItem('Graphics', summary.graphicsPss, summary.graphicsRss, Colors.pink),
-      _SummaryItem('Private Other', summary.privateOther, 0, Colors.teal),
-      _SummaryItem('System', summary.system, 0, Colors.indigo),
+      _SummaryItem('Java Heap', widget.summary.javaHeapPss, widget.summary.javaHeapRss, Colors.green),
+      _SummaryItem('Native Heap', widget.summary.nativeHeapPss, widget.summary.nativeHeapRss, Colors.orange),
+      _SummaryItem('Code', widget.summary.codePss, widget.summary.codeRss, Colors.blue),
+      _SummaryItem('Stack', widget.summary.stackPss, widget.summary.stackRss, Colors.purple),
+      _SummaryItem('Graphics', widget.summary.graphicsPss, widget.summary.graphicsRss, Colors.pink),
+      _SummaryItem('Private Other', widget.summary.privateOther, 0, Colors.teal),
+      _SummaryItem('System', widget.summary.system, 0, Colors.indigo),
+      if (widget.summary.unknownRss > 0) _SummaryItem('Unknown', 0, widget.summary.unknownRss, Colors.grey),
     ];
 
     return Container(
@@ -37,30 +45,34 @@ class MemInfoSummaryCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16.h,
         children: [
           Row(
             children: [
               Icon(Icons.analytics, size: 20.sp, color: Theme.of(context).colorScheme.primary),
               SizedBox(width: 8.w),
-              Text(
-                context.loc.appSummary,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  context.loc.appSummary,
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
           Row(
+            spacing: 12.w,
             children: [
-              Expanded(child: _buildTotalCard(context, 'Total PSS', summary.totalPss, Colors.blue, Icons.memory)),
-              SizedBox(width: 12.w),
-              Expanded(child: _buildTotalCard(context, 'Total RSS', summary.totalRss, Colors.purple, Icons.storage)),
+              Expanded(
+                child: _buildTotalCard(context, 'Total PSS', widget.summary.totalPss, Colors.blue, Icons.memory),
+              ),
+              Expanded(
+                child: _buildTotalCard(context, 'Total RSS', widget.summary.totalRss, Colors.purple, Icons.storage),
+              ),
             ],
           ),
-          if (summary.totalSwapPss > 0) ...[
-            SizedBox(height: 12.h),
-            _buildTotalCard(context, 'Swap PSS', summary.totalSwapPss, Colors.orange, Icons.swap_horiz),
-          ],
-          SizedBox(height: 16.h),
+          if (widget.summary.totalSwapPss > 0)
+            _buildTotalCard(context, 'Swap PSS', widget.summary.totalSwapPss, Colors.orange, Icons.swap_horiz),
+          _buildToggleButton(context),
           Wrap(
             spacing: 8.w,
             runSpacing: 8.h,
@@ -68,6 +80,61 @@ class MemInfoSummaryCard extends StatelessWidget {
                 .where((item) => item.pss > 0 || item.rss > 0)
                 .map((item) => _buildSummaryChip(context, item))
                 .toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(8.rSafe),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => showPss = true),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: showPss ? Theme.of(context).colorScheme.primary : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.rSafe),
+                ),
+                child: Text(
+                  'PSS',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: showPss ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => showPss = false),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: !showPss ? Theme.of(context).colorScheme.primary : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.rSafe),
+                ),
+                child: Text(
+                  'RSS',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: !showPss ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -106,6 +173,10 @@ class MemInfoSummaryCard extends StatelessWidget {
   }
 
   Widget _buildSummaryChip(BuildContext context, _SummaryItem item) {
+    final primaryValue = showPss ? item.pss : item.rss;
+    final secondaryValue = showPss ? item.rss : item.pss;
+    final secondaryLabel = showPss ? 'RSS' : 'PSS';
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
@@ -129,10 +200,16 @@ class MemInfoSummaryCard extends StatelessWidget {
                 item.label,
                 style: TextStyle(fontSize: 10.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
-              Text(
-                item.pss.formatRam(),
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: item.color),
-              ),
+              if (primaryValue > 0)
+                Text(
+                  primaryValue.formatRam(),
+                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: item.color),
+                ),
+              if (secondaryValue > 0)
+                Text(
+                  '$secondaryLabel: ${secondaryValue.formatRam()}',
+                  style: TextStyle(fontSize: 9.sp, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ),
             ],
           ),
         ],

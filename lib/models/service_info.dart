@@ -57,7 +57,8 @@ abstract class AppProcessInfo with _$AppProcessInfo {
 
   factory AppProcessInfo.fromJson(Map<String, dynamic> json) => _$AppProcessInfoFromJson(json);
 
-  bool get isActive => isActiveState(processState, hasServices: hasServices);
+  bool get hasActiveService => services.any((s) => s.startRequested == true || s.isForeground == true || s.hasBound || s.pid != null);
+  bool get isActive => isActiveState(processState, hasServices: hasServices, hasActiveService: hasActiveService);
   bool get isCached => isCachedState(processState);
   int get processCount {
     return allPids.isNotEmpty ? allPids.length : (processes.isNotEmpty ? processes.length : pids.length);

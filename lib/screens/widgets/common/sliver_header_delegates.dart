@@ -25,23 +25,37 @@ class RamBarDelegate extends SliverPersistentHeaderDelegate {
 
 class FilterChipsDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;
+  final double height;
+  final double opacity;
+  final double slideOffset;
 
-  FilterChipsDelegate({required this.child});
+  FilterChipsDelegate({required this.child, double? height, this.opacity = 1.0, this.slideOffset = 0.0})
+    : height = height ?? 52.h;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(color: Theme.of(context).colorScheme.surface, child: child);
+    return Container(
+      height: height,
+      color: Theme.of(context).colorScheme.surface,
+      child: Transform.translate(
+        offset: Offset(0, -slideOffset), // Slide up visually
+        child: Opacity(opacity: opacity, child: child),
+      ),
+    );
   }
 
   @override
-  double get maxExtent => 52.h;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => 52.h;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant FilterChipsDelegate oldDelegate) {
-    return child != oldDelegate.child;
+    return child != oldDelegate.child ||
+        height != oldDelegate.height ||
+        opacity != oldDelegate.opacity ||
+        slideOffset != oldDelegate.slideOffset;
   }
 }
 

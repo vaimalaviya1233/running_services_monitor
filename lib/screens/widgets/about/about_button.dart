@@ -27,6 +27,8 @@ class AboutButton extends StatelessWidget {
               _showModeSelector(context);
             } else if (value == 'logs') {
               context.push('/command-logs');
+            } else if (value == 'compare') {
+              context.push('/meminfo-compare');
             }
           },
           itemBuilder: (context) => [
@@ -47,6 +49,14 @@ class AboutButton extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.terminal, size: 20.sp),
                 title: Text(context.loc.commandLogs, style: TextStyle(fontSize: 14.sp)),
+              ),
+            ),
+            PopupMenuItem<String>(
+              value: 'compare',
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.compare_arrows, size: 20.sp),
+                title: Text(context.loc.compareWithOther, style: TextStyle(fontSize: 14.sp)),
               ),
             ),
             PopupMenuItem<String>(

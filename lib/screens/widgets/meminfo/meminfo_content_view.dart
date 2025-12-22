@@ -3,7 +3,6 @@ import 'package:flutter_scale_kit/flutter_scale_kit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:running_services_monitor/core/extensions.dart';
 import 'package:running_services_monitor/models/meminfo_data.dart';
-import 'meminfo_category_card.dart';
 import 'meminfo_summary_card.dart';
 import 'meminfo_objects_card.dart';
 import '../home/stats/meminfo_pie_chart.dart';
@@ -27,12 +26,9 @@ class MemInfoContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxPss = data.categories.isNotEmpty
-        ? data.categories.map((c) => c.pssTotal).reduce((a, b) => a > b ? a : b)
-        : 0;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16.h,
       children: [
         Row(
           children: [
@@ -49,8 +45,8 @@ class MemInfoContentView extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 12.h),
         Row(
+          spacing: 8.w,
           children: [
             Expanded(
               child: FilledButton.tonalIcon(
@@ -62,7 +58,6 @@ class MemInfoContentView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 8.w),
             Expanded(
               child: FilledButton.icon(
                 onPressed: () => context.push('/meminfo-compare', extra: {'packageName': packageName}),
@@ -72,8 +67,7 @@ class MemInfoContentView extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
-        if (showRawOutput) ...[
+        if (showRawOutput)
           CodeOutputBox(
             text: data.rawOutput.isEmpty ? context.loc.noOutput : data.rawOutput,
             fontSize: 10.sp,
@@ -82,20 +76,9 @@ class MemInfoContentView extends StatelessWidget {
             horizontalScroll: true,
             hasBorder: true,
           ),
-          SizedBox(height: 16.h),
-        ],
-        if (data.appSummary != null) ...[MemInfoPieChart(summary: data.appSummary!), SizedBox(height: 16.h)],
-        if (data.appSummary != null) ...[MemInfoSummaryCard(summary: data.appSummary!), SizedBox(height: 16.h)],
-        if (data.objects != null) ...[MemInfoObjectsCard(objects: data.objects!), SizedBox(height: 16.h)],
-        if (data.categories.isNotEmpty) ...[
-          Text(
-            context.loc.memoryCategories,
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 12.h),
-          ...data.categories.map((category) => MemInfoCategoryCard(category: category, maxPss: maxPss)),
-        ],
-        SizedBox(height: 24.h),
+        if (data.appSummary != null) MemInfoPieChart(summary: data.appSummary!),
+        if (data.appSummary != null) MemInfoSummaryCard(summary: data.appSummary!),
+        if (data.objects != null) MemInfoObjectsCard(objects: data.objects!),
       ],
     );
   }

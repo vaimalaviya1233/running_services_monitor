@@ -100,15 +100,15 @@ class SliverRefreshHeader extends StatelessWidget {
         return SliverToBoxAdapter(
           child: ClipRect(
             child: AnimatedContainer(
-              duration: state.isRefreshing || state.isDismissing ? Duration.zero : const Duration(milliseconds: 150),
+              duration: state.isDragging ? Duration.zero : const Duration(milliseconds: 200),
               height: state.currentHeight,
               color: colorScheme.surface,
               child: AnimatedSlide(
-                duration: const Duration(milliseconds: 150),
+                duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOutCubic,
                 offset: isVisible ? Offset.zero : const Offset(0, -1),
                 child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 200),
                   opacity: isVisible ? 1.0 : 0.0,
                   child: Center(
                     child: state.currentHeight > 20

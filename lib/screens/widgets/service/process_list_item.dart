@@ -25,7 +25,7 @@ class ProcessListItem extends StatelessWidget {
     final displayName = colonIdx != -1 ? processName.substring(colonIdx + 1) : processName;
 
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 25.w, vertical: 4.h),
+      margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 4.h),
       child: ListTile(
         onTap: () => _showProcessDetails(context),
         title: Text(

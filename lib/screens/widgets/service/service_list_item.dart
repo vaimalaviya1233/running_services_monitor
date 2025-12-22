@@ -15,7 +15,7 @@ class ServiceListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 25.w, vertical: 4.h),
+      margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 4.h),
       child: ListTile(
         title: Text(
           service.packageName,

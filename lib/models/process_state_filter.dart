@@ -1,6 +1,7 @@
 enum ProcessStateFilter { all, active, cached, withServices }
 
-bool isActiveState(String? processState, {bool hasServices = false}) {
+bool isActiveState(String? processState, {bool hasServices = false, bool hasActiveService = false}) {
+  if (hasActiveService) return true;
   if (processState == null) return hasServices;
   final state = processState.toLowerCase();
   return state.startsWith('fg') ||
@@ -11,7 +12,12 @@ bool isActiveState(String? processState, {bool hasServices = false}) {
       state.startsWith('home') ||
       state.startsWith('hvy') ||
       state.startsWith('psvc') ||
-      state.startsWith('pers');
+      state.startsWith('pers') ||
+      state.startsWith('top') ||
+      state.startsWith('btop') ||
+      state.startsWith('impf') ||
+      state.startsWith('bfgs') ||
+      state.startsWith('rcvr');
 }
 
 bool isCachedState(String? processState) {
