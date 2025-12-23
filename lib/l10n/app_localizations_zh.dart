@@ -292,6 +292,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get flags => '标志';
 
   @override
+  String get bound => 'Bound';
+
+  @override
+  String get processRecord => 'Process Record';
+
+  @override
   String get visible => '可见';
 
   @override
@@ -603,83 +609,83 @@ class AppLocalizationsZh extends AppLocalizations {
   String get boundServiceCannotStop => '此服务被另一个进程绑定，无法直接停止。您可以改用停止整个应用。';
 
   @override
-  String get memoryInfo => 'Memory Info';
+  String get memoryInfo => '内存信息';
 
   @override
-  String get viewRawOutput => 'View Raw';
+  String get viewRawOutput => '查看原始数据';
 
   @override
-  String get hideRawOutput => 'Hide Raw';
+  String get hideRawOutput => '隐藏原始数据';
 
   @override
-  String get compareWithOther => 'Compare';
+  String get compareWithOther => '比较';
 
   @override
-  String get memoryCategories => 'Memory Categories';
+  String get memoryCategories => '内存类别';
 
   @override
-  String get appSummary => 'App Summary';
+  String get appSummary => '应用摘要';
 
   @override
-  String get objects => 'Objects';
+  String get objects => '对象';
 
   @override
-  String get memoryComparison => 'Memory Comparison';
+  String get memoryComparison => '内存比较';
 
   @override
-  String get selectAppToCompare => 'Select an app to compare';
+  String get selectAppToCompare => '选择要比较的应用';
 
   @override
-  String get selectApp => 'Select app...';
+  String get selectApp => '选择应用...';
 
   @override
-  String get totalPss => 'Total PSS';
+  String get totalPss => '总 PSS';
 
   @override
-  String get totalRss => 'Total RSS';
+  String get totalRss => '总 RSS';
 
   @override
-  String get javaHeap => 'Java Heap';
+  String get javaHeap => 'Java 堆';
 
   @override
-  String get nativeHeap => 'Native Heap';
+  String get nativeHeap => 'Native 堆';
 
   @override
-  String get code => 'Code';
+  String get code => '代码';
 
   @override
-  String get graphics => 'Graphics';
+  String get graphics => '图形';
 
   @override
-  String get current => 'Current';
+  String get current => '当前';
 
   @override
-  String get allApps => 'All';
+  String get allApps => '全部';
 
   @override
-  String get userApps => 'User';
+  String get userApps => '用户';
 
   @override
-  String get systemApps => 'System';
+  String get systemApps => '系统';
 
   @override
-  String get compareWith => 'Compare with';
+  String get compareWith => '与...比较';
 
   @override
-  String get stats => 'Stats';
+  String get stats => '统计';
 
   @override
-  String get statsLiveRamArea => 'Live System RAM';
+  String get statsLiveRamArea => '实时系统 RAM';
 
   @override
-  String get statsLiveRamAreaSubtitle => 'Used RAM over time';
+  String get statsLiveRamAreaSubtitle => 'RAM 使用随时间变化';
 
   @override
-  String get statsRamDistribution => 'System RAM Distribution';
+  String get statsRamDistribution => '系统 RAM 分布';
 
   @override
   String statsRamDistributionTotal(String size) {
-    return 'Total: $size';
+    return '总计: $size';
   }
 
   @override
@@ -689,157 +695,156 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statsZram => 'ZRAM';
 
   @override
-  String get statsUserVsSystemRam => 'User vs System Apps RAM';
+  String get statsUserVsSystemRam => '用户 vs 系统应用 RAM';
 
   @override
-  String get statsAppStateDistribution => 'App State Distribution';
+  String get statsAppStateDistribution => '应用状态分布';
 
   @override
-  String get statsActive => 'Active';
+  String get statsActive => '活跃';
 
   @override
-  String get statsBackground => 'Background';
+  String get statsBackground => '后台';
 
   @override
-  String get statsCached => 'Cached';
+  String get statsCached => '缓存';
 
   @override
   String statsAppsCount(int count) {
-    return '$count Apps';
+    return '$count 个应用';
   }
 
   @override
-  String get statsSystemVsUserAnalysis => 'System vs User Analysis';
+  String get statsSystemVsUserAnalysis => '系统 vs 用户分析';
 
   @override
-  String get statsAppCount => 'App Count';
+  String get statsAppCount => '应用数量';
 
   @override
-  String get statsTotalRam => 'Total RAM';
+  String get statsTotalRam => '总 RAM';
 
   @override
-  String get statsPerformance => 'Performance';
+  String get statsPerformance => '性能';
 
   @override
-  String get statsRamDistributionScatter => 'RAM Distribution Scatter';
+  String get statsRamDistributionScatter => 'RAM 分布散点图';
 
   @override
-  String get statsRamDistributionScatterSubtitle => 'Y: RAM, X: App Index';
+  String get statsRamDistributionScatterSubtitle => 'Y: RAM, X: 应用索引';
 
   @override
-  String get statsTopRamConsumers => 'Top RAM Consumers';
+  String get statsTopRamConsumers => '消耗 RAM 最多的应用';
 
   @override
-  String get statsServicesVsRamCorrelation => 'Services vs RAM Correlation';
+  String get statsServicesVsRamCorrelation => '服务 vs RAM 相关性';
 
   @override
-  String get statsServicesVsRamSubtitle =>
-      'Y: RAM, X: Service Count, Bubble: Process Count';
+  String get statsServicesVsRamSubtitle => 'Y: RAM, X: 服务数量, 气泡: 进程数量';
 
   @override
-  String get statsRamHistogram => 'RAM Frequency Histogram';
+  String get statsRamHistogram => 'RAM 频率直方图';
 
   @override
-  String get statsRamHistogramSubtitle => 'Count of Apps by Memory Size';
+  String get statsRamHistogramSubtitle => '按内存大小统计应用数';
 
   @override
-  String get statsMemoryHeatmap => 'Memory Heatmap';
+  String get statsMemoryHeatmap => '内存热力图';
 
   @override
-  String get statsMemoryHeatmapSubtitle => 'All Apps Sorted by RAM Intensity';
+  String get statsMemoryHeatmapSubtitle => '按 RAM 强度排序的所有应用';
 
   @override
-  String get statsTopAppsRelativeImpact => 'Top Apps Relative Impact';
+  String get statsTopAppsRelativeImpact => '热门应用相对影响';
 
   @override
-  String get statsGanttSubtitle => 'Gantt-style Visualization of RAM Share';
+  String get statsGanttSubtitle => 'RAM 份额甘特图风格可视化';
 
   @override
-  String get statsStackedAreaChart => 'RAM Breakdown Over Time';
+  String get statsStackedAreaChart => 'RAM 随时间细分';
 
   @override
-  String get statsStackedAreaSubtitle => 'User, System, and Kernel RAM';
+  String get statsStackedAreaSubtitle => '用户、系统和内核 RAM';
 
   @override
-  String get statsPolarChart => 'Process State Distribution';
+  String get statsPolarChart => '进程状态分布';
 
   @override
-  String get statsPolarSubtitle => 'Polar view of app states';
+  String get statsPolarSubtitle => '应用状态极坐标视图';
 
   @override
-  String get statsTreemap => 'RAM Distribution Treemap';
+  String get statsTreemap => 'RAM 分布树状图';
 
   @override
-  String get statsTreemapSubtitle => 'Proportional RAM usage by app';
+  String get statsTreemapSubtitle => '按应用比例分配的 RAM';
 
   @override
-  String get statsFunnelChart => 'RAM Usage Tiers';
+  String get statsFunnelChart => 'RAM 使用层级';
 
   @override
-  String get statsFunnelSubtitle => 'Apps grouped by memory size';
+  String get statsFunnelSubtitle => '按内存大小分组的应用';
 
   @override
-  String get statsWaterfallChart => 'RAM Allocation Waterfall';
+  String get statsWaterfallChart => 'RAM 分配瀑布图';
 
   @override
-  String get statsWaterfallSubtitle => 'Breakdown from total to components';
+  String get statsWaterfallSubtitle => '从总计到组件的细分';
 
   @override
-  String get statsGaugeChart => 'RAM Usage Gauge';
+  String get statsGaugeChart => 'RAM 使用仪表盘';
 
   @override
-  String get statsGaugeSubtitle => 'Overall system memory utilization';
+  String get statsGaugeSubtitle => '整体系统内存利用率';
 
   @override
-  String get statsTiny => 'Tiny';
+  String get statsTiny => '微小';
 
   @override
-  String get statsSmall => 'Small';
+  String get statsSmall => '小';
 
   @override
-  String get statsMedium => 'Medium';
+  String get statsMedium => '中';
 
   @override
-  String get statsLarge => 'Large';
+  String get statsLarge => '大';
 
   @override
-  String get statsHuge => 'Huge';
+  String get statsHuge => '巨大';
 
   @override
-  String get statsNoData => 'No data available';
+  String get statsNoData => '无可用数据';
 
   @override
-  String get statsWaitingForData => 'Waiting for data...';
+  String get statsWaitingForData => '等待数据...';
 
   @override
-  String get statsRamDistributionPie => 'System RAM Distribution';
+  String get statsRamDistributionPie => '系统 RAM 分布';
 
   @override
-  String get statsRamDistributionSubtitle => 'Used, Free, and ZRAM';
+  String get statsRamDistributionSubtitle => '已用、空闲和 ZRAM';
 
   @override
-  String get statsUsed => 'Used';
+  String get statsUsed => '已用';
 
   @override
-  String get statsFree => 'Free';
+  String get statsFree => '空闲';
 
   @override
-  String get statsUserVsSystemPie => 'User vs System Apps RAM';
+  String get statsUserVsSystemPie => '用户 vs 系统应用 RAM';
 
   @override
-  String get statsUserVsSystemSubtitle => 'Compare user and system app memory';
+  String get statsUserVsSystemSubtitle => '比较用户和系统应用内存';
 
   @override
-  String get statsProcessStateBar => 'App State Distribution';
+  String get statsProcessStateBar => '应用状态分布';
 
   @override
-  String get statsProcessStateSubtitle => 'Active, Background, and Cached apps';
+  String get statsProcessStateSubtitle => '活跃、后台和缓存应用';
 
   @override
-  String get statsScatterChart => 'RAM Distribution Scatter';
+  String get statsScatterChart => 'RAM 分布散点图';
 
   @override
-  String get statsScatterSubtitle => 'Y: RAM (MB), X: App Index';
+  String get statsScatterSubtitle => 'Y: RAM (MB), X: 应用索引';
 
   @override
   String get core => '核心';

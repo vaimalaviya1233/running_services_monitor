@@ -105,6 +105,8 @@
   "no": "No",
   "connections": "Connections",
   "flags": "Flags",
+  "bound": "Bound",
+  "processRecord": "Process Record",
   "visible": "Visible",
   "capabilities": "Capabilities",
   "active": "Active",

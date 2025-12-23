@@ -658,6 +658,18 @@ abstract class AppLocalizations {
   /// **'Flags'**
   String get flags;
 
+  /// No description provided for @bound.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound'**
+  String get bound;
+
+  /// No description provided for @processRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Process Record'**
+  String get processRecord;
+
   /// No description provided for @visible.
   ///
   /// In en, this message translates to:

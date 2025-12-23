@@ -13,11 +13,7 @@ class ProcessService {
 
   ProcessService(this.shizukuService);
 
-  ({
-    Stream<AppProcessInfo> apps,
-    Future<SystemRamInfo?> systemRamInfo,
-    Future<void> Function(void Function(Map<String, AppProcessInfo>)) onRamInfoReady,
-  })
+  ({Stream<AppProcessInfo> apps, Future<SystemRamInfo?> systemRamInfo, Future<void> Function(void Function(Map<String, AppProcessInfo>)) onRamInfoReady})
   streamAppProcessInfosWithRamInfo() {
     final meminfoFuture = meminfo();
     final groupedAppsCompleter = Completer<Map<String, AppProcessInfo>>();
@@ -34,14 +30,7 @@ class ProcessService {
       await for (final line in shizukuService.executeCommandStream(AppConstants.cmdDumpsysActivityServices)) {
         if (line.trim().isEmpty) {
           if (currentBlock.isNotEmpty && currentPackage != null) {
-            final app = _processBlock(
-              currentBlock,
-              currentPackage,
-              groupedApps,
-              emptyPidRamMap,
-              emptyProcessNameRamMap,
-              rawBuffer,
-            );
+            final app = _processBlock(currentBlock, currentPackage, groupedApps, emptyPidRamMap, emptyProcessNameRamMap, rawBuffer);
             if (app != null) yield app;
             currentBlock.clear();
             rawBuffer.clear();
@@ -62,14 +51,7 @@ class ProcessService {
       }
 
       if (currentBlock.isNotEmpty && currentPackage != null) {
-        final app = _processBlock(
-          currentBlock,
-          currentPackage,
-          groupedApps,
-          emptyPidRamMap,
-          emptyProcessNameRamMap,
-          rawBuffer,
-        );
+        final app = _processBlock(currentBlock, currentPackage, groupedApps, emptyPidRamMap, emptyProcessNameRamMap, rawBuffer);
         if (app != null) yield app;
       }
 
@@ -123,30 +105,13 @@ class ProcessService {
 
         var updatedApp = existingApp;
 
-        final enrichedServices = existingApp.services.map((s) {
-          if (s.ramInKb != null || s.pid == null) return s;
-          final ramKb = pidRamMap[s.pid];
-          return s.copyWith(ramInKb: ramKb);
-        }).toList();
+        final enrichedServices = ProcessParser.enrichServicesWithRam(existingApp.services, pidRamMap);
 
-        var totalRamKb = 0.0;
-        final countedPids = <int>{};
-        for (final s in enrichedServices) {
-          final pid = s.pid;
-          if (pid != null && countedPids.add(pid)) {
-            totalRamKb += pidRamMap[pid] ?? s.ramInKb ?? 0;
-          }
-        }
+        final totalRamKb =
+            meminfoRam ??
+            ProcessParser.calculateTotalRamKb(services: enrichedServices, packageName: packageName, pidRamMap: pidRamMap, processNameRamMap: processNameRamMap);
 
-        if (totalRamKb <= 0) totalRamKb = processNameRamMap[packageName] ?? 0;
-
-        if (meminfoRam != null && meminfoRam > totalRamKb) {
-          totalRamKb = meminfoRam;
-        }
-
-        final ramSources = processList
-            .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
-            .toList();
+        final ramSources = processList.map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName)).toList();
 
         updatedApp = updatedApp.copyWith(
           services: enrichedServices,
@@ -167,9 +132,7 @@ class ProcessService {
         final processList = meminfoProcesses[packageName] ?? [];
         final pids = processList.map((p) => p.pid).whereType<int>().toList();
 
-        final ramSources = processList
-            .map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName))
-            .toList();
+        final ramSources = processList.map((p) => RamSourceInfo(source: RamSourceType.meminfoPss, ramKb: p.ramKb, processName: p.processName)).toList();
 
         updatedApps[packageName] = AppProcessInfo(
           packageName: packageName,
@@ -209,12 +172,7 @@ class ProcessService {
       return _mergeService(existing, service, packageName, groupedApps, pidRamMap, processNameRamMap);
     }
 
-    final app = ProcessParser.createAppProcessInfo(
-      packageName: packageName,
-      services: [service],
-      pidRamMap: pidRamMap,
-      processNameRamMap: processNameRamMap,
-    );
+    final app = ProcessParser.createAppProcessInfo(packageName: packageName, services: [service], pidRamMap: pidRamMap, processNameRamMap: processNameRamMap);
     groupedApps[packageName] = app;
     return app;
   }
@@ -231,23 +189,13 @@ class ProcessService {
     final mergedPids = <int>{...existing.pids};
     if (service.pid != null) mergedPids.add(service.pid!);
 
-    var totalRamKb = 0.0;
-    final countedPids = <int>{};
-
-    for (final s in mergedServices) {
-      final pid = s.pid;
-      if (pid != null && countedPids.add(pid)) {
-        totalRamKb += pidRamMap[pid] ?? s.ramInKb ?? 0;
-      }
-    }
-
-    if (totalRamKb <= 0) totalRamKb = processNameRamMap[packageName] ?? 0;
-
-    final enrichedServices = mergedServices.map((s) {
-      if (s.ramInKb != null || s.pid == null) return s;
-      final ramKb = pidRamMap[s.pid];
-      return s.copyWith(ramInKb: ramKb);
-    }).toList();
+    final enrichedServices = ProcessParser.enrichServicesWithRam(mergedServices, pidRamMap);
+    final totalRamKb = ProcessParser.calculateTotalRamKb(
+      services: enrichedServices,
+      packageName: packageName,
+      pidRamMap: pidRamMap,
+      processNameRamMap: processNameRamMap,
+    );
 
     final app = existing.copyWith(services: enrichedServices, pids: mergedPids.toList(), totalRamInKb: totalRamKb);
     groupedApps[packageName] = app;
@@ -282,9 +230,7 @@ class ProcessService {
   }
 
   Future<bool> stopServiceByComponent({required String packageName, required String serviceName}) async {
-    final component = serviceName.startsWith('.')
-        ? '$packageName/$packageName$serviceName'
-        : '$packageName/$serviceName';
+    final component = serviceName.startsWith('.') ? '$packageName/$packageName$serviceName' : '$packageName/$serviceName';
     final result = await shizukuService.executeCommand('am stop-service $component');
     return result == null || result.isEmpty || !result.toLowerCase().contains('error');
   }

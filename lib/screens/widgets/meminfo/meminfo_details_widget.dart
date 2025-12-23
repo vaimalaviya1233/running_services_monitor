@@ -30,6 +30,7 @@ class _MemInfoDetailsWidgetState extends State<MemInfoDetailsWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<MeminfoBloc, MemInfoState>(
       bloc: bloc,
+      buildWhen: (prev, curr) => prev.runtimeType != curr.runtimeType || prev != curr,
       builder: (context, state) {
         return state.when(
           initial: () => Center(child: LoadingIndicator()),

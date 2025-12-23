@@ -16,6 +16,39 @@ class ProcessParser {
   static final _zramRegex = RegExp(r'ZRAM:\s+([\d,]+)K\s+physical\s+used\s+for\s+([\d,]+)K\s+in\s+swap\s*\(\s*([\d,]+)K\s+total\s+swap\)');
   static final _tuningRegex = RegExp(r'Tuning:.*oom\s+([\d,]+)K.*restore limit\s+([\d,]+)K');
 
+  static double calculateTotalRamKb({
+    required List<RunningServiceInfo> services,
+    required String packageName,
+    required Map<int, double> pidRamMap,
+    required Map<String, double> processNameRamMap,
+    Set<int>? excludePids,
+  }) {
+    var totalRamKb = 0.0;
+    final countedPids = <int>{};
+
+    for (final service in services) {
+      final pid = service.pid;
+      if (pid != null && countedPids.add(pid)) {
+        if (excludePids != null && excludePids.contains(pid)) continue;
+        totalRamKb += pidRamMap[pid] ?? 0;
+      }
+    }
+
+    if (totalRamKb <= 0) {
+      totalRamKb = processNameRamMap[packageName] ?? 0;
+    }
+
+    return totalRamKb;
+  }
+
+  static List<RunningServiceInfo> enrichServicesWithRam(List<RunningServiceInfo> services, Map<int, double> pidRamMap) {
+    return services.map((s) {
+      if (s.ramInKb != null || s.pid == null) return s;
+      final ramKb = pidRamMap[s.pid];
+      return s.copyWith(ramInKb: ramKb);
+    }).toList();
+  }
+
   static double _parseKb(String? value) {
     if (value == null) return 0.0;
     return double.tryParse(value.replaceAll(',', '')) ?? 0.0;
@@ -55,6 +88,7 @@ class ProcessParser {
     bool? startRequested;
     bool? createdFromFg;
     int? recentCallingUid;
+    String? appProcessRecord;
     List<ConnectionRecord>? connections;
     bool hasBound = false;
 
@@ -126,6 +160,7 @@ class ProcessParser {
         final pidMatch = _processRecordRegex.firstMatch(trimmed);
         if (pidMatch != null) {
           pid = int.tryParse(pidMatch.group(1) ?? '');
+          appProcessRecord = pidMatch.group(2);
           uid = (int.tryParse(pidMatch.group(3) ?? '0') ?? 0) * 100000 + 10000 + (int.tryParse(pidMatch.group(4) ?? '0') ?? 0);
         }
       }
@@ -160,6 +195,7 @@ class ProcessParser {
       rawServiceRecord: rawBuffer.toString(),
       uid: uid,
       recentCallingUid: recentCallingUid,
+      appProcessRecord: appProcessRecord,
       connections: connections ?? const [],
       hasBound: hasBound,
     );
@@ -310,33 +346,25 @@ class ProcessParser {
     required Map<int, double> pidRamMap,
     required Map<String, double> processNameRamMap,
   }) {
-    final pids = <int>{};
+    final enrichedServices = enrichServicesWithRam(services, pidRamMap);
+    final pids = services.map((s) => s.pid).whereType<int>().toSet();
+    final isSystemApp = services.isNotEmpty && services.first.isSystemApp;
+
+    final totalRamKb = calculateTotalRamKb(services: enrichedServices, packageName: packageName, pidRamMap: pidRamMap, processNameRamMap: processNameRamMap);
+
     final ramSources = <RamSourceInfo>[];
-    var totalRamKb = 0.0;
-    var isSystemApp = false;
-
-    final enrichedServices = List<RunningServiceInfo>.generate(services.length, (i) {
-      final service = services[i];
+    final countedPids = <int>{};
+    for (final service in enrichedServices) {
       final pid = service.pid;
-      isSystemApp = service.isSystemApp;
-
-      if (pid != null && pids.add(pid)) {
+      if (pid != null && countedPids.add(pid)) {
         final ramKb = pidRamMap[pid];
         if (ramKb != null) {
-          totalRamKb += ramKb;
           ramSources.add(RamSourceInfo(source: RamSourceType.pid, ramKb: ramKb, pid: pid));
         }
       }
-
-      return service.copyWith(ramInKb: pidRamMap[pid]);
-    });
-
-    if (totalRamKb <= 0) {
-      final fallbackRam = processNameRamMap[packageName];
-      if (fallbackRam != null) {
-        totalRamKb = fallbackRam;
-        ramSources.add(RamSourceInfo(source: RamSourceType.processName, ramKb: totalRamKb, processName: packageName));
-      }
+    }
+    if (ramSources.isEmpty && totalRamKb > 0) {
+      ramSources.add(RamSourceInfo(source: RamSourceType.processName, ramKb: totalRamKb, processName: packageName));
     }
 
     return AppProcessInfo(

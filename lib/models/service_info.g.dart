@@ -28,6 +28,7 @@ _RunningServiceInfo _$RunningServiceInfoFromJson(Map<String, dynamic> json) =>
       rawServiceRecord: json['rawServiceRecord'] as String?,
       uid: (json['uid'] as num?)?.toInt(),
       recentCallingUid: (json['recentCallingUid'] as num?)?.toInt(),
+      appProcessRecord: json['appProcessRecord'] as String?,
       connections:
           (json['connections'] as List<dynamic>?)
               ?.map((e) => ConnectionRecord.fromJson(e as Map<String, dynamic>))
@@ -58,6 +59,7 @@ Map<String, dynamic> _$RunningServiceInfoToJson(_RunningServiceInfo instance) =>
       'rawServiceRecord': instance.rawServiceRecord,
       'uid': instance.uid,
       'recentCallingUid': instance.recentCallingUid,
+      'appProcessRecord': instance.appProcessRecord,
       'connections': instance.connections,
       'hasBound': instance.hasBound,
     };

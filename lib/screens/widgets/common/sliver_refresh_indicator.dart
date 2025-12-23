@@ -39,10 +39,7 @@ class _RefreshWrapperBody extends StatelessWidget {
           }
         }
       },
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) => _handleScrollNotification(context, notification),
-        child: child,
-      ),
+      child: NotificationListener<ScrollNotification>(onNotification: (notification) => _handleScrollNotification(context, notification), child: child),
     );
   }
 
@@ -62,9 +59,7 @@ class _RefreshWrapperBody extends StatelessWidget {
       final isUserDrag = notification.dragDetails != null;
 
       if (state.isDragging && isUserDrag) {
-        if (notification.metrics.extentBefore == 0 &&
-            notification.scrollDelta != null &&
-            notification.scrollDelta! < 0) {
+        if (notification.metrics.extentBefore == 0 && notification.scrollDelta != null && notification.scrollDelta! < 0) {
           bloc.add(RefreshIndicatorEvent.updateDrag(-notification.scrollDelta!));
           return true;
         } else if (notification.scrollDelta != null && notification.scrollDelta! > 0 && state.dragOffset > 0) {
@@ -92,7 +87,18 @@ class SliverRefreshHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RefreshIndicatorBloc, RefreshIndicatorState>(
+    return BlocSelector<
+      RefreshIndicatorBloc,
+      RefreshIndicatorState,
+      ({bool showIndicator, double currentHeight, bool isDragging, bool isRefreshing, double progress})
+    >(
+      selector: (state) => (
+        showIndicator: state.showIndicator,
+        currentHeight: state.currentHeight,
+        isDragging: state.isDragging,
+        isRefreshing: state.isRefreshing,
+        progress: state.progress,
+      ),
       builder: (context, state) {
         final colorScheme = Theme.of(context).colorScheme;
         final isVisible = state.showIndicator && state.currentHeight > 0;

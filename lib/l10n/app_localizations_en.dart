@@ -299,6 +299,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flags => 'Flags';
 
   @override
+  String get bound => 'Bound';
+
+  @override
+  String get processRecord => 'Process Record';
+
+  @override
   String get visible => 'Visible';
 
   @override

@@ -301,6 +301,12 @@ class AppLocalizationsBn extends AppLocalizations {
   String get flags => 'ফ্ল্যাগস';
 
   @override
+  String get bound => 'Bound';
+
+  @override
+  String get processRecord => 'Process Record';
+
+  @override
   String get visible => 'দৃশ্যমান';
 
   @override
@@ -654,67 +660,67 @@ class AppLocalizationsBn extends AppLocalizations {
       'এই সার্ভিসটি অন্য একটি প্রসেসের সাথে বাউন্ড এবং সরাসরি বন্ধ করা যায় না। আপনি পুরো অ্যাপটি বন্ধ করতে পারেন।';
 
   @override
-  String get memoryInfo => 'Memory Info';
+  String get memoryInfo => 'মেমরি ইনফো';
 
   @override
-  String get viewRawOutput => 'View Raw';
+  String get viewRawOutput => 'র আউটপুট দেখুন';
 
   @override
-  String get hideRawOutput => 'Hide Raw';
+  String get hideRawOutput => 'র আউটপুট লুকান';
 
   @override
-  String get compareWithOther => 'Compare';
+  String get compareWithOther => 'তুলনা করুন';
 
   @override
-  String get memoryCategories => 'Memory Categories';
+  String get memoryCategories => 'মেমরি ক্যাটাগরি';
 
   @override
-  String get appSummary => 'App Summary';
+  String get appSummary => 'অ্যাপ সামারি';
 
   @override
-  String get objects => 'Objects';
+  String get objects => 'অবজেক্টস';
 
   @override
-  String get memoryComparison => 'Memory Comparison';
+  String get memoryComparison => 'মেমরি তুলনা';
 
   @override
-  String get selectAppToCompare => 'Select an app to compare';
+  String get selectAppToCompare => 'তুলনা করার জন্য একটি অ্যাপ নির্বাচন করুন';
 
   @override
-  String get selectApp => 'Select app...';
+  String get selectApp => 'অ্যাপ নির্বাচন করুন...';
 
   @override
-  String get totalPss => 'Total PSS';
+  String get totalPss => 'মোট PSS';
 
   @override
-  String get totalRss => 'Total RSS';
+  String get totalRss => 'মোট RSS';
 
   @override
-  String get javaHeap => 'Java Heap';
+  String get javaHeap => 'জাভা হিপ';
 
   @override
-  String get nativeHeap => 'Native Heap';
+  String get nativeHeap => 'নেটিভ হিপ';
 
   @override
-  String get code => 'Code';
+  String get code => 'কোড';
 
   @override
-  String get graphics => 'Graphics';
+  String get graphics => 'গ্রাফিক্স';
 
   @override
-  String get current => 'Current';
+  String get current => 'বর্তমান';
 
   @override
-  String get allApps => 'All';
+  String get allApps => 'সব';
 
   @override
-  String get userApps => 'User';
+  String get userApps => 'ব্যবহারকারী';
 
   @override
-  String get systemApps => 'System';
+  String get systemApps => 'সিস্টেম';
 
   @override
-  String get compareWith => 'Compare with';
+  String get compareWith => 'এর সাথে তুলনা করুন';
 
   @override
   String get stats => 'পরিসংখ্যান';

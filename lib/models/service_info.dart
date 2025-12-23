@@ -28,6 +28,7 @@ abstract class RunningServiceInfo with _$RunningServiceInfo {
     String? rawServiceRecord,
     int? uid,
     int? recentCallingUid,
+    String? appProcessRecord,
     @Default([]) List<ConnectionRecord> connections,
     @Default(false) bool hasBound,
   }) = _RunningServiceInfo;
@@ -58,8 +59,7 @@ abstract class AppProcessInfo with _$AppProcessInfo {
 
   factory AppProcessInfo.fromJson(Map<String, dynamic> json) => _$AppProcessInfoFromJson(json);
 
-  bool get hasActiveService =>
-      services.any((s) => s.startRequested == true || s.isForeground == true || s.hasBound || s.pid != null);
+  bool get hasActiveService => services.any((s) => s.startRequested == true || s.isForeground == true || s.hasBound || s.pid != null);
   bool get isActive => isActiveState(processState, hasServices: hasServices, hasActiveService: hasActiveService);
   bool get isCached => isCachedState(processState);
   int get processCount {
@@ -73,8 +73,7 @@ enum RamSourceType { pid, lru, processName, meminfoPss }
 
 @freezed
 abstract class RamSourceInfo with _$RamSourceInfo {
-  const factory RamSourceInfo({required RamSourceType source, required double ramKb, int? pid, String? processName}) =
-      _RamSourceInfo;
+  const factory RamSourceInfo({required RamSourceType source, required double ramKb, int? pid, String? processName}) = _RamSourceInfo;
 
   factory RamSourceInfo.fromJson(Map<String, dynamic> json) => _$RamSourceInfoFromJson(json);
 }
@@ -126,11 +125,5 @@ class ProcessedAppsResult {
   final double appsRam;
   final List<double>? ramInfo;
 
-  ProcessedAppsResult({
-    required this.allApps,
-    required this.userApps,
-    required this.systemApps,
-    required this.appsRam,
-    this.ramInfo,
-  });
+  ProcessedAppsResult({required this.allApps, required this.userApps, required this.systemApps, required this.appsRam, this.ramInfo});
 }

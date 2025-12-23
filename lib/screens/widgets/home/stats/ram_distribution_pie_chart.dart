@@ -13,11 +13,9 @@ class RamDistributionPieChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StatsBloc, StatsState>(
-      buildWhen: (prev, curr) => prev.ramDistributionTouchedIndex != curr.ramDistributionTouchedIndex,
-      builder: (context, statsState) {
-        final touchedIndex = statsState.ramDistributionTouchedIndex;
-
+    return BlocSelector<StatsBloc, StatsState, int>(
+      selector: (state) => state.ramDistributionTouchedIndex,
+      builder: (context, touchedIndex) {
         return BlocSelector<HomeBloc, HomeState, SystemRamInfo>(
           selector: (state) => state.value.systemRamInfo,
           builder: (context, ramInfo) {
@@ -76,19 +74,12 @@ class RamDistributionPieChart extends StatelessWidget {
                         PieChartData(
                           pieTouchData: PieTouchData(
                             touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                              if (!event.isInterestedForInteractions ||
-                                  pieTouchResponse == null ||
-                                  pieTouchResponse.touchedSection == null) {
-                                context.read<StatsBloc>().add(
-                                  const StatsEvent.updateChartTouchIndex(chartType: 'ramDistribution', index: -1),
-                                );
+                              if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                                context.read<StatsBloc>().add(const StatsEvent.updateChartTouchIndex(chartType: 'ramDistribution', index: -1));
                                 return;
                               }
                               context.read<StatsBloc>().add(
-                                StatsEvent.updateChartTouchIndex(
-                                  chartType: 'ramDistribution',
-                                  index: pieTouchResponse.touchedSection!.touchedSectionIndex,
-                                ),
+                                StatsEvent.updateChartTouchIndex(chartType: 'ramDistribution', index: pieTouchResponse.touchedSection!.touchedSectionIndex),
                               );
                             },
                           ),
@@ -103,22 +94,9 @@ class RamDistributionPieChart extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ChartIndicator(
-                          color: Colors.redAccent,
-                          text: context.loc.statsUsed,
-                          isSelected: touchedIndex == 0,
-                        ),
-                        ChartIndicator(
-                          color: Colors.greenAccent,
-                          text: context.loc.statsFree,
-                          isSelected: touchedIndex == 1,
-                        ),
-                        if (zram > 0)
-                          ChartIndicator(
-                            color: Colors.orangeAccent,
-                            text: context.loc.statsZram,
-                            isSelected: touchedIndex == 2,
-                          ),
+                        ChartIndicator(color: Colors.redAccent, text: context.loc.statsUsed, isSelected: touchedIndex == 0),
+                        ChartIndicator(color: Colors.greenAccent, text: context.loc.statsFree, isSelected: touchedIndex == 1),
+                        if (zram > 0) ChartIndicator(color: Colors.orangeAccent, text: context.loc.statsZram, isSelected: touchedIndex == 2),
                       ],
                     ),
                   ],

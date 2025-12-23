@@ -62,9 +62,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                 },
                 success: (packageName, serviceName, pid) {
                   final homeBloc = getIt<HomeBloc>();
-                  final message = serviceName != null
-                      ? '${context.loc.serviceStopped}: $serviceName'
-                      : context.loc.allServicesStopped;
+                  final message = serviceName != null ? '${context.loc.serviceStopped}: $serviceName' : context.loc.allServicesStopped;
                   SnackBarHelper.showSuccess(context, message);
 
                   if (packageName != null) {
@@ -79,15 +77,12 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                   }
                 },
                 error: (message) {
-                  SnackBarHelper.showError(
-                    context,
-                    '${context.loc.stopServiceError}: ${context.loc.resolve(message)}',
-                    actionLabel: context.loc.ok,
-                  );
+                  SnackBarHelper.showError(context, '${context.loc.stopServiceError}: ${context.loc.resolve(message)}', actionLabel: context.loc.ok);
                 },
               );
             },
             child: Scaffold(
+              extendBody: true,
               appBar: AppBar(
                 title: Text(context.loc.appDetails, style: TextStyle(fontSize: 20.sp)),
                 actions: [
@@ -149,9 +144,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                               child: Center(
                                 child: Text(
                                   context.loc.noServicesFound,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                 ),
                               ),
                             ),
@@ -162,9 +155,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                     ] else if (selectedFilter == AppDetailsFilter.meminfo) ...[
                       SliverPadding(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        sliver: SliverToBoxAdapter(
-                          child: MemInfoDetailsWidget(packageName: currentAppInfo.packageName),
-                        ),
+                        sliver: SliverToBoxAdapter(child: MemInfoDetailsWidget(packageName: currentAppInfo.packageName)),
                       ),
                     ] else ...[
                       if (currentAppInfo.processes.isEmpty)
@@ -176,9 +167,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                               child: Center(
                                 child: Text(
                                   context.loc.noProcessesFound,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                 ),
                               ),
                             ),
@@ -219,11 +208,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                                     ),
                                     child: Text(
                                       context.loc.systemAppWarning,
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.error,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13.sp,
-                                      ),
+                                      style: TextStyle(color: Theme.of(context).colorScheme.error, fontWeight: FontWeight.bold, fontSize: 13.sp),
                                     ),
                                   ),
                                 ],
@@ -236,7 +221,6 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
                               ),
                               FilledButton(
                                 onPressed: () => Navigator.of(dialogContext).pop(true),
-                                style: FilledButton.styleFrom(backgroundColor: Colors.red),
                                 child: Text(context.loc.stop, style: TextStyle(fontSize: 14.sp)),
                               ),
                             ],
@@ -245,9 +229,7 @@ class _AppDetailsScreenState extends State<AppDetailsScreen> {
 
                         if (confirmed == true) {
                           if (context.mounted) {
-                            context.read<StopServiceBloc>().add(
-                              StopServiceEvent.stopAllServices(packageName: currentAppInfo.packageName),
-                            );
+                            context.read<StopServiceBloc>().add(StopServiceEvent.stopAllServices(packageName: currentAppInfo.packageName));
                           }
                         }
                       },

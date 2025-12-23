@@ -171,6 +171,7 @@ abstract class L10nKeys {
   static const shizukuNotRunning = 'shizukuNotRunning';
   static const shizukuRequired = 'shizukuRequired';
   static const shizukuRequiredMessage = 'shizukuRequiredMessage';
+  static const showCoreApps = 'showCoreApps';
   static const sourceCode = 'sourceCode';
   static const startRequested = 'startRequested';
   static const stats = 'stats';
@@ -437,6 +438,7 @@ extension L10nResolver on AppLocalizations {
       'shizukuNotRunning' => shizukuNotRunning,
       'shizukuRequired' => shizukuRequired,
       'shizukuRequiredMessage' => shizukuRequiredMessage,
+      'showCoreApps' => showCoreApps,
       'sourceCode' => sourceCode,
       'startRequested' => startRequested,
       'stats' => stats,
