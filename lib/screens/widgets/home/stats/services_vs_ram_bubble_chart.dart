@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +21,7 @@ class ServicesVsRamBubbleChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<AppInfoBloc, AppInfoState, Map<String, CachedAppInfo>>(
       bloc: getIt<AppInfoBloc>(),
-      selector: (state) {
-        return state.value.cachedApps;
-      },
+      selector: (state) => state.value.cachedApps,
       builder: (context, cachedApps) {
         String appName(String packageName) {
           return cachedApps[packageName]?.appName ?? packageName;
@@ -32,27 +32,39 @@ class ServicesVsRamBubbleChart extends StatelessWidget {
           builder: (context, apps) {
             if (apps.isEmpty) return const SizedBox.shrink();
 
-            List<ScatterSpot> spots = [];
-            double maxRam = 0;
-            double maxServices = 0;
-
             final theme = Theme.of(context);
             final dividerColor = theme.dividerColor;
             final surfaceContainerHighest = theme.colorScheme.surfaceContainerHighest;
             final onSurface = theme.colorScheme.onSurface;
             final primary = theme.colorScheme.primary;
+            final tertiary = theme.colorScheme.tertiary;
+
+            double maxRam = 0;
+            double maxServices = 0;
+
+            double sumX = 0;
+            double sumY = 0;
+            double sumXY = 0;
+            double sumX2 = 0;
+            double sumY2 = 0;
+            int n = 0;
+
+            final scatterData = <({ScatterSpot spot, AppProcessInfo app})>[];
 
             for (int i = 0; i < apps.length; i++) {
               final app = apps[i];
-              if (app.totalRamInKb > maxRam) maxRam = app.totalRamInKb;
-              if (app.services.length > maxServices) maxServices = app.services.length.toDouble();
+              final x = app.services.length.toDouble();
+              final y = app.totalRamInKb;
+
+              if (y > maxRam) maxRam = y;
+              if (x > maxServices) maxServices = x;
 
               double radius = 4 + (app.processCount > 10 ? 10 : app.processCount).toDouble();
 
-              spots.add(
-                ScatterSpot(
-                  app.services.length.toDouble(),
-                  app.totalRamInKb,
+              scatterData.add((
+                spot: ScatterSpot(
+                  x,
+                  y,
                   show: true,
                   dotPainter: FlDotCirclePainter(
                     radius: radius,
@@ -60,65 +72,103 @@ class ServicesVsRamBubbleChart extends StatelessWidget {
                     strokeWidth: 0,
                   ),
                 ),
-              );
+                app: app,
+              ));
+
+              sumX += x;
+              sumY += y;
+              sumXY += x * y;
+              sumX2 += x * x;
+              sumY2 += y * y;
+              n++;
             }
+
+            if (maxRam == 0 || n < 2) return const SizedBox.shrink();
+
+            final slope = (n * sumX2 - sumX * sumX) != 0 ? (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX) : 0.0;
+            final intercept = (sumY - slope * sumX) / n;
+
+            final numerator = n * sumXY - sumX * sumY;
+            final denominator = (n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY);
+            final correlation = denominator > 0 ? numerator / math.sqrt(denominator) : 0.0;
+
+            final trendStartY = intercept.clamp(0.0, maxRam * 1.1);
+            final trendEndY = (slope * maxServices + intercept).clamp(0.0, maxRam * 1.1);
 
             return StatsChartCard(
               title: context.loc.statsServicesVsRamCorrelation,
-              subtitle: context.loc.statsServicesVsRamSubtitle,
+              subtitle: '${context.loc.statsServicesVsRamSubtitle} (r = ${correlation.toStringAsFixed(2)})',
               height: 250.h,
-              child: ScatterChart(
-                ScatterChartData(
-                  scatterTouchData: ScatterTouchData(
-                    touchTooltipData: ScatterTouchTooltipData(
-                      getTooltipColor: (spot) => surfaceContainerHighest,
-                      getTooltipItems: (ScatterSpot spot) {
-                        final matchingApps = apps.where((app) => app.services.length.toDouble() == spot.x && (app.totalRamInKb - spot.y).abs() < 0.1).toList();
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size.infinite,
+                    painter: _TrendLinePainter(
+                      startX: 0,
+                      startY: trendStartY,
+                      endX: maxServices,
+                      endY: trendEndY,
+                      maxX: maxServices + 1,
+                      maxY: maxRam * 1.1,
+                      color: tertiary,
+                      leftPadding: 0,
+                      bottomPadding: 30,
+                    ),
+                  ),
+                  ScatterChart(
+                    ScatterChartData(
+                      scatterTouchData: ScatterTouchData(
+                        touchTooltipData: ScatterTouchTooltipData(
+                          getTooltipColor: (spot) => surfaceContainerHighest,
+                          getTooltipItems: (ScatterSpot spot) {
+                            final matchingData = scatterData.where((d) => d.spot.x == spot.x && (d.spot.y - spot.y).abs() < 0.1).toList();
 
-                        if (matchingApps.isNotEmpty) {
-                          final app = matchingApps.first;
-                          return ScatterTooltipItem(
-                            '${appName(app.packageName)}\n',
-                            textStyle: AppStyles.bodyStyle.copyWith(fontWeight: FontWeight.bold, color: onSurface),
-                            children: [
-                              TextSpan(
-                                text: 'RAM: ${app.totalRamInKb.formatRam()}\n${context.loc.services}: ${app.services.length}',
-                                style: AppStyles.smallStyle.copyWith(color: primary, fontSize: 12.sp),
-                              ),
-                            ],
-                          );
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: true,
-                    drawVerticalLine: true,
-                    getDrawingHorizontalLine: (value) => FlLine(color: dividerColor.withValues(alpha: 0.2)),
-                    getDrawingVerticalLine: (value) => FlLine(color: dividerColor.withValues(alpha: 0.2)),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 30,
-                        getTitlesWidget: (val, meta) => Text(val.toInt().toString(), style: const TextStyle(fontSize: 10)),
+                            if (matchingData.isNotEmpty) {
+                              final app = matchingData.first.app;
+                              return ScatterTooltipItem(
+                                '${appName(app.packageName)}\n',
+                                textStyle: AppStyles.bodyStyle.copyWith(fontWeight: FontWeight.bold, color: onSurface),
+                                children: [
+                                  TextSpan(
+                                    text: 'RAM: ${app.totalRamInKb.formatRam()}\n${context.loc.services}: ${app.services.length}',
+                                    style: AppStyles.smallStyle.copyWith(color: primary, fontSize: 12.sp),
+                                  ),
+                                ],
+                              );
+                            }
+                            return null;
+                          },
+                        ),
                       ),
+                      gridData: FlGridData(
+                        show: true,
+                        drawHorizontalLine: true,
+                        drawVerticalLine: true,
+                        getDrawingHorizontalLine: (value) => FlLine(color: dividerColor.withValues(alpha: 0.2)),
+                        getDrawingVerticalLine: (value) => FlLine(color: dividerColor.withValues(alpha: 0.2)),
+                      ),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            getTitlesWidget: (val, meta) => Text(val.toInt().toString(), style: const TextStyle(fontSize: 10)),
+                          ),
+                        ),
+                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      ),
+                      borderData: FlBorderData(show: false),
+                      minX: -0.5,
+                      maxX: maxServices + 1,
+                      minY: 0,
+                      maxY: maxRam * 1.1,
+                      scatterSpots: scatterData.map((d) => d.spot).toList(),
                     ),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
-                  borderData: FlBorderData(show: false),
-                  minX: -0.5,
-                  maxX: maxServices + 1,
-                  minY: 0,
-                  maxY: maxRam * 1.1,
-                  scatterSpots: spots.map((s) => s).toList(), // Copy list
-                ),
+                ],
               ),
             );
           },
@@ -126,4 +176,69 @@ class ServicesVsRamBubbleChart extends StatelessWidget {
       },
     );
   }
+}
+
+class _TrendLinePainter extends CustomPainter {
+  final double startX;
+  final double startY;
+  final double endX;
+  final double endY;
+  final double maxX;
+  final double maxY;
+  final Color color;
+  final double leftPadding;
+  final double bottomPadding;
+
+  _TrendLinePainter({
+    required this.startX,
+    required this.startY,
+    required this.endX,
+    required this.endY,
+    required this.maxX,
+    required this.maxY,
+    required this.color,
+    this.leftPadding = 0,
+    this.bottomPadding = 0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final chartWidth = size.width - leftPadding;
+    final chartHeight = size.height - bottomPadding;
+
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+
+    final x1 = leftPadding + ((startX + 0.5) / maxX) * chartWidth;
+    final y1 = chartHeight - (startY / maxY) * chartHeight;
+    final x2 = leftPadding + ((endX + 0.5) / maxX) * chartWidth;
+    final y2 = chartHeight - (endY / maxY) * chartHeight;
+
+    path.moveTo(x1, y1);
+    path.lineTo(x2, y2);
+
+    final dashWidth = 8.0;
+    final dashSpace = 4.0;
+    final totalLength = (Offset(x2, y2) - Offset(x1, y1)).distance;
+    final dx = (x2 - x1) / totalLength;
+    final dy = (y2 - y1) / totalLength;
+
+    double currentLength = 0;
+    final dashPath = Path();
+    while (currentLength < totalLength) {
+      final segmentLength = math.min(dashWidth, totalLength - currentLength);
+      dashPath.moveTo(x1 + dx * currentLength, y1 + dy * currentLength);
+      dashPath.lineTo(x1 + dx * (currentLength + segmentLength), y1 + dy * (currentLength + segmentLength));
+      currentLength += dashWidth + dashSpace;
+    }
+
+    canvas.drawPath(dashPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

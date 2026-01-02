@@ -13,6 +13,9 @@ import 'gauge_chart.dart';
 import 'funnel_chart.dart';
 import 'waterfall_chart.dart';
 import 'polar_chart.dart';
+import 'process_vs_ram_line_chart.dart';
+import 'services_vs_processes_scatter_chart.dart';
+import 'process_state_vs_ram_chart.dart';
 
 class StatsTab extends StatefulWidget {
   final int tabIndex;
@@ -57,6 +60,12 @@ class _StatsTabState extends State<StatsTab> with AutomaticKeepAliveClientMixin 
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     const ServicesVsRamBubbleChart(),
+                    AppStyles.spacingH24,
+                    const ProcessVsRamLineChart(),
+                    AppStyles.spacingH24,
+                    const ServicesVsProcessesScatterChart(),
+                    AppStyles.spacingH24,
+                    const ProcessStateVsRamChart(),
                     AppStyles.spacingH24,
                     const FunnelChart(),
                     AppStyles.spacingH24,

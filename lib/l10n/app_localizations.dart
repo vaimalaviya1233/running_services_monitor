@@ -1785,6 +1785,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Re-execute'**
   String get reExecute;
+
+  /// No description provided for @statsProcessVsRamLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Process vs RAM Correlation'**
+  String get statsProcessVsRamLine;
+
+  /// No description provided for @statsProcessVsRamLineSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue: RAM, Dashed: Process Count'**
+  String get statsProcessVsRamLineSubtitle;
+
+  /// No description provided for @statsUserVsSystemBar.
+  ///
+  /// In en, this message translates to:
+  /// **'User vs System Comparison'**
+  String get statsUserVsSystemBar;
+
+  /// No description provided for @statsUserVsSystemBarSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Count, Total RAM, Average RAM'**
+  String get statsUserVsSystemBarSubtitle;
+
+  /// No description provided for @statsRamTrendScatter.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Trend Analysis'**
+  String get statsRamTrendScatter;
+
+  /// No description provided for @statsRamTrendScatterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Services vs RAM with Trend Line'**
+  String get statsRamTrendScatterSubtitle;
+
+  /// No description provided for @statsServicesVsProcesses.
+  ///
+  /// In en, this message translates to:
+  /// **'Services vs Processes'**
+  String get statsServicesVsProcesses;
+
+  /// No description provided for @statsServicesVsProcessesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Correlation between Service and Process counts'**
+  String get statsServicesVsProcessesSubtitle;
+
+  /// No description provided for @statsProcessStateRam.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM by Process State'**
+  String get statsProcessStateRam;
+
+  /// No description provided for @statsProcessStateRamSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Average RAM usage per process state'**
+  String get statsProcessStateRamSubtitle;
 }
 
 class _AppLocalizationsDelegate

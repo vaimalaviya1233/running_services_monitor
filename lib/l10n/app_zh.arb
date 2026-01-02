@@ -281,5 +281,15 @@
   "commandDescription": "描述",
   "reExecute": "重新执行",
   "bound": "绑定",
-  "processRecord": "进程记录"
+  "processRecord": "进程记录",
+  "statsProcessVsRamLine": "进程 vs RAM 相关性",
+  "statsProcessVsRamLineSubtitle": "蓝色: RAM, 虚线: 进程数",
+  "statsUserVsSystemBar": "用户 vs 系统柱状图",
+  "statsUserVsSystemBarSubtitle": "应用数量、总 RAM、平均 RAM",
+  "statsRamTrendScatter": "RAM 趋势散点图",
+  "statsRamTrendScatterSubtitle": "服务 vs RAM 带趋势线",
+  "statsServicesVsProcesses": "服务 vs 进程",
+  "statsServicesVsProcessesSubtitle": "X: 进程数, Y: 服务数",
+  "statsProcessStateRam": "进程状态 vs RAM",
+  "statsProcessStateRamSubtitle": "按状态分组的平均 RAM 使用量"
 }

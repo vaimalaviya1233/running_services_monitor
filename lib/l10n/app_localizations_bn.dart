@@ -933,4 +933,39 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get reExecute => 'পুনরায় চালান';
+
+  @override
+  String get statsProcessVsRamLine => 'প্রসেস বনাম র‍্যাম সম্পর্ক';
+
+  @override
+  String get statsProcessVsRamLineSubtitle =>
+      'নীল: র‍্যাম, ড্যাশড: প্রসেস সংখ্যা';
+
+  @override
+  String get statsUserVsSystemBar => 'ইউজার বনাম সিস্টেম বার';
+
+  @override
+  String get statsUserVsSystemBarSubtitle =>
+      'অ্যাপ সংখ্যা, মোট র‍্যাম, গড় র‍্যাম';
+
+  @override
+  String get statsRamTrendScatter => 'র‍্যাম ট্রেন্ড স্ক্যাটার';
+
+  @override
+  String get statsRamTrendScatterSubtitle =>
+      'সার্ভিস বনাম র‍্যাম ট্রেন্ড লাইন সহ';
+
+  @override
+  String get statsServicesVsProcesses => 'সার্ভিস বনাম প্রসেস';
+
+  @override
+  String get statsServicesVsProcessesSubtitle =>
+      'X: প্রসেস সংখ্যা, Y: সার্ভিস সংখ্যা';
+
+  @override
+  String get statsProcessStateRam => 'প্রসেস স্টেট বনাম র‍্যাম';
+
+  @override
+  String get statsProcessStateRamSubtitle =>
+      'স্টেট অনুযায়ী গড় র‍্যাম ব্যবহার';
 }

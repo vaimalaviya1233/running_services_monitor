@@ -206,7 +206,11 @@ abstract class L10nKeys {
   static const statsPolarChart = 'statsPolarChart';
   static const statsPolarSubtitle = 'statsPolarSubtitle';
   static const statsProcessStateBar = 'statsProcessStateBar';
+  static const statsProcessStateRam = 'statsProcessStateRam';
+  static const statsProcessStateRamSubtitle = 'statsProcessStateRamSubtitle';
   static const statsProcessStateSubtitle = 'statsProcessStateSubtitle';
+  static const statsProcessVsRamLine = 'statsProcessVsRamLine';
+  static const statsProcessVsRamLineSubtitle = 'statsProcessVsRamLineSubtitle';
   static const statsRamDistribution = 'statsRamDistribution';
   static const statsRamDistributionPie = 'statsRamDistributionPie';
   static const statsRamDistributionScatter = 'statsRamDistributionScatter';
@@ -215,8 +219,12 @@ abstract class L10nKeys {
   static const statsRamHistogram = 'statsRamHistogram';
   static const statsRamHistogramSubtitle = 'statsRamHistogramSubtitle';
   static const statsRamLabel = 'statsRamLabel';
+  static const statsRamTrendScatter = 'statsRamTrendScatter';
+  static const statsRamTrendScatterSubtitle = 'statsRamTrendScatterSubtitle';
   static const statsScatterChart = 'statsScatterChart';
   static const statsScatterSubtitle = 'statsScatterSubtitle';
+  static const statsServicesVsProcesses = 'statsServicesVsProcesses';
+  static const statsServicesVsProcessesSubtitle = 'statsServicesVsProcessesSubtitle';
   static const statsServicesVsRamCorrelation = 'statsServicesVsRamCorrelation';
   static const statsServicesVsRamSubtitle = 'statsServicesVsRamSubtitle';
   static const statsSmall = 'statsSmall';
@@ -230,6 +238,8 @@ abstract class L10nKeys {
   static const statsTreemap = 'statsTreemap';
   static const statsTreemapSubtitle = 'statsTreemapSubtitle';
   static const statsUsed = 'statsUsed';
+  static const statsUserVsSystemBar = 'statsUserVsSystemBar';
+  static const statsUserVsSystemBarSubtitle = 'statsUserVsSystemBarSubtitle';
   static const statsUserVsSystemPie = 'statsUserVsSystemPie';
   static const statsUserVsSystemRam = 'statsUserVsSystemRam';
   static const statsUserVsSystemSubtitle = 'statsUserVsSystemSubtitle';
@@ -482,7 +492,11 @@ extension L10nResolver on AppLocalizations {
       'statsPolarChart' => statsPolarChart,
       'statsPolarSubtitle' => statsPolarSubtitle,
       'statsProcessStateBar' => statsProcessStateBar,
+      'statsProcessStateRam' => statsProcessStateRam,
+      'statsProcessStateRamSubtitle' => statsProcessStateRamSubtitle,
       'statsProcessStateSubtitle' => statsProcessStateSubtitle,
+      'statsProcessVsRamLine' => statsProcessVsRamLine,
+      'statsProcessVsRamLineSubtitle' => statsProcessVsRamLineSubtitle,
       'statsRamDistribution' => statsRamDistribution,
       'statsRamDistributionPie' => statsRamDistributionPie,
       'statsRamDistributionScatter' => statsRamDistributionScatter,
@@ -491,8 +505,12 @@ extension L10nResolver on AppLocalizations {
       'statsRamHistogram' => statsRamHistogram,
       'statsRamHistogramSubtitle' => statsRamHistogramSubtitle,
       'statsRamLabel' => statsRamLabel,
+      'statsRamTrendScatter' => statsRamTrendScatter,
+      'statsRamTrendScatterSubtitle' => statsRamTrendScatterSubtitle,
       'statsScatterChart' => statsScatterChart,
       'statsScatterSubtitle' => statsScatterSubtitle,
+      'statsServicesVsProcesses' => statsServicesVsProcesses,
+      'statsServicesVsProcessesSubtitle' => statsServicesVsProcessesSubtitle,
       'statsServicesVsRamCorrelation' => statsServicesVsRamCorrelation,
       'statsServicesVsRamSubtitle' => statsServicesVsRamSubtitle,
       'statsSmall' => statsSmall,
@@ -506,6 +524,8 @@ extension L10nResolver on AppLocalizations {
       'statsTreemap' => statsTreemap,
       'statsTreemapSubtitle' => statsTreemapSubtitle,
       'statsUsed' => statsUsed,
+      'statsUserVsSystemBar' => statsUserVsSystemBar,
+      'statsUserVsSystemBarSubtitle' => statsUserVsSystemBarSubtitle,
       'statsUserVsSystemPie' => statsUserVsSystemPie,
       'statsUserVsSystemRam' => statsUserVsSystemRam,
       'statsUserVsSystemSubtitle' => statsUserVsSystemSubtitle,

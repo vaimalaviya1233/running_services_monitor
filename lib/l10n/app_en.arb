@@ -358,5 +358,15 @@
   "placeholders": "Placeholders",
   "commandTitle": "Title",
   "commandDescription": "Description",
-  "reExecute": "Re-execute"
+  "reExecute": "Re-execute",
+  "statsProcessVsRamLine": "Process vs RAM Correlation",
+  "statsProcessVsRamLineSubtitle": "Blue: RAM, Dashed: Process Count",
+  "statsUserVsSystemBar": "User vs System Comparison",
+  "statsUserVsSystemBarSubtitle": "App Count, Total RAM, Average RAM",
+  "statsRamTrendScatter": "RAM Trend Analysis",
+  "statsRamTrendScatterSubtitle": "Services vs RAM with Trend Line",
+  "statsServicesVsProcesses": "Services vs Processes",
+  "statsServicesVsProcessesSubtitle": "Correlation between Service and Process counts",
+  "statsProcessStateRam": "RAM by Process State",
+  "statsProcessStateRamSubtitle": "Average RAM usage per process state"
 }

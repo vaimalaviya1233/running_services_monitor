@@ -56,11 +56,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i773.ContributorsService>(
       () => _i773.ContributorsService(),
     );
-    gh.lazySingleton<_i340.AppInfoBloc>(
-      () => _i340.AppInfoBloc(gh<_i825.AppInfoService>()),
-    );
     gh.lazySingleton<_i204.AboutBloc>(
       () => _i204.AboutBloc(gh<_i773.ContributorsService>()),
+    );
+    gh.lazySingleton<_i340.AppInfoBloc>(
+      () => _i340.AppInfoBloc(gh<_i825.AppInfoService>()),
     );
     gh.lazySingleton<_i842.ShizukuService>(
       () => _i842.ShizukuService(
@@ -68,27 +68,27 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i660.ShizukuHostApi>(),
       ),
     );
-    gh.lazySingleton<_i725.CommandLogBloc>(
-      () => _i725.CommandLogBloc(
-        gh<_i404.CommandLogService>(),
-        gh<_i842.ShizukuService>(),
-      ),
-    );
     gh.lazySingleton<_i622.ProcessService>(
       () => _i622.ProcessService(gh<_i842.ShizukuService>()),
-    );
-    gh.lazySingleton<_i98.HomeBloc>(
-      () =>
-          _i98.HomeBloc(gh<_i842.ShizukuService>(), gh<_i622.ProcessService>()),
-    );
-    gh.lazySingleton<_i552.WorkingModeBloc>(
-      () => _i552.WorkingModeBloc(gh<_i842.ShizukuService>()),
     );
     gh.factory<_i414.MeminfoBloc>(
       () => _i414.MeminfoBloc(gh<_i622.ProcessService>()),
     );
     gh.factory<_i256.StopServiceBloc>(
       () => _i256.StopServiceBloc(gh<_i622.ProcessService>()),
+    );
+    gh.lazySingleton<_i725.CommandLogBloc>(
+      () => _i725.CommandLogBloc(
+        gh<_i404.CommandLogService>(),
+        gh<_i842.ShizukuService>(),
+      ),
+    );
+    gh.lazySingleton<_i552.WorkingModeBloc>(
+      () => _i552.WorkingModeBloc(gh<_i842.ShizukuService>()),
+    );
+    gh.lazySingleton<_i98.HomeBloc>(
+      () =>
+          _i98.HomeBloc(gh<_i842.ShizukuService>(), gh<_i622.ProcessService>()),
     );
     return this;
   }

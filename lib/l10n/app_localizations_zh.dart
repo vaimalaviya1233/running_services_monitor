@@ -875,4 +875,34 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get reExecute => '重新执行';
+
+  @override
+  String get statsProcessVsRamLine => '进程 vs RAM 相关性';
+
+  @override
+  String get statsProcessVsRamLineSubtitle => '蓝色: RAM, 虚线: 进程数';
+
+  @override
+  String get statsUserVsSystemBar => '用户 vs 系统柱状图';
+
+  @override
+  String get statsUserVsSystemBarSubtitle => '应用数量、总 RAM、平均 RAM';
+
+  @override
+  String get statsRamTrendScatter => 'RAM 趋势散点图';
+
+  @override
+  String get statsRamTrendScatterSubtitle => '服务 vs RAM 带趋势线';
+
+  @override
+  String get statsServicesVsProcesses => '服务 vs 进程';
+
+  @override
+  String get statsServicesVsProcessesSubtitle => 'X: 进程数, Y: 服务数';
+
+  @override
+  String get statsProcessStateRam => '进程状态 vs RAM';
+
+  @override
+  String get statsProcessStateRamSubtitle => '按状态分组的平均 RAM 使用量';
 }

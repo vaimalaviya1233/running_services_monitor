@@ -926,4 +926,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reExecute => 'Re-execute';
+
+  @override
+  String get statsProcessVsRamLine => 'Process vs RAM Correlation';
+
+  @override
+  String get statsProcessVsRamLineSubtitle =>
+      'Blue: RAM, Dashed: Process Count';
+
+  @override
+  String get statsUserVsSystemBar => 'User vs System Comparison';
+
+  @override
+  String get statsUserVsSystemBarSubtitle =>
+      'App Count, Total RAM, Average RAM';
+
+  @override
+  String get statsRamTrendScatter => 'RAM Trend Analysis';
+
+  @override
+  String get statsRamTrendScatterSubtitle => 'Services vs RAM with Trend Line';
+
+  @override
+  String get statsServicesVsProcesses => 'Services vs Processes';
+
+  @override
+  String get statsServicesVsProcessesSubtitle =>
+      'Correlation between Service and Process counts';
+
+  @override
+  String get statsProcessStateRam => 'RAM by Process State';
+
+  @override
+  String get statsProcessStateRamSubtitle =>
+      'Average RAM usage per process state';
 }
