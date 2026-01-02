@@ -6,6 +6,7 @@ import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
 import 'package:running_services_monitor/core/utils/helper.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
+import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 import 'package:running_services_monitor/models/system_ram_info.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -48,7 +49,7 @@ class _AppListState extends State<AppList> with AutomaticKeepAliveClientMixin {
         builder: (context, cachedApps) {
           return BlocSelector<HomeBloc, HomeState, List<AppProcessInfo>>(
             selector: (state) {
-              final filteredApps = Helper.filterApps(widget.apps, state.value.searchQuery, state.value.selectedProcessFilter, cachedApps);
+              final filteredApps = widget.apps.where((app) => state.value.selectedProcessFilter.matches(app)).toList();
               return Helper.sortApps(filteredApps, state.value.sortAscending);
             },
             builder: (context, filteredApps) {

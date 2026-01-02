@@ -1,3 +1,5 @@
+import 'package:running_services_monitor/models/service_info.dart';
+
 enum ProcessStateFilter { all, active, cached, withServices }
 
 bool isActiveState(String? processState, {bool hasServices = false, bool hasActiveService = false}) {
@@ -26,16 +28,16 @@ bool isCachedState(String? processState) {
 }
 
 extension ProcessStateFilterExtension on ProcessStateFilter {
-  bool matchesAppState(String? processState, bool hasServices, {bool isCached = false}) {
+  bool matches(AppProcessInfo app) {
     switch (this) {
       case ProcessStateFilter.all:
         return true;
       case ProcessStateFilter.active:
-        return isActiveState(processState, hasServices: hasServices);
+        return app.isActive;
       case ProcessStateFilter.cached:
-        return isCachedState(processState) || isCached;
+        return app.isCached;
       case ProcessStateFilter.withServices:
-        return hasServices;
+        return app.hasServices;
     }
   }
 }

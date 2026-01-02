@@ -4,6 +4,7 @@ import 'package:running_services_monitor/bloc/app_info_bloc/app_info_bloc.dart';
 import 'package:running_services_monitor/bloc/home_bloc/home_bloc.dart';
 import 'package:running_services_monitor/core/app_styles.dart';
 import 'package:running_services_monitor/core/dependency_injection/dependency_injection.dart';
+import 'package:running_services_monitor/core/utils/helper.dart';
 import 'package:running_services_monitor/models/app_info_state_model.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 
@@ -22,7 +23,9 @@ class AppCountTab extends StatelessWidget {
         builder: (context, cachedApps) {
           return BlocSelector<HomeBloc, HomeState, int>(
             selector: (state) {
+              final searchQuery = state.value.searchQuery;
               return state.value.allApps.where((app) {
+                if (!Helper.matchesSearch(app, searchQuery, cachedApps)) return false;
                 final cached = cachedApps[app.packageName];
                 return filter(app, cached);
               }).length;

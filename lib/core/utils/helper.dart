@@ -3,23 +3,18 @@ import 'package:running_services_monitor/models/process_state_filter.dart';
 import 'package:running_services_monitor/models/service_info.dart';
 
 class Helper {
-  static List<AppProcessInfo> filterApps(
-    List<AppProcessInfo> apps,
-    String searchQuery,
-    ProcessStateFilter filter,
-    Map<String, CachedAppInfo> cachedApps,
-  ) {
+  static bool matchesSearch(AppProcessInfo app, String searchQuery, Map<String, CachedAppInfo> cachedApps) {
+    if (searchQuery.trim().isEmpty) return true;
+    final query = searchQuery.trim().toLowerCase();
+    final pkg = app.packageName.trim().toLowerCase();
+    final name = cachedApps[app.packageName]?.appName.trim().toLowerCase() ?? pkg;
+    return pkg.contains(query) || name.contains(query);
+  }
+
+  static List<AppProcessInfo> filterApps(List<AppProcessInfo> apps, String searchQuery, ProcessStateFilter filter, Map<String, CachedAppInfo> cachedApps) {
     return apps.where((app) {
-      if (searchQuery.trim().isNotEmpty) {
-        final query = searchQuery.trim().toLowerCase();
-        final pkg = app.packageName.trim().toLowerCase();
-        final cached = cachedApps[app.packageName];
-        final name = cached?.appName.trim().toLowerCase() ?? pkg;
-        if (!pkg.contains(query) && !name.contains(query)) {
-          return false;
-        }
-      }
-      return filter.matchesAppState(app.processState, app.hasServices, isCached: app.isCached);
+      if (!matchesSearch(app, searchQuery, cachedApps)) return false;
+      return filter.matches(app);
     }).toList();
   }
 

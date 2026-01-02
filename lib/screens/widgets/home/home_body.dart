@@ -43,6 +43,7 @@ class HomeBody extends StatelessWidget {
             List<AppProcessInfo> userApps,
             List<AppProcessInfo> systemApps,
             List<AppProcessInfo> coreApps,
+            List<AppProcessInfo> filteredAllApps,
           })
         >(
           selector: (state) {
@@ -50,11 +51,14 @@ class HomeBody extends StatelessWidget {
             final (isError, errorMessage) = state.mapOrNull(failure: (s) => (true, s.message)) ?? (false, null);
 
             final showCoreApps = state.value.showCoreApps;
+            final searchQuery = state.value.searchQuery;
             final rawApps = state.value.allApps;
             final allApps = showCoreApps ? rawApps : rawApps.where((a) => !a.isCoreApp).toList();
-            final userApps = allApps.where((a) => Helper.isSystemApp(a, cachedApps) == false && !a.isCoreApp).toList();
-            final systemApps = allApps.where((a) => Helper.isSystemApp(a, cachedApps) == true && !a.isCoreApp).toList();
-            final coreApps = showCoreApps ? rawApps.where((a) => a.isCoreApp).toList() : <AppProcessInfo>[];
+
+            final filteredAllApps = allApps.where((a) => Helper.matchesSearch(a, searchQuery, cachedApps)).toList();
+            final userApps = filteredAllApps.where((a) => Helper.isSystemApp(a, cachedApps) == false && !a.isCoreApp).toList();
+            final systemApps = filteredAllApps.where((a) => Helper.isSystemApp(a, cachedApps) == true && !a.isCoreApp).toList();
+            final coreApps = showCoreApps ? rawApps.where((a) => a.isCoreApp && Helper.matchesSearch(a, searchQuery, cachedApps)).toList() : <AppProcessInfo>[];
 
             return (
               isLoading: isLoading,
@@ -66,6 +70,7 @@ class HomeBody extends StatelessWidget {
               userApps: userApps,
               systemApps: systemApps,
               coreApps: coreApps,
+              filteredAllApps: filteredAllApps,
             );
           },
           builder: (context, data) {
@@ -107,11 +112,11 @@ class HomeBody extends StatelessWidget {
                           child: ProcessFilterChips(
                             selectedFilter: data.model.selectedProcessFilter,
                             apps: switch (tabController.index) {
-                              0 => data.model.allApps,
+                              0 => data.filteredAllApps,
                               1 => data.userApps,
                               2 => data.systemApps,
                               3 => data.model.showCoreApps ? data.coreApps : [],
-                              _ => data.model.allApps,
+                              _ => data.filteredAllApps,
                             },
                             sortAscending: data.model.sortAscending,
                           ),
@@ -129,7 +134,7 @@ class HomeBody extends StatelessWidget {
                     child: TabBarView(
                       controller: tabController,
                       children: [
-                        AppList(apps: data.model.allApps, tabIndex: 0),
+                        AppList(apps: data.filteredAllApps, tabIndex: 0),
                         AppList(apps: data.userApps, tabIndex: 1),
                         AppList(apps: data.systemApps, tabIndex: 2),
                         if (data.model.showCoreApps) AppList(apps: data.coreApps, tabIndex: 3),
