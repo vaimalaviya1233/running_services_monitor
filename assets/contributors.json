@@ -2,7 +2,7 @@
   {
     "login": "biplobsd",
     "name": "Biplob Sutradhar",
-    "contributions": 134,
+    "contributions": 154,
     "pullRequests": [
       {
         "number": 3,
@@ -17,8 +17,12 @@
   {
     "login": "FriesI23",
     "name": "Fries_I23",
-    "contributions": 4,
+    "contributions": 6,
     "pullRequests": [
+      {
+        "number": 12,
+        "title": "feat: support follow system theme in theme toggle"
+      },
       {
         "number": 6,
         "title": "Add Andoird app language support"
